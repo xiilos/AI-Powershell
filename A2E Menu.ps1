@@ -152,7 +152,7 @@ do {
                     Write-Output "Adding Add2Exchange Permissions"
                     Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
                     Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
+                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
                     Invoke-Item "C:\A2E_Office365_permissions.txt"
                     Write-Output "Quitting"
                     Get-PSSession | Remove-PSSession
@@ -285,7 +285,7 @@ do {
                     Start-Sleep -s 2
                     Write-Output "All Done"
                     Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
                     Invoke-Item "C:\A2E_permissions.txt"
                     Write-Output "Quitting"
                     Get-PSSession | Remove-PSSession
@@ -304,7 +304,7 @@ do {
                     Start-Sleep -s 2
                     Write-Output "All Done"
                     Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
                     Invoke-Item "C:\A2E_permissions.txt"
                     Write-Output "Quitting"
                     Get-PSSession | Remove-PSSession
@@ -325,7 +325,7 @@ do {
                     Start-Sleep -s 2
                     Write-Output "All Done"
                     Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
                     Invoke-Item "C:\A2E_permissions.txt"
                     Write-Output "Quitting"
                     Get-PSSession | Remove-PSSession
@@ -345,7 +345,7 @@ do {
                             Add-MailboxPermission -Identity $Member.name -User $User -AccessRights ‘FullAccess’ -InheritanceType all -AutoMapping:$false
                         }
                         Write-Output "Writing Data......"
-                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
                         Invoke-Item "C:\A2E_permissions.txt"
 
                         $repeat = Read-Host 'Do you want to run it again? [Y/N]'
@@ -370,7 +370,7 @@ do {
                             Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights ‘FullAccess’ -InheritanceType all -Confirm:$false
                         }
                         Write-Output "Writing Data......"
-                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
                         Invoke-Item "C:\A2E_permissions.txt"
 
                         $repeat = Read-Host 'Do you want to run it again? [Y/N]'
@@ -410,7 +410,7 @@ do {
                         Write-Output "Removing Add2Exchange Permissions to Single User"
                         Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                         Write-Output "Writing Data......"
-                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
                         Invoke-Item "C:\A2E_permissions.txt"
 
                         $repeat = Read-Host 'Do you want to run it again? [Y/N]'
@@ -430,7 +430,7 @@ do {
 
 
         } '3' {
-            cls
+            Clear-Host
             'You chose option #3'
 
             $IE = new-object -com internetexplorer.application
@@ -446,7 +446,7 @@ do {
             Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
                 
         } '5' {
-            cls
+            Clear-Host
             'You chose option #5'
             $message = 'Please Pick How to Logon'
             $question = 'Pick one of the following from below'
@@ -497,19 +497,19 @@ do {
 
 
         } '6' {
-            cls
+            Clear-Host
             'You chose option #6'
             Write-Verbose "Removing Windows 10 Apps"
             Get-AppxPackage | Where-Object-object {$_.name –notlike "*photos"} | Where-Object-object {$_.name –notlike "*store*"} | Where-Object-Object-Object-Object-object {$_.name –notlike "*windowscalculator*"} | Remove-AppxPackage -Confirm:$False
                 
         } '7' {
-            cls
+            Clear-Host
             'You chose option #7'
             Write-Verbose "Checking Powershell Version"
             Get-Host
                 
         } '8' {
-            cls
+            Clear-Host
             'You chose option #8'
             Write-Verbose "Adding Registry Favorits"
             Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name Session Manager -Value Computer\\HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager
