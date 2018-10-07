@@ -8,15 +8,20 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Write-Verbose "Disabling UAC In the Registry"
     Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
+
+ # Setting Time Zone
+ Write-Verbose "Setting the Time Zone"
+Set-TimeZone -Name "Central Standard Time"
     
 # Rename Computer
 
+Write-Verbose "Renaming Computer"
 $Compname = read-host "Enter the new name of this Computer"
-Rename-Computer -NewName "$CompName" -Restart
+Rename-Computer -NewName "$CompName"
 
 
 # Rename HDD's
-
+Write-Verbose "Renaming HDD's"
 Get-Volume -DriveLetter C | Set-Volume -NewFileSystemLabel "MAIN OS" -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
 
 If ($ProcessError) {
@@ -53,6 +58,7 @@ Write-Verbose "Changing File Explorer Views"
 
 
 # Disable Drive indexing
+Write-Verbose "Disabling Drive Indexing"
 function Disable-Indexing {
     Param($Drive)
     $obj = Get-WmiObject -Class Win32_Volume -Filter "DriveLetter='$Drive'"
@@ -71,4 +77,71 @@ Disable-Indexing "D:"
 
 
 # Disabled Services
+
+Write-Verbose "Disabling Services"
+Stop-Service WSearch
+Set-Service WSearch -StartupType Disabled
+
+Stop-Service WpcMonSvc
+Set-Service WpcMonSvc -StartupType Disabled
+
+Stop-Service wercplsupport
+Set-Service wercplsupport -StartupType Disabled
+
+Stop-Service RetailDemo
+Set-Service RetailDemo -StartupType Disabled
+
+Stop-Service SDRSVC
+Set-Service SDRSVC -StartupType Disabled
+
+Stop-Service WerSvc
+Set-Service WerSvc -StartupType Disabled
+
+Stop-Service XboxGipSvc
+Set-Service XboxGipSvc -StartupType Disabled
+
+Stop-Service XblAuthManager
+Set-Service XblAuthManager -StartupType Disabled
+
+Stop-Service XblGameSave
+Set-Service XblGameSave -StartupType Disabled
+
+Stop-Service XboxNetApiSvc
+Set-Service XboxNetApiSvc -StartupType Disabled
+
+# Control Panel Options
+Write-Verbose "Setting Mouse Speed"
+Set-ItemProperty -Path 'HKCU:\Control Panel\Mouse' -Name MouseSensitivity -Value 20 | out-null
+
+Write-Verbose "Allowing RDC"
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name AllowRemoteRPC -Value 0 | out-null
+
+
+Write-Verbose "Allowing RDC"
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0 | out-null
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+Write-Verbose "Disable Syetm Restore"
+Disable-ComputerRestore "C:\", "D:\"
+
+Write-Verbose "Setting Visual Performance"
+Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects' -Name VisualFXSetting -Value 2 | out-null
+
+# Windows Apps Cleanup
+
+Write-Verbose "Make Sure to Enable Cloud Content GPO"
+
+
+Write-Verbose "Removing Windows Apps"
+Get-AppxPackage -AllUsers | where-object {$_.name –notlike "*windows.photos"} | where-object {$_.name –notlike "*store*"} | where-object {$_.name –notlike "*calculator*"} | where-object {$_.name –notlike "*sticky*"} | where-object {$_.name –notlike "*soundrecorder*"} | where-object {$_.name –notlike "*mspaint*"} | where-object {$_.name –notlike "*screensketch*"} | Remove-AppxPackage -Confirm:$False -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
+
+If ($ProcessError) {
+
+    write-warning -message "Cannot Remove this App";
+
+} 
+Get-AppxPackage | Select-Object Name, PackageFullName >"$env:userprofile\Desktop\myapps.txt"
+
+
+# Windows Settings Cleanup
 
