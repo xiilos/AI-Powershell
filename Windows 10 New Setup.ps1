@@ -6,22 +6,22 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 # Disable UAC From Registry
 
-Write-Verbose "Disabling UAC In the Registry"
+Write-Host "Disabling UAC In the Registry"
     Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
 
  # Setting Time Zone
- Write-Verbose "Setting the Time Zone"
+ Write-Host "Setting the Time Zone"
 Set-TimeZone -Name "Central Standard Time"
     
 # Rename Computer
 
-Write-Verbose "Renaming Computer"
+Write-Host "Renaming Computer"
 $Compname = read-host "Enter the new name of this Computer"
 Rename-Computer -NewName "$CompName"
 
 
 # Rename HDD's
-Write-Verbose "Renaming HDD's"
+Write-Host "Renaming HDD's"
 Get-Volume -DriveLetter C | Set-Volume -NewFileSystemLabel "MAIN OS" -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
 
 If ($ProcessError) {
@@ -34,14 +34,14 @@ Get-Volume -DriveLetter D | Set-Volume -NewFileSystemLabel "DATA" -ErrorAction S
 
 If ($ProcessError) {
 
-    write-warning -message "Something went wrong renaming D!";
+    write-warning -message "Something went wrong renaming D! Maybe Does not Exist?";
 
 } 
 
 
 # File Explorer Options "Views"
 
-Write-Verbose "Changing File Explorer Views"
+Write-Host "Changing File Explorer Views"
     Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name Hidden -Value 1 | out-null
     Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name AutoCheckSelect -Value 0 | out-null
     Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name showsuperhidden -Value 0 | out-null
@@ -58,7 +58,7 @@ Write-Verbose "Changing File Explorer Views"
 
 
 # Disable Drive indexing
-Write-Verbose "Disabling Drive Indexing"
+Write-Host "Disabling Drive Indexing"
 function Disable-Indexing {
     Param($Drive)
     $obj = Get-WmiObject -Class Win32_Volume -Filter "DriveLetter='$Drive'"
@@ -78,7 +78,7 @@ Disable-Indexing "D:"
 
 # Disabled Services
 
-Write-Verbose "Disabling Services"
+Write-Host "Disabling Services"
 Stop-Service WSearch
 Set-Service WSearch -StartupType Disabled
 
@@ -110,22 +110,22 @@ Stop-Service XboxNetApiSvc
 Set-Service XboxNetApiSvc -StartupType Disabled
 
 # Control Panel Options
-Write-Verbose "Setting Mouse Speed"
+Write-Host "Setting Mouse Speed"
 Set-ItemProperty -Path 'HKCU:\Control Panel\Mouse' -Name MouseSensitivity -Value 20 | out-null
 
-Write-Verbose "Removing Remote Assistance"
+Write-Host "Removing Remote Assistance"
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Remote Assistance" -Name "fAllowToGetHelp" -Type DWord -Value 0 | out-null
 
-Write-Verbose "Allowing RDC"
-Write-Output "Enabling Remote Desktop w/o Network Level Authentication..."
+Write-Host "Allowing RDC"
+Write-Host "Enabling Remote Desktop w/o Network Level Authentication..."
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Type DWord -Value 0
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Type DWord -Value 0
 Enable-NetFirewallRule -Name "RemoteDesktop*"
 
-Write-Verbose "Disable Syetm Restore"
+Write-Host "Disable Syetm Restore"
 Disable-ComputerRestore "C:\", "D:\"
 
-Write-Verbose "Setting Visual Performance"
+Write-Host "Setting Visual Performance"
 Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects' -Name VisualFXSetting -Value 2 | out-null
 
 Write-Host "Set Control Panel Items to Large View"
@@ -144,10 +144,14 @@ Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer
 
 # Windows Apps Cleanup
 
-Write-Verbose "Make Sure to Enable Cloud Content GPO"
+Write-Host "Make Sure to Disable Cloud Content GPO"
+Reg Add	"HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD /V "DisableSoftLanding" /D 1 /F
+Reg Add	"HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD /V "DisableWindowsConsumerFeatures" /D 1 /F
+Reg Add	"HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD /V "DisableThirdPartySuggestions" /D 1 /F
+Reg Add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD /V "DisableWindowsSpotlightFeatures" /D 1 /F
 
 
-Write-Verbose "Removing Windows Apps"
+Write-Host "Removing Windows Apps"
 Get-AppxPackage -AllUsers | where-object {$_.name –notlike "*windows.photos"} | where-object {$_.name –notlike "*store*"} | where-object {$_.name –notlike "*calculator*"} | where-object {$_.name –notlike "*sticky*"} | where-object {$_.name –notlike "*soundrecorder*"} | where-object {$_.name –notlike "*mspaint*"} | where-object {$_.name –notlike "*screensketch*"} | Remove-AppxPackage -Confirm:$False -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
 
 If ($ProcessError) {
@@ -221,7 +225,7 @@ Get-AppxPackage "XINGAG.XING" | Remove-AppxPackage
 # Kill Cortana
 
 
-	Write-Output "Disabling Cortana..."
+	Write-Host "Disabling Cortana..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings")) {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings" -Force | Out-Null
 	}
@@ -243,14 +247,14 @@ Get-AppxPackage "XINGAG.XING" | Remove-AppxPackage
 
 # Setup Netowrk to Private and File Sharing
 
-	Write-Output "Setting current network profile to private..."
+	Write-Host "Setting current network profile to private..."
     Set-NetConnectionProfile -NetworkCategory Private
 
 
 # Disable Windows Defender Cloud Submission
 
 
-	Write-Output "Disabling Windows Defender Cloud..."
+	Write-Host "Disabling Windows Defender Cloud..."
 	If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Force | Out-Null
 	}
@@ -260,7 +264,7 @@ Get-AppxPackage "XINGAG.XING" | Remove-AppxPackage
 
 # Privacy Settings
 
-Write-Output "Disabling Telemetry"
+Write-Host "Disabling Telemetry"
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
@@ -271,7 +275,7 @@ Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improveme
 Disable-ScheduledTask -TaskName "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" | Out-Null
 Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" | Out-Null
 
-Write-Output "Disable Location Tracking"
+Write-Host "Disable Location Tracking"
 If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location")) {
     New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" -Force | Out-Null
 }
@@ -279,7 +283,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Capabili
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" -Name "SensorPermissionState" -Type DWord -Value 0
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration" -Name "Status" -Type DWord -Value 0
 
-Write-Output "Disable Auto Maps Update"
+Write-Host "Disable Auto Maps Update"
 Set-ItemProperty -Path "HKLM:\SYSTEM\Maps" -Name "AutoUpdateEnabled" -Type DWord -Value 0
 
 Write-Host "Disable Feedback"
@@ -307,12 +311,36 @@ Write-Host "Disable Diag Tracking"
 Stop-Service "DiagTrack" -WarningAction SilentlyContinue
 Set-Service "DiagTrack" -StartupType Disabled
 
+Write-Host "Disable Shared Experiences"
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableCdp" -Type DWord -Value 0
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableMmx" -Type DWord -Value 0
+
+# Privacy Settings with App Permissions
+
+Write-Host "Cleaning up Privacy Settings with App Permissions"
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\contacts" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appointments" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCallHistory" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\email" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\chat" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\cellularData" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /T REG_DWORD /V "GlobalUserDisabled" /D 1 /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /T REG_DWORD /V "BackgroundAppGlobalToggle" /D 0 /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\documentsLibrary" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\picturesLibrary" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\videosLibrary" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\broadFileSystemAccess" /T REG_SZ /V "Value" /D Deny /F
+
+
 
 
 
 #Start Menu Tweaks
 
-Write-Output "Disabling Start menu web search"
+Write-Host "Disabling Start menu web search"
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "BingSearchEnabled" -Type DWord -Value 0
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "CortanaConsent" -Type DWord -Value 0
 	If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search")) {
@@ -321,17 +349,17 @@ Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" 
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Name "DisableWebSearch" -Type DWord -Value 1
     
 
-Write-Output "Hide Searchbox"
+Write-Host "Hide Searchbox"
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
 
-Write-Output "Hide People Button"
+Write-Host "Hide People Button"
 If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People")) {
     New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" | Out-Null
 }
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWord -Value 0
 
 
-Write-Output " Unpin All Start Menu Icons"
+Write-Host " Unpin All Start Menu Icons"
 If ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environment]::OSVersion.Version.Build -le 16299) {
     Get-ChildItem -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount" -Include "*.group" -Recurse | ForEach-Object {
         $data = (Get-ItemProperty -Path "$($_.PsPath)\Current" -Name "Data").Data -Join ","
