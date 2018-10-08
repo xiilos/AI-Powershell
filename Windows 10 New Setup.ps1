@@ -4,6 +4,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+#Execution Policy
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force
+
 # Disable UAC From Registry
 
 Write-Host "Disabling UAC In the Registry"
@@ -58,6 +61,7 @@ Write-Host "Changing File Explorer Views"
 
 
 # Disable Drive indexing
+
 Write-Host "Disabling Drive Indexing"
 function Disable-Indexing {
     Param($Drive)
@@ -110,6 +114,7 @@ Stop-Service XboxNetApiSvc
 Set-Service XboxNetApiSvc -StartupType Disabled
 
 # Control Panel Options
+
 Write-Host "Setting Mouse Speed"
 Set-ItemProperty -Path 'HKCU:\Control Panel\Mouse' -Name MouseSensitivity -Value 20 | out-null
 
@@ -156,10 +161,8 @@ Get-AppxPackage -AllUsers | where-object {$_.name –notlike "*windows.photos"} 
 
 If ($ProcessError) {
 
-    write-warning -message "Cannot Remove this App";
-
-} 
-Get-AppxPackage | Select-Object Name, PackageFullName >"$env:userprofile\Desktop\myapps.txt"
+    write-warning -message "Cannot Remove some Apps. Maybe not a windows App?";
+}
 
 Write-Host "Disable Background Apps"
 Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Exclude "Microsoft.Windows.Cortana*" | ForEach-Object {
@@ -333,12 +336,15 @@ Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\
 Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\picturesLibrary" /T REG_SZ /V "Value" /D Deny /F
 Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\videosLibrary" /T REG_SZ /V "Value" /D Deny /F
 Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\broadFileSystemAccess" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{52079E78-A92B-413F-B213-E8FE35712E72}" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{A8804298-2D5F-42E3-9531-9C8C39EB29CE}" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" /T REG_SZ /V "Value" /D Deny /F
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{2297E4E2-5DBE-466D-A12B-0F8286F0D9CA}" /T REG_SZ /V "Value" /D Deny /F
 
 
 
 
-
-#Start Menu Tweaks
+# Start Menu Tweaks
 
 Write-Host "Disabling Start menu web search"
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "BingSearchEnabled" -Type DWord -Value 0
@@ -372,6 +378,9 @@ If ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environ
     Set-ItemProperty -Path $key.PSPath -Name "Data" -Type Binary -Value $data
 }
 
+Write-Host " Unpin All Taskbar Items"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](255))
+Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
+
 # End Scripting
-Write-Host "Lets Reboot"
-Restart-Computer
+
