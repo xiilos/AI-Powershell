@@ -5,7 +5,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Execution Policy
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Force
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 # Disable UAC From Registry
 
@@ -13,7 +13,7 @@ Write-Host "Disabling UAC In the Registry"
     Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
 
  # Setting Time Zone
- Write-Host "Setting the Time Zone"
+Write-Host "Setting the Time Zone"
 Set-TimeZone -Name "Central Standard Time"
     
 # Rename Computer
