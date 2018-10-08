@@ -80,6 +80,7 @@ Disable-Indexing "C:"
 Disable-Indexing "D:"
 
 
+
 # Disabled Services
 
 Write-Host "Disabling Services"
@@ -128,7 +129,12 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\W
 Enable-NetFirewallRule -Name "RemoteDesktop*"
 
 Write-Host "Disable Syetm Restore"
-Disable-ComputerRestore "C:\", "D:\"
+Disable-ComputerRestore "C:\"
+Disable-ComputerRestore "D:\" -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
+If ($ProcessError) {
+
+    write-warning -message "D: Does not Exist";
+}
 
 Write-Host "Setting Visual Performance"
 Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects' -Name VisualFXSetting -Value 2 | out-null
