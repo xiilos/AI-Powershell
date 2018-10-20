@@ -27,7 +27,7 @@ Exit
 if ($decision -eq 0) {
 
 do {
-$UserName = read-host "Enter the Username (Display Name)";
+$UserName = read-host "Enter the Username Example: DOMAIN\USERNAME";
 $Password = read-host "Enter the Account password"
 
 
