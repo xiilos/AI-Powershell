@@ -4,6 +4,8 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
   exit
 }
+#Execution Policy
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 # Group Policy Results
 do {
