@@ -5,3 +5,7 @@
   exit
 }
 Get-AppxPackage | where-object {$_.name –notlike "*photos"} | where-object {$_.name –notlike "*store*"} | where-object {$_.name –notlike "*windowscalculator*"} | Remove-AppxPackage -Confirm:$False
+
+Write-Output "Quitting"
+Get-PSSession | Remove-PSSession
+Exit

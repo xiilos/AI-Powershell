@@ -423,6 +423,9 @@ $StartLayoutStr = @"
 
 #------End XML Editing------
 
+Write-Output "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
 
 # End Scripting
 
