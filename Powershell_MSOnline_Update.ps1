@@ -14,8 +14,9 @@ if ($confirmation -eq 'y') {
   
 
 Write-Host "Updating Powershell"
+Write-Host "Downloading the latest powershell Update"
 $url = "https://download.microsoft.com/download/6/F/5/6F5FF66C-6775-42B0-86C4-47D41F2DA187/W2K12-KB3191565-x64.msu"
-$output = "$PSScriptRoot\Powershell_Update"
+$output = "$PSScriptRoot\Powershell_5.msu"
 $start_time = Get-Date
 
 $wc = New-Object System.Net.WebClient
