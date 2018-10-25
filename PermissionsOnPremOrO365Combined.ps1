@@ -33,7 +33,7 @@ $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic –AllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService –Credential $Cred
+Connect-MsolService –Credential $Cred -ErrorAction "Inquire"
 
 
 $message  = 'Please Pick what you want to do'
