@@ -16,12 +16,16 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
+# Option 2: Quit
+
 if ($decision -eq 2) {
-Exit
+  Write-Output "Quitting"
+  Get-PSSession | Remove-PSSession
+  Exit
 }
 
 
-
+# Option 0: Office 365
 
 
 if ($decision -eq 0) {
@@ -33,7 +37,7 @@ $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic –AllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService –Credential $Cred
+Connect-MsolService –Credential $Cred -ErrorAction "Inquire"
 
 
 $message  = 'Please Pick what you want to do'
@@ -46,7 +50,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
-
+# Option 0: Office 365-Adding Add2Exchange Permissions to Single User
 
 
 if ($decision -eq 0) {
@@ -69,6 +73,7 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 1: Office 365-Removing Add2Exchange Permissions to Single User
 
 if ($decision -eq 1) {
 
@@ -87,16 +92,17 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 2: Office 365-Quit
+
 if ($decision -eq 2) {
-Exit
+  Write-Output "Quitting"
+  Get-PSSession | Remove-PSSession
+  Exit
 }
 
 }
 
-
-
-
-
+# Option 1:Exchange on Premise
 
 
 if ($decision -eq 1) {
@@ -104,14 +110,10 @@ if ($decision -eq 1) {
 
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 
-
 Set-ADServerSettings -ViewEntireForest $true
-
 
 Write-Output "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
-
-
 
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
@@ -125,7 +127,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
-
+# Option 0: Exchange on Premise-Adding Add2Exchange Permissions to Single User
 
 
 if ($decision -eq 0) {
@@ -147,6 +149,8 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 1: Exchange on Premise-Removing Add2Exchange Permissions to Single User
+
 if ($decision -eq 1) {
 do {
 $User = read-host "Enter Sync Service Account (Display Name)";
@@ -166,7 +170,11 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+#Option 2: Exchange on Premise-Quit
+
 if ($decision -eq 2) {
-Exit
+  Write-Output "Quitting"
+  Get-PSSession | Remove-PSSession
+  Exit
 }
 }

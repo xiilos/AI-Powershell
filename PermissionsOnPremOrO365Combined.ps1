@@ -1,6 +1,7 @@
 ﻿if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
   # Relaunch as an elevated process:
+
   Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
   exit
 }
@@ -16,12 +17,16 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
+# Option 2: Quit
+
 if ($decision -eq 2) {
+Write-Output "Quitting"
+Get-PSSession | Remove-PSSession
 Exit
 }
 
 
-
+# Option 1: Office 365
 
 
 if ($decision -eq 0) {
@@ -51,6 +56,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 
+# Option 0: Office 365-Adding Add2Exchange Permissions
 
 if ($decision -eq 0) {
 
@@ -66,6 +72,8 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 1: Office 365-Removing Add2Exchange Permissions
+
 if ($decision -eq 1) {
 
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
@@ -79,6 +87,8 @@ Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+
+# Option 2: Office 365-Remove&Add Permissions
 
 if ($decision -eq 2) {
 
@@ -95,6 +105,8 @@ Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+
+# Option 3: Office 365-Adding to Dist. List
 
 if ($decision -eq 3) {
 
@@ -120,6 +132,8 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 4: Office 365-Remove Permissions within a dist. list
+
 if ($decision -eq 4) {
 
 do {
@@ -144,6 +158,8 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 5: Office 365-Add Permissions to single user
+
 if ($decision -eq 5) {
 
 do {
@@ -158,9 +174,12 @@ $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 } Until ($repeat -eq 'n')
 
+Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+
+# Option 6: Office 365-Remove Single user permissions
 
 if ($decision -eq 6) {
 
@@ -181,16 +200,18 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 7: Office 365-Quit
+
 if ($decision -eq 7) {
+Write-Output "Quitting"
+Get-PSSession | Remove-PSSession
 Exit
 }
 
 }
 
 
-
-
-
+# Option 1: Exchange on Premise
 
 
 if ($decision -eq 1) {
@@ -198,14 +219,10 @@ if ($decision -eq 1) {
 
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 
-
 Set-ADServerSettings -ViewEntireForest $true
-
 
 Write-Output "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
-
-
 
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
@@ -224,6 +241,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 
+# Option 0: Exchange on Premise-Adding new permissions all
 
 if ($decision -eq 0) {
   Write-Host 'Adding'
@@ -239,6 +257,8 @@ Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 } 
+
+# Option 1: Exchange on Premise-Remove old Add2Exchange permissions
 
 if ($decision -eq 1) {
   Write-Host 'Removing'
@@ -259,6 +279,8 @@ Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+
+# Option 2: Exchange on Premise-Remove/Add Permissions all
 
 if ($decision -eq 2) {
     Write-Host 'Removing'
@@ -282,6 +304,8 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 3: Exchange on Premise-Adding Permissions to dist. list
+
 if ($decision -eq 3) {
 
 do {
@@ -308,6 +332,8 @@ Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+
+# Option 4: Exchange on Premise-Removing dist. list permissions
 
 if ($decision -eq 4) {
 
@@ -336,6 +362,8 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 5: Exchange on Premise-Adding permissions to single user
+
 if ($decision -eq 5) {
 
 do {
@@ -356,6 +384,8 @@ Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+
+# Option 6: Exchange on Premise-Removing permissions to single user
 
 if ($decision -eq 6) {
 do {
@@ -378,7 +408,14 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 7: Exchange on Premise- Quit
+
 if ($decision -eq 7) {
-Exit
+  Write-Output "Quitting"
+  Get-PSSession | Remove-PSSession
+  Exit
 }
 }
+
+
+# End Scripting
