@@ -16,13 +16,17 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
+# Option 2: Quiting
+
 if ($decision -eq 2) {
-Exit
+  Write-Output "Quitting"
+  Get-PSSession | Remove-PSSession
+  Exit
 }
 
 
 
-
+# Option 0: Office 365
 
 if ($decision -eq 0) {
 
@@ -33,7 +37,7 @@ $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic –AllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService –Credential $Cred
+Connect-MsolService –Credential $Cred -ErrorAction "Inquire"
 
 
 $message  = 'Please Pick what you want to do'
@@ -48,7 +52,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 
 
-
+# Option 0: Office 365-Adding Add2Exchange Permissions
 
 if ($decision -eq 0) {
 
@@ -72,6 +76,8 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 1: Office 365-Removing Add2Exchange Permissions
+
 if ($decision -eq 1) {
 do {
 $User = read-host "Enter Sync Service Account (Display Name)";
@@ -93,31 +99,27 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 2: Office 365-Quiting
 
 if ($decision -eq 2) {
-Exit
+  Write-Output "Quitting"
+  Get-PSSession | Remove-PSSession
+  Exit
 }
 
 }
 
-
-
-
-
-
+# Option 1: Exchange on Premise
 
 if ($decision -eq 1) {
 
 
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 
-
 Set-ADServerSettings -ViewEntireForest $true
-
 
 Write-Output "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
-
 
 
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
@@ -129,10 +131,9 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
 
 
-
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
-
+# Option 0: Exchange on Premise-Adding Add2Exchange Permissions
 
 if ($decision -eq 0) {
 do {
@@ -152,12 +153,14 @@ Add-MailboxPermission -Identity $Member.name -User $User -AccessRights ‘FullAc
 } Until ($repeat -eq 'n')
 
 Write-Output "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+
+# Option 1: Exchange on Premise-Removing Add2Exchange Permissions
 
 if ($decision -eq 1) {
 
@@ -178,14 +181,18 @@ Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights ‘Ful
 } Until ($repeat -eq 'n')
 
 Write-Output "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | where {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
 
+# Option 2: Exchange on Premise-Quit
+
 if ($decision -eq 2) {
-Exit
+  Write-Output "Quitting"
+  Get-PSSession | Remove-PSSession
+  Exit
 }
 }

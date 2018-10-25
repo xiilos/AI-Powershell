@@ -17,12 +17,14 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
 if ($decision -eq 2) {
-Exit
+	Write-Output "Quitting"
+	Get-PSSession | Remove-PSSession
+	Exit
 }
 
 
 
-
+# Enable Auto Login
 
 if ($decision -eq 0) {
 
@@ -49,7 +51,7 @@ Exit
 
 
 
-
+# Disable Auto Login
 
 
 if ($decision -eq 1) {
