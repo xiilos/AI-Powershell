@@ -12,7 +12,7 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 Write-Host "Disabling UAC In the Registry"
     Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
 
- # Setting Time Zone
+# Setting Time Zone
 Write-Host "Setting the Time Zone"
 Set-TimeZone -Name "Central Standard Time"
     
@@ -73,7 +73,6 @@ function Disable-Indexing {
     }
 }
 
-#Use:
 #Disable Drive Indexing on C:\ and D:\
 
 Disable-Indexing "C:"
