@@ -19,19 +19,16 @@ $url = "https://download.microsoft.com/download/6/F/5/6F5FF66C-6775-42B0-86C4-47
 $output = "$PSScriptRoot\Powershell_5.msu"
 $start_time = Get-Date
 
-$wc = New-Object System.Net.WebClient
-$wc.DownloadFile($url, $output)
-#OR
+
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
 
 Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
 
 }
-
-
 $confirmation = Read-Host "Would you like me to Install MSonline Module? [Y/N]"
 if ($confirmation -eq 'y') {
 Write-Host "Adding Azure MSonline module"
+Set-PSRepository -Name psgallery -InstallationPolicy Trusted
 Install-Module MSonline -Confirm:$false
 
 }
