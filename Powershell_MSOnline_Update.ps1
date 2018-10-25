@@ -29,11 +29,9 @@ $confirmation = Read-Host "Would you like me to Install MSonline Module? [Y/N]"
 if ($confirmation -eq 'y') {
 Write-Host "Adding Azure MSonline module"
 Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-Install-Module MSonline -Confirm:$false
+Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
 
 }
-
-
 
 Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
