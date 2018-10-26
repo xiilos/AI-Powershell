@@ -56,11 +56,11 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
+
 # Option 0: Office 365-Adding Add2Exchange Permissions
 
 if ($decision -eq 0) {
-
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
 
 Write-Output "Adding Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
@@ -76,8 +76,6 @@ Exit
 
 if ($decision -eq 1) {
 
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
-
 Write-Output "Removing Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess –verbose -confirm:$false
 Write-Output "Writing Data......"
@@ -91,8 +89,6 @@ Exit
 # Option 2: Office 365-Remove&Add Permissions
 
 if ($decision -eq 2) {
-
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
 
 Write-Output "Removing Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess –verbose -confirm:$false
@@ -112,7 +108,6 @@ if ($decision -eq 3) {
 
 do {
 
-$User = read-host "Enter Sync Service Account (Display Name)";
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
 
 Write-Output "Adding Add2Exchange Permissions"
@@ -138,7 +133,6 @@ if ($decision -eq 4) {
 
 do {
 
-$User = read-host "Enter Sync Service Account (Display Name)";
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
 
 Write-Output "Removing Add2Exchange Permissions"
@@ -164,7 +158,6 @@ if ($decision -eq 5) {
 
 do {
 
-$User = read-host "Enter Sync Service Account (Display Name)";
 $Identity = read-host "Enter user Email Address"
 
 Write-Output "Adding Add2Exchange Permissions to Single User"
@@ -185,7 +178,6 @@ if ($decision -eq 6) {
 
 do {
 
-$User = read-host "Enter Sync Service Account (Display Name)";
 $Identity = read-host "Enter user Email Address"
 
 Write-Output "Removing Add2Exchange Permissions to Single User"
@@ -310,7 +302,6 @@ if ($decision -eq 3) {
 
 do {
 
-$User = read-host "Enter Sync Service Account (Display Name)";
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
 
 Write-Output "Adding Add2Exchange Permissions"
@@ -339,7 +330,6 @@ if ($decision -eq 4) {
 
 do {
 
-$User = read-host "Enter Sync Service Account (Display Name)";
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
 
 Write-Output "Removing Add2Exchange Permissions"
@@ -368,8 +358,7 @@ if ($decision -eq 5) {
 
 do {
 
-$User = read-host "Enter Sync Service Account (Display Name)";
-$Identity = read-host "Enter user Email Address"
+$Identity = read-host "Enter user Email Address";
 
 Write-Output "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
@@ -390,7 +379,6 @@ Exit
 if ($decision -eq 6) {
 do {
 
-$User = read-host "Enter Sync Service Account (Display Name)";
 $Identity = read-host "Enter user Email Address"
 
 Write-Output "Removing Add2Exchange Permissions to Single User"
