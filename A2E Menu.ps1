@@ -1,553 +1,210 @@
-﻿if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    # Relaunch as an elevated process:
-    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-    exit
+﻿if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+{
+  # Relaunch as an elevated process:
+  Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+  exit
 }
 
-##This is a test
-function Show-Menu {
-    param (
-        [string]$Title = 'DidItBetter Software Main Menu'
-    )
-    Clear-Host
-    Write-Host "========================== $Title =========================="
-    {
-
-    }
-    
-    Write-Host "Press '1' Creat Outlook Profile for Add2Exchange."
-    Write-Host "NOTE* If you have already installed Outlook on this box then you may proceed. 
-     If not; then please install a 32bit version of outlook 2016 for On premise Exchange or Outlook365 if you are on Office 365"
-    Write-Host "Note* Make sure that this profile is not in Cache Mode"
-    ""
-    ""
-    Write-Host "Press '2' Give Add2Exchange permissions via powershell for the users you want to sync."
-    ""
-    ""
-    Write-Host "Press '3' Download the latest Add2exchange Software."
-    Write-Host "Note* For new installations you will download the full Add2Exchange Enterprise Edition. For Upgrades; you will download the Upgrade versions"
-    ""
-    ""
-    Write-Host "Press '4'Disable User Access Control"
-    Write-Host "Note* Reboot after disabling"
-    ""
-    ""
-    Write-Host "Press '5' Setup AutoLogon"
-    ""
-    ""
-    Write-Host "Press '6' Remove Windows 10 Apps"
-    ""
-    ""
-    Write-Host "Press '7' Check Powershell Version"
-    ""
-    ""
-    Write-Host "Press '8' Setup Registry Favorits"
-    ""
-    ""
-    Write-Host "Press '9' Eport License and Profile 1"
-    ""
-    ""
-    Write-Host "Press '10' Remove Outlook Add-Ins"
-    ""
-    ""
-    Write-Host "Press '11' Re-Enable Outlook Add-Ins"
-    ""
-    ""
-    Write-Host "Q: Press 'Q' to quit."
-}
-
-
-
-do {
-    Show-Menu
-    ""
-    ""
-    ""
-    $input = Read-Host "Please make a selection"
-    switch ($input) {
-        '1' {
-            Clear-Host
-            'You chose option #1'
-            Get-ControlPanelItem -Name "Mail (Microsoft Outlook 2016)" | Show-ControlPanelItem
-        } '2' {
-            Clear-Host
-            'You chose option #2'
-
-             
-            $message = 'Please Pick how you want to connect'
-            $question = 'Pick one of the following from below'
-
-            $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-            $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Office 365'))
-            $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Exchange2013-2016'))
-            $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
-
-            $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
-
-
-
-
-
-
-
-            if ($decision -eq 0) {
-
-                Import-Module MSOnline
-
-                Write-Output "Sign in to Office365 as Tenant Admin"
-                $Cred = Get-Credential
-                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic –AllowRedirection
-                Import-PSSession $Session
-                Import-Module MSOnline
-                Connect-MsolService –Credential $Cred
-
-
-                $message = 'Please Pick what you want to do'
-                $question = 'Pick one of the following from below'
-
-                $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&0 Add Perm O365'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1 Remove Perm O365'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Both-Remove/Add'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&3 Add Dist-List Perm'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&4 Remove Dist-List Perm'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&5 Add Single Perm'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&6 Remove Single Perm'))
-
-                $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
-
-
-                if ($decision -eq 0) {
-
-                    $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
-
-                    Write-Output "Adding Add2Exchange Permissions"
-                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                    Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
-                    Invoke-Item "C:\A2E_Office365_permissions.txt"
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 1) {
-
-                    $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
-
-                    Write-Output "Removing Add2Exchange Permissions"
-                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess –verbose -confirm:$false
-                    Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
-                    Invoke-Item "C:\A2E_Office365_permissions.txt"
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 2) {
-
-                    $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
-
-                    Write-Output "Removing Add2Exchange Permissions"
-                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess –verbose -confirm:$false
-                    Write-Output "Adding Add2Exchange Permissions"
-                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                    Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
-                    Invoke-Item "C:\A2E_Office365_permissions.txt"
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 3) {
-
-                    do {
-
-                        $User = read-host "Enter Sync Service Account (Display Name)";
-                        $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
-
-                        Write-Output "Adding Add2Exchange Permissions"
-
-                        $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-                        ForEach ($Member in $DistributionGroupName) {
-                            Add-MailboxPermission -Identity $Member.name -User $User -AccessRights ‘FullAccess’ -InheritanceType all -AutoMapping:$false
-                        }
-
-                        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                    } Until ($repeat -eq 'n')
-
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 4) {
-
-                    do {
-
-                        $User = read-host "Enter Sync Service Account (Display Name)";
-                        $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
-
-                        Write-Output "Removing Add2Exchange Permissions"
-
-                        $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-                        ForEach ($Member in $DistributionGroupName) {
-                            Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights ‘FullAccess’ -InheritanceType all -Confirm:$false
-                        }
-
-                        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                    } Until ($repeat -eq 'n')
-
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 5) {
-
-                    do {
-
-                        $User = read-host "Enter Sync Service Account (Display Name)";
-                        $Identity = read-host "Enter user Email Address"
-
-                        Write-Output "Adding Add2Exchange Permissions to Single User"
-                        Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-
-                        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                    } Until ($repeat -eq 'n')
-
-                }
-
-                if ($decision -eq 6) {
-
-                    do {
-
-                        $User = read-host "Enter Sync Service Account (Display Name)";
-                        $Identity = read-host "Enter user Email Address"
-
-                        Write-Output "Removing Add2Exchange Permissions to Single User"
-                        Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-
-                        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                    } Until ($repeat -eq 'n')
-
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-
-            }
-
-
-
-
-
-
-
-
-            if ($decision -eq 1) {
-
-
-                Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
-
-
-                Set-ADServerSettings -ViewEntireForest $true
-
-
-                Write-Output "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
-                $User = read-host "Enter Sync Service Account";
-
-
-
-                $message = 'Do you Want to remove or Add Add2Exchange Permissions'
-                $question = 'Pick one of the following from below'
-
-                $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&0 Add Exchange Perm'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1 Remove Exchange Perm'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Both-Remove/Add'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&3 Add Dist-List Perm'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&4 Remove Dist-List Perm'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&5 Add Single Perm'))
-                $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&6 Remove Single Perm'))
-
-
-
-                $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
-
-
-                if ($decision -eq 0) {
-                    Write-Host 'Adding'
-                    Write-Output "Adding Permissions to Users"
-                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-                    Write-Output "Checking............"
-                    Start-Sleep -s 2
-                    Write-Output "All Done"
-                    Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-                    Invoke-Item "C:\A2E_permissions.txt"
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                } 
-
-                if ($decision -eq 1) {
-                    Write-Host 'Removing'
-                    Write-Output "Removing Old zAdd2Exchange Permissions"
-                    Remove-ADPermission -Identity “Exchange Administrative Group (FYDIBOHF23SPDLT)” -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
-                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess –verbose -Confirm:$false
-                    Write-Output "Checking.............................."
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
-                    Write-Output "Success....."
-                    Write-Output "Checking............"
-                    Start-Sleep -s 2
-                    Write-Output "All Done"
-                    Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-                    Invoke-Item "C:\A2E_permissions.txt"
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 2) {
-                    Write-Host 'Removing'
-                    Write-Output "Removing Old zAdd2Exchange Permissions"
-                    Remove-ADPermission -Identity “Exchange Administrative Group (FYDIBOHF23SPDLT)” -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
-                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess –verbose -Confirm:$false
-                    Write-Output "Checking.............................."
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
-                    Write-Output "Success....."
-                    Write-Output "Adding Permissions to Users"
-                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-                    Write-Output "Checking............"
-                    Start-Sleep -s 2
-                    Write-Output "All Done"
-                    Write-Output "Writing Data......"
-                    Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-                    Invoke-Item "C:\A2E_permissions.txt"
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 3) {
-
-                    do {
-
-                        $User = read-host "Enter Sync Service Account (Display Name)";
-                        $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
-
-                        Write-Output "Adding Add2Exchange Permissions"
-
-                        $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-                        ForEach ($Member in $DistributionGroupName) {
-                            Add-MailboxPermission -Identity $Member.name -User $User -AccessRights ‘FullAccess’ -InheritanceType all -AutoMapping:$false
-                        }
-                        Write-Output "Writing Data......"
-                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-                        Invoke-Item "C:\A2E_permissions.txt"
-
-                        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                    } Until ($repeat -eq 'n')
-
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 4) {
-
-                    do {
-
-                        $User = read-host "Enter Sync Service Account (Display Name)";
-                        $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
-
-                        Write-Output "Removing Add2Exchange Permissions"
-
-                        $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-                        ForEach ($Member in $DistributionGroupName) {
-                            Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights ‘FullAccess’ -InheritanceType all -Confirm:$false
-                        }
-                        Write-Output "Writing Data......"
-                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-                        Invoke-Item "C:\A2E_permissions.txt"
-
-                        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                    } Until ($repeat -eq 'n')
-
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 5) {
-
-                    do {
-
-                        $User = read-host "Enter Sync Service Account (Display Name)";
-                        $Identity = read-host "Enter user Email Address"
-
-                        Write-Output "Adding Add2Exchange Permissions to Single User"
-                        Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-                        Write-Output "Writing Data......"
-                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object-Object-Object-Object-Object-Object-Object-Object-Object-Object-Object-Object-Object-Object-Object-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-                        Invoke-Item "C:\A2E_permissions.txt"
-                        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                    } Until ($repeat -eq 'n')
-
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-                if ($decision -eq 6) {
-                    do {
-
-                        $User = read-host "Enter Sync Service Account (Display Name)";
-                        $Identity = read-host "Enter user Email Address"
-
-                        Write-Output "Removing Add2Exchange Permissions to Single User"
-                        Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-                        Write-Output "Writing Data......"
-                        Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = {[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-                        Invoke-Item "C:\A2E_permissions.txt"
-
-                        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                    } Until ($repeat -eq 'n')
-
-                    Write-Output "Quitting"
-                    Get-PSSession | Remove-PSSession
-                }
-
-            }
-
-
-
-
-
-
-
-        } '3' {
-            Clear-Host
-            'You chose option #3'
-
-            $IE = new-object -com internetexplorer.application
-            $IE.navigate2("ftp.diditbetter.com")
-            $IE.visible = $true
-
-
-        } '4' {
-            Clear-Host
-            'You chose option #4'
-
-            Write-Verbose "Disabling User Access Control"
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
-                
-        } '5' {
-            Clear-Host
-            'You chose option #5'
-            $message = 'Please Pick How to Logon'
-            $question = 'Pick one of the following from below'
-
-            $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-            $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Enable Auto Login'))
-            $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Disable Auto Login'))
-
-            $decision = $Host.UI.PromptForChoice($message, $question, $choices, 0)
-
-
-
-            if ($decision -eq 0) {
-
-                do {
-                    $UserName = read-host "Enter the Username (Display Name)";
-                    $Password = read-host "Enter the Account password"
-
-
-
-                    Write-Verbose "Enabling Windows AutoLogon"
-                    New-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoAdminLogon -Value 1 | out-null
-                    New-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultUserName -Value $UserName | out-null
-                    New-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultPassword -Value $Password | out-null
-
-                    $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-                } Until ($repeat -eq 'n')
-
-                Write-Output "Quitting"
-                Get-PSSession | Remove-PSSession
-            }
-
-
-
-
-            if ($decision -eq 1) {
-
-
-                Write-Verbose "Disabling Windows AutoLogon"
-                Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name AutoAdminLogon | out-null
-                Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultUserName | out-null
-                Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultPassword | out-null
-
-                Write-Output "Quitting"
-                Get-PSSession | Remove-PSSession
-            }
-
-
-        } '6' {
-            Clear-Host
-            'You chose option #6'
-            Write-Verbose "Removing Windows 10 Apps"
-            Get-AppxPackage | Where-Object-object {$_.name –notlike "*photos"} | Where-Object-object {$_.name –notlike "*store*"} | Where-Object-Object-Object-Object-object {$_.name –notlike "*windowscalculator*"} | Remove-AppxPackage -Confirm:$False
-                
-        } '7' {
-            Clear-Host
-            'You chose option #7'
-            Write-Verbose "Checking Powershell Version"
-            Get-Host
-                
-        } '8' {
-            Clear-Host
-            'You chose option #8'
-            Write-Verbose "Adding Registry Favorits"
-            Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name Session Manager -Value Computer\\HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager
-            Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name EnableLUA -Value Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System
-            Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name .NetFramework -Value Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\.NETFramework
-            Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name OpenDoor Software -Value Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\OpenDoor Software®
-            Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name PendingFileRename -Value Computer\\HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Control\\Session Manager
-            Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name AutoDiscover -Value HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Office\\ClickToRun\\REGISTRY\\MACHINE\\Software\\Wow6432Node\\Microsoft\\Office\\16.0\\Outlook\\AutoDiscover
-            Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name Office -Value Computer\\HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System
-            Get-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" | New-ItemProperty -Name EnableLUA -Value Computer\\HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem
-
-                
-        } '9' {
-            Clear-Host
-            'You chose option #9'
-            write-verbose "Exporting License and Profile 1"
-            REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" C:\zlibrary\License_Info.Reg
-            REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" C:\zlibrary\Profile_1.Reg
-
-
-        } '10' {
-            Clear-Host
-            'You chose option #10'
-            write-verbose "Remove Outlook Add-Ins"
-            Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SOCIALCONNECTOR.DLL*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALCONNECTOR.DLL', 'SOCIALCONNECTORbckup.dll' }
-            Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SOCIALPROVIDER.DLL*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALPROVIDER.DLL', 'SOCIALPROVIDERbckup.dll' }
-            Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16\ADDINS" "*ColleagueImport.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'ColleagueImport.dll', 'ColleagueImportbckup.dll' }
-
-        } '11' {
-            Clear-Host
-            'You chose option #11'
-            write-verbose "Re-Enable Outlook Add-Ins"
-
-           
-        } 'q' {
-            return
-        }
-    }
-    pause
-}
-until ($input -eq 'q')
+#Execution Policy
+
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+
+
+<#
+.NAME
+    Add2Exchange ToolBox
+.SYNOPSIS
+    Add2Exchange Tool Box
+.DESCRIPTION
+    Tools to install and Administer Add2Exchange
+#>
+
+Add-Type -AssemblyName System.Windows.Forms
+[System.Windows.Forms.Application]::EnableVisualStyles()
+
+#region begin GUI{ 
+
+$A2ETools                        = New-Object system.Windows.Forms.Form
+$A2ETools.ClientSize             = '710,598'
+$A2ETools.text                   = "Add2Exchange Toolbox"
+$A2ETools.BackColor              = "#ffffff"
+$A2ETools.TopMost                = $false
+
+$ExchangePermissions             = New-Object system.Windows.Forms.Panel
+$ExchangePermissions.height      = 205
+$ExchangePermissions.width       = 310
+$ExchangePermissions.location    = New-Object System.Drawing.Point(19,50)
+
+$Add2Exchange                    = New-Object system.Windows.Forms.Panel
+$Add2Exchange.height             = 205
+$Add2Exchange.width              = 310
+$Add2Exchange.location           = New-Object System.Drawing.Point(380,50)
+
+$WindowsTasks                    = New-Object system.Windows.Forms.Panel
+$WindowsTasks.height             = 280
+$WindowsTasks.width              = 310
+$WindowsTasks.location           = New-Object System.Drawing.Point(19,299)
+
+$O365onprem                      = New-Object system.Windows.Forms.Button
+$O365onprem.text                 = "Office 365 & On-Premise Permissions"
+$O365onprem.width                = 250
+$O365onprem.height               = 30
+$O365onprem.location             = New-Object System.Drawing.Point(10,50)
+$O365onprem.Font                 = 'Microsoft Sans Serif,10'
+
+$UAC                             = New-Object system.Windows.Forms.Button
+$UAC.text                        = "Disable UAC"
+$UAC.width                       = 175
+$UAC.height                      = 25
+$UAC.location                    = New-Object System.Drawing.Point(15,20)
+$UAC.Font                        = 'Microsoft Sans Serif,10'
+
+$Favorites                       = New-Object system.Windows.Forms.Button
+$Favorites.text                  = "Add Add2Exchange Favorites"
+$Favorites.width                 = 220
+$Favorites.height                = 30
+$Favorites.location              = New-Object System.Drawing.Point(10,10)
+$Favorites.Font                  = 'Microsoft Sans Serif,10'
+
+$Add2Outlook                     = New-Object system.Windows.Forms.Button
+$Add2Outlook.text                = "A2O Granular Permissions"
+$Add2Outlook.width               = 220
+$Add2Outlook.height              = 30
+$Add2Outlook.location            = New-Object System.Drawing.Point(10,50)
+$Add2Outlook.Font                = 'Microsoft Sans Serif,10'
+
+$AutoLogin                       = New-Object system.Windows.Forms.Button
+$AutoLogin.text                  = "Setup Auto Login"
+$AutoLogin.width                 = 175
+$AutoLogin.height                = 25
+$AutoLogin.location              = New-Object System.Drawing.Point(15,60)
+$AutoLogin.Font                  = 'Microsoft Sans Serif,10'
+
+$A2EExport                       = New-Object system.Windows.Forms.Button
+$A2EExport.text                  = "Export License and Profile 1 Info"
+$A2EExport.width                 = 220
+$A2EExport.height                = 30
+$A2EExport.location              = New-Object System.Drawing.Point(10,90)
+$A2EExport.Font                  = 'Microsoft Sans Serif,10'
+
+$GPOResult                       = New-Object system.Windows.Forms.Button
+$GPOResult.text                  = "Get Group Policy Results"
+$GPOResult.width                 = 175
+$GPOResult.height                = 25
+$GPOResult.location              = New-Object System.Drawing.Point(15,100)
+$GPOResult.Font                  = 'Microsoft Sans Serif,10'
+
+$ShellUpdate                     = New-Object system.Windows.Forms.Button
+$ShellUpdate.text                = "Get MS Online Azure AD & Update"
+$ShellUpdate.width               = 250
+$ShellUpdate.height              = 30
+$ShellUpdate.location            = New-Object System.Drawing.Point(10,10)
+$ShellUpdate.Font                = 'Microsoft Sans Serif,10'
+
+$OutlookAddinDisable             = New-Object system.Windows.Forms.Button
+$OutlookAddinDisable.text        = "Disable Outlook Add-ins"
+$OutlookAddinDisable.width       = 175
+$OutlookAddinDisable.height      = 25
+$OutlookAddinDisable.location    = New-Object System.Drawing.Point(15,140)
+$OutlookAddinDisable.Font        = 'Microsoft Sans Serif,10'
+
+$OutlookAddinsEnable             = New-Object system.Windows.Forms.Button
+$OutlookAddinsEnable.text        = "Enable Outlook Add-ins"
+$OutlookAddinsEnable.width       = 175
+$OutlookAddinsEnable.height      = 25
+$OutlookAddinsEnable.location    = New-Object System.Drawing.Point(16,180)
+$OutlookAddinsEnable.Font        = 'Microsoft Sans Serif,10'
+
+$Windows10Virgin                 = New-Object system.Windows.Forms.Button
+$Windows10Virgin.text            = "Virginize Windows 10"
+$Windows10Virgin.width           = 175
+$Windows10Virgin.height          = 25
+$Windows10Virgin.location        = New-Object System.Drawing.Point(15,220)
+$Windows10Virgin.Font            = 'Microsoft Sans Serif,10'
+
+$ExchangeSideLabel               = New-Object system.Windows.Forms.Label
+$ExchangeSideLabel.text          = "Exchange Services"
+$ExchangeSideLabel.AutoSize      = $true
+$ExchangeSideLabel.width         = 25
+$ExchangeSideLabel.height        = 10
+$ExchangeSideLabel.location      = New-Object System.Drawing.Point(18,25)
+$ExchangeSideLabel.Font          = 'Microsoft Sans Serif,10,style=Bold'
+
+$A2ELable                        = New-Object system.Windows.Forms.Label
+$A2ELable.text                   = "Add2Exchange Services"
+$A2ELable.AutoSize               = $true
+$A2ELable.width                  = 25
+$A2ELable.height                 = 10
+$A2ELable.location               = New-Object System.Drawing.Point(380,25)
+$A2ELable.Font                   = 'Microsoft Sans Serif,10,style=Bold'
+
+$WindowsServices                 = New-Object system.Windows.Forms.Label
+$WindowsServices.text            = "Windows Services"
+$WindowsServices.AutoSize        = $true
+$WindowsServices.width           = 25
+$WindowsServices.height          = 10
+$WindowsServices.location        = New-Object System.Drawing.Point(19,275)
+$WindowsServices.Font            = 'Microsoft Sans Serif,10,style=Bold'
+
+$Panel1                          = New-Object system.Windows.Forms.Panel
+$Panel1.height                   = 280
+$Panel1.width                    = 310
+$Panel1.location                 = New-Object System.Drawing.Point(380,298)
+
+$A2ESQL                          = New-Object system.Windows.Forms.Label
+$A2ESQL.text                     = "Add2Exchange SQL"
+$A2ESQL.AutoSize                 = $true
+$A2ESQL.width                    = 25
+$A2ESQL.height                   = 10
+$A2ESQL.location                 = New-Object System.Drawing.Point(380,275)
+$A2ESQL.Font                     = 'Microsoft Sans Serif,10,style=Bold'
+
+$SQLCommands                     = New-Object system.Windows.Forms.Button
+$SQLCommands.text                = "SQL Coming soon!"
+$SQLCommands.width               = 230
+$SQLCommands.height              = 163
+$SQLCommands.location            = New-Object System.Drawing.Point(42,50)
+$SQLCommands.Font                = 'Microsoft Sans Serif,10'
+
+$A2Eupdates                      = New-Object system.Windows.Forms.Button
+$A2Eupdates.text                 = "Update Add2Exchange"
+$A2Eupdates.width                = 220
+$A2Eupdates.height               = 30
+$A2Eupdates.location             = New-Object System.Drawing.Point(10,130)
+$A2Eupdates.Font                 = 'Microsoft Sans Serif,10'
+
+$A2ETools.controls.AddRange(@($ExchangePermissions,$Add2Exchange,$WindowsTasks,$ExchangeSideLabel,$A2ELable,$WindowsServices,$Panel1,$A2ESQL))
+$ExchangePermissions.controls.AddRange(@($O365onprem,$ShellUpdate))
+$WindowsTasks.controls.AddRange(@($UAC,$AutoLogin,$GPOResult,$OutlookAddinDisable,$OutlookAddinsEnable,$Windows10Virgin))
+$Add2Exchange.controls.AddRange(@($Favorites,$Add2Outlook,$A2EExport,$A2Eupdates))
+$Panel1.controls.AddRange(@($SQLCommands))
+
+#region gui events {
+$O365onprem.Add_Click({  })
+$ShellUpdate.Add_Click({  })
+$Favorites.Add_Click({  })
+$Add2Outlook.Add_Click({  })
+$A2EExport.Add_Click({  })
+$UAC.Add_Click({  })
+$AutoLogin.Add_Click({  })
+$GPOResult.Add_Click({  })
+$OutlookAddinDisable.Add_Click({  })
+$OutlookAddinsEnable.Add_Click({  })
+$Windows10Virgin.Add_Click({  })
+#endregion events }
+
+#endregion GUI }
+
+
+# Logic Code Here
+
+[void]$A2ETools.ShowDialog()
+
+
+
+
+Write-Output "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
+
+# End Scripting
