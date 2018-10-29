@@ -13,7 +13,7 @@ Add-Type -AssemblyName System.Windows.Forms
 #region begin GUI{ 
 
 $A2EMenu                         = New-Object system.Windows.Forms.Form
-$A2EMenu.ClientSize              = '285,525'
+$A2EMenu.ClientSize              = '285,546'
 $A2EMenu.text                    = "Add2Exchange Setup"
 $A2EMenu.TopMost                 = $false
 
@@ -94,14 +94,21 @@ $ExportLicense_Profile1.height   = 30
 $ExportLicense_Profile1.location  = New-Object System.Drawing.Point(5,380)
 $ExportLicense_Profile1.Font     = 'Microsoft Sans Serif,10,style=Bold'
 
+$redemption                      = New-Object system.Windows.Forms.Button
+$redemption.text                 = "Legacy Redemption Un-Register"
+$redemption.width                = 270
+$redemption.height               = 30
+$redemption.location             = New-Object System.Drawing.Point(5,460)
+$redemption.Font                 = 'Microsoft Sans Serif,10,style=Bold'
+
 $ThatWasEasy                     = New-Object system.Windows.Forms.Button
-$ThatWasEasy.text                = "Easy 1 Click Setup"
+$ThatWasEasy.text                = "Make it Easy"
 $ThatWasEasy.width               = 270
 $ThatWasEasy.height              = 30
-$ThatWasEasy.location            = New-Object System.Drawing.Point(5,460)
+$ThatWasEasy.location            = New-Object System.Drawing.Point(5,500)
 $ThatWasEasy.Font                = 'Microsoft Sans Serif,16,style=Bold'
 
-$A2EMenu.controls.AddRange(@($O365_onprem_permissions,$autologon,$Windows10Virgin,$Add2ExchangeUpdate,$PowershellUpdate,$GPResults,$RegistryFavorites,$DisableUAC,$OutlookAddinsdisable,$outlookAddinsEnable,$ExportLicense_Profile1,$ThatWasEasy))
+$A2EMenu.controls.AddRange(@($O365_onprem_permissions,$autologon,$Windows10Virgin,$Add2ExchangeUpdate,$PowershellUpdate,$GPResults,$RegistryFavorites,$DisableUAC,$OutlookAddinsdisable,$outlookAddinsEnable,$ExportLicense_Profile1,$ThatWasEasy,$redemption))
 
 #region gui events {
 $O365_onprem_permissions.Add_Click({PermissionsOnPremOrO365Combined})
@@ -115,6 +122,7 @@ $OutlookAddinsdisable.Add_Click({Remove_Outlook_Add_ins})
 $outlookAddinsEnable.Add_Click({ReEnable_Outlook_Add_ins})
 $ExportLicense_Profile1.Add_Click({Export_License_and_Profile1})
 $Windows10Virgin.Add_Click({VirginizeWindows10})
+$redemption.Add_Click({Redemption})
 $ThatWasEasy.Add_Click({1ClickSetup})
 #endregion events }
 
@@ -180,11 +188,16 @@ Function VirginizeWindows10 {
 
 }
 
+
+Function Redemption {
+
+    
+}
+
 Function 1ClickSetup {
 
 
 }
-
 
 
 [void]$A2EMenu.ShowDialog()
