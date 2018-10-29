@@ -12,35 +12,6 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 Write-Host "Disabling UAC In the Registry"
     Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
 
-# Setting Time Zone
-Write-Host "Setting the Time Zone"
-Set-TimeZone -Name "Central Standard Time"
-    
-# Rename Computer
-
-Write-Host "Renaming Computer"
-$Compname = read-host "Enter the new name of this Computer"
-Rename-Computer -NewName "$CompName"
-
-
-# Rename HDD's
-Write-Host "Renaming HDD's"
-Get-Volume -DriveLetter C | Set-Volume -NewFileSystemLabel "MAIN OS" -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
-
-If ($ProcessError) {
-
-    write-warning -message "Something went wrong renaming C";
-
-} 
-
-Get-Volume -DriveLetter D | Set-Volume -NewFileSystemLabel "DATA" -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
-
-If ($ProcessError) {
-
-    write-warning -message "Something went wrong renaming D! Maybe Does not Exist?";
-
-} 
-
 
 # File Explorer Options "Views"
 
@@ -56,8 +27,6 @@ Write-Host "Changing File Explorer Views"
     Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name HideMergeConflicts -Value 0 | out-null
     Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState' -Name FullPath -Value 1 | out-null
     Stop-Process -processname explorer
-
-
 
 
 # Disable Drive indexing
@@ -253,11 +222,6 @@ Get-AppxPackage "XINGAG.XING" | Remove-AppxPackage
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Name "AllowCortana" -Type DWord -Value 0
 
 
-# Setup Netowrk to Private and File Sharing
-
-	Write-Host "Setting current network profile to private..."
-    Set-NetConnectionProfile -NetworkCategory Private
-
 
 # Disable Windows Defender Cloud Submission
 
@@ -382,10 +346,6 @@ If ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environ
     $data = (Get-ItemProperty -Path $key.PSPath -Name "Data").Data[0..25] + ([byte[]](202,50,0,226,44,1,1,0,0))
     Set-ItemProperty -Path $key.PSPath -Name "Data" -Type Binary -Value $data
 }
-
-Write-Host " Unpin All Taskbar Items"
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](255))
-Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
 
 # Setting Up the Start Menu
 

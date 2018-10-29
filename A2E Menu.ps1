@@ -95,7 +95,7 @@ $ExportLicense_Profile1.location  = New-Object System.Drawing.Point(5,380)
 $ExportLicense_Profile1.Font     = 'Microsoft Sans Serif,10,style=Bold'
 
 $ThatWasEasy                     = New-Object system.Windows.Forms.Button
-$ThatWasEasy.text                = "Make it Easy"
+$ThatWasEasy.text                = "Easy 1 Click Setup"
 $ThatWasEasy.width               = 270
 $ThatWasEasy.height              = 30
 $ThatWasEasy.location            = New-Object System.Drawing.Point(5,460)
@@ -182,7 +182,7 @@ Function VirginizeWindows10 {
 
 Function 1ClickSetup {
 
-    
+
 }
 
 
