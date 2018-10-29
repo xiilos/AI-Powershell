@@ -17,7 +17,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
 if ($decision -eq 2) {
-	Write-Output "Quitting"
+	Write-Host "Quitting"
 	Get-PSSession | Remove-PSSession
 	Exit
 }
@@ -43,7 +43,7 @@ $Password = read-host "Enter the Account password"
 
 } Until ($repeat -eq 'n')
 
-Write-Output "Quitting"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
@@ -62,7 +62,7 @@ if ($decision -eq 1) {
 	Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultUserName | out-null
 	Remove-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name DefaultPassword | out-null
 
-Write-Output "Quitting"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
