@@ -131,7 +131,7 @@ Reg Add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD /V 
 
 
 Write-Host "Removing Windows Apps"
-Get-AppxPackage -AllUsers | where-object {$_.name ùnotlike "*windows.photos"} | where-object {$_.name ùnotlike "*store*"} | where-object {$_.name ùnotlike "*calculator*"} | where-object {$_.name ùnotlike "*sticky*"} | where-object {$_.name ùnotlike "*soundrecorder*"} | where-object {$_.name ùnotlike "*mspaint*"} | where-object {$_.name ùnotlike "*screensketch*"} | Remove-AppxPackage -Confirm:$False -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
+Get-AppxPackage -AllUsers | where-object {$_.name -notlike "*windows.photos"} | where-object {$_.name -notlike "*store*"} | where-object {$_.name -notlike "*calculator*"} | where-object {$_.name -notlike "*sticky*"} | where-object {$_.name -notlike "*soundrecorder*"} | where-object {$_.name -notlike "*mspaint*"} | where-object {$_.name -notlike "*screensketch*"} | Remove-AppxPackage -Confirm:$False -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
 
 If ($ProcessError) {
 
