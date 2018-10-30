@@ -130,6 +130,7 @@ $ThatWasEasy.Add_Click({1ClickSetup})
 
 
 #Functions start below here
+
 Function PermissionsOnPremOrO365Combined {
     $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 & $setup\PermissionsOnPremOrO365Combined.ps1
@@ -187,7 +188,7 @@ Function ReEnable_Outlook_Add_ins {
 
 Function Export_License_and_Profile1 {
     $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\PermissionsOnPremOrO365Combined.ps1
+    & $setup\Export_License_and_Profile1.ps1
 
 }
 
