@@ -131,7 +131,7 @@ Reg Add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD /V 
 
 
 Write-Host "Removing Windows Apps"
-Get-AppxPackage -AllUsers | where-object {$_.name ñnotlike "*windows.photos"} | where-object {$_.name ñnotlike "*store*"} | where-object {$_.name ñnotlike "*calculator*"} | where-object {$_.name ñnotlike "*sticky*"} | where-object {$_.name ñnotlike "*soundrecorder*"} | where-object {$_.name ñnotlike "*mspaint*"} | where-object {$_.name ñnotlike "*screensketch*"} | Remove-AppxPackage -Confirm:$False -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
+Get-AppxPackage -AllUsers | where-object {$_.name ùnotlike "*windows.photos"} | where-object {$_.name ùnotlike "*store*"} | where-object {$_.name ùnotlike "*calculator*"} | where-object {$_.name ùnotlike "*sticky*"} | where-object {$_.name ùnotlike "*soundrecorder*"} | where-object {$_.name ùnotlike "*mspaint*"} | where-object {$_.name ùnotlike "*screensketch*"} | Remove-AppxPackage -Confirm:$False -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
 
 If ($ProcessError) {
 
@@ -334,7 +334,7 @@ If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanc
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWord -Value 0
 
 
-Write-Host " Unpin All Start Menu Icons"
+Write-Host "Unpin All Start Menu Icons"
 If ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environment]::OSVersion.Version.Build -le 16299) {
     Get-ChildItem -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount" -Include "*.group" -Recurse | ForEach-Object {
         $data = (Get-ItemProperty -Path "$($_.PsPath)\Current" -Name "Data").Data -Join ","
@@ -382,7 +382,12 @@ $StartLayoutStr = @"
 
 #------End XML Editing------
 
-Write-Output "Quitting"
+
+Write-Host "Done"
+$wshell = New-Object -ComObject Wscript.Shell
+
+$wshell.Popup("Please Reboot",0,"Done",0x1)
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 

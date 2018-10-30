@@ -16,6 +16,9 @@ Write-Host "Disabling UAC In the Registry"
     Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
 
 Write-Host "Done"
+$wshell = New-Object -ComObject Wscript.Shell
+
+$wshell.Popup("Please Reboot",0,"Done",0x1)
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
