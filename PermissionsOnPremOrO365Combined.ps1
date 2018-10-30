@@ -1,4 +1,4 @@
-Ôªøif (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
   # Relaunch as an elevated process:
 
@@ -36,10 +36,10 @@ Import-Module MSOnline
 
 Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic ‚ÄìAllowRedirection
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic ñAllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService ‚ÄìCredential $Cred -ErrorAction "Inquire"
+Connect-MsolService ñCredential $Cred -ErrorAction "Inquire"
 
 
 $message  = 'Please Pick what you want to do'
@@ -66,7 +66,7 @@ if ($decision -eq 0) {
 Write-Host "Adding Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
 Invoke-Item "C:\A2E_Office365_permissions.txt"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
@@ -78,9 +78,9 @@ Exit
 if ($decision -eq 1) {
 
 Write-Host "Removing Add2Exchange Permissions"
-Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess ‚Äìverbose -confirm:$false
+Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess ñverbose -confirm:$false
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
 Invoke-Item "C:\A2E_Office365_permissions.txt"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
@@ -92,11 +92,11 @@ Exit
 if ($decision -eq 2) {
 
 Write-Host "Removing Add2Exchange Permissions"
-Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess ‚Äìverbose -confirm:$false
+Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess ñverbose -confirm:$false
 Write-Host "Adding Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
 Invoke-Item "C:\A2E_Office365_permissions.txt"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
@@ -116,7 +116,7 @@ Write-Host "Adding Add2Exchange Permissions"
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
-Add-MailboxPermission -Identity $Member.name -User $User -AccessRights ‚ÄòFullAccess‚Äô -InheritanceType all -AutoMapping:$false
+Add-MailboxPermission -Identity $Member.name -User $User -AccessRights ëFullAccessí -InheritanceType all -AutoMapping:$false
 }
 
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
@@ -141,7 +141,7 @@ Write-Host "Removing Add2Exchange Permissions"
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
-Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights ‚ÄòFullAccess‚Äô -InheritanceType all -Confirm:$false
+Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights ëFullAccessí -InheritanceType all -Confirm:$false
 }
 
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
@@ -244,7 +244,7 @@ Write-Host "Checking............"
 Start-Sleep -s 2
 Write-Host "All Done"
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
@@ -256,9 +256,9 @@ Exit
 if ($decision -eq 1) {
   Write-Host 'Removing'
   Write-Host "Removing Old zAdd2Exchange Permissions"
-Remove-ADPermission -Identity ‚ÄúExchange Administrative Group (FYDIBOHF23SPDLT)‚Äù -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
+Remove-ADPermission -Identity ìExchange Administrative Group (FYDIBOHF23SPDLT)î -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
-Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess ‚Äìverbose -Confirm:$false
+Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess ñverbose -Confirm:$false
 Write-Host "Checking.............................."
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
 Write-Host "Success....."
@@ -266,7 +266,7 @@ Write-Host "Checking............"
 Start-Sleep -s 2
 Write-Host "All Done"
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
@@ -278,9 +278,9 @@ Exit
 if ($decision -eq 2) {
     Write-Host 'Removing'
     Write-Host "Removing Old zAdd2Exchange Permissions"
-Remove-ADPermission -Identity ‚ÄúExchange Administrative Group (FYDIBOHF23SPDLT)‚Äù -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
+Remove-ADPermission -Identity ìExchange Administrative Group (FYDIBOHF23SPDLT)î -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
-Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess ‚Äìverbose -Confirm:$false
+Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess ñverbose -Confirm:$false
 Write-Host "Checking.............................."
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
 Write-Host "Success....."
@@ -290,7 +290,7 @@ Write-Host "Checking............"
 Start-Sleep -s 2
 Write-Host "All Done"
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
@@ -310,10 +310,10 @@ Write-Host "Adding Add2Exchange Permissions"
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
-Add-MailboxPermission -Identity $Member.name -User $User -AccessRights ‚ÄòFullAccess‚Äô -InheritanceType all -AutoMapping:$false
+Add-MailboxPermission -Identity $Member.name -User $User -AccessRights ëFullAccessí -InheritanceType all -AutoMapping:$false
 }
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
@@ -338,10 +338,10 @@ Write-Host "Removing Add2Exchange Permissions"
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
-Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights ‚ÄòFullAccess‚Äô -InheritanceType all -Confirm:$false
+Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights ëFullAccessí -InheritanceType all -Confirm:$false
 }
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
@@ -364,7 +364,7 @@ $Identity = read-host "Enter user Email Address";
 Write-Host "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
@@ -385,7 +385,7 @@ $Identity = read-host "Enter user Email Address"
 Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
 
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'

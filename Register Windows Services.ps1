@@ -10,7 +10,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 
-Cd ÔøΩC:\Program Files (x86)\OpenDoor SoftwareÔøΩ\Add2Exchange\Setup InitializeÔøΩ
+Cd ùC:\Program Files (x86)\OpenDoor Softwareù\Add2Exchange\Setup Initializeù
 
 C:\Windows\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe "Windows Services.dll" /tlb:"Windows Services.tlb" /unregister
 C:\Windows\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe "Windows Services.dll" /tlb:"Windows Services.tlb" /codebase

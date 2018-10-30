@@ -1,4 +1,4 @@
-Ôªøif (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
   # Relaunch as an elevated process:
   Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -30,10 +30,10 @@ Import-Module MSOnline
 
 Write-Output "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic ‚ÄìAllowRedirection
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic ñAllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService ‚ÄìCredential $Cred -ErrorAction "Inquire"
+Connect-MsolService ñCredential $Cred -ErrorAction "Inquire"
 
 
 $message  = 'Please Pick what you want to do'
@@ -138,7 +138,7 @@ Add-MailboxPermission -Identity $Mailbox -User $User  -AccessRights 'readpermiss
 Add-MailboxFolderPermission -Identity $Identity -User $User -AccessRights $AccessRights
 
 Write-Output "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2O_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2O_permissions.txt
 Invoke-Item "C:\A2O_permissions.txt"
   $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
@@ -159,7 +159,7 @@ $Identity = read-host "Enter user Email Address"
 Write-Output "Removing Add2Outlook Granular Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
 Write-Output "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ‚ÄúNT AUTHORITY\SELF‚Äù)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2O_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like ìNT AUTHORITY\SELFî)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2O_permissions.txt
 Invoke-Item "C:\A2O_permissions.txt"
   $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 

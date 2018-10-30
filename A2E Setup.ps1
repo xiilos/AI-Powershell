@@ -1,4 +1,4 @@
-﻿<#
+<#
 .NAME
     A2E Menu
 .SYNOPSIS
