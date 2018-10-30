@@ -34,10 +34,10 @@ Import-Module MSOnline
 
 Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic –AllowRedirection
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService –Credential $Cred -ErrorAction "Inquire"
+Connect-MsolService -Credential $Cred -ErrorAction "Inquire"
 
 
 $message  = 'Please Pick what you want to do'
@@ -138,7 +138,7 @@ $Identity = read-host "Enter user Email Address"
 Write-Host "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
   $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
@@ -159,7 +159,7 @@ $Identity = read-host "Enter user Email Address"
 Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
 Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
+Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
   $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 

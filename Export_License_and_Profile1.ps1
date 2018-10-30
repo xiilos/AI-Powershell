@@ -10,8 +10,8 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 
-REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" C:\zlibrary\License_Info.Reg
-REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" C:\zlibrary\Profile_1.Reg
+REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor SoftwareÂ®\Add2Exchange\LicenseRegistryInfo" C:\zlibrary\License_Info.Reg
+REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor SoftwareÂ®\Add2Exchange\Profile 1" C:\zlibrary\Profile_1.Reg
 
 Write-Host "Done"
 Write-Host "Quitting"
