@@ -10,17 +10,17 @@
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 
-Write-Output "Unregistering Old Redemption"
+Write-Host "Unregistering Old Redemption"
 regsvr32 -u "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Console\Redemption.dll"
 Start-Sleep -s 1
-Write-Output "Removing old Redemption"
+Write-Host "Removing old Redemption"
 Remove-Item –path "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Console\Redemption.dll" –recurse
 Start-Sleep -s 1
-Write-Output "Registering new Redemption"
+Write-Host "Registering new Redemption"
 regsvr32 "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Service\Redemption.dll"
 
-
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 

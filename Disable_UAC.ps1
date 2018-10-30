@@ -15,8 +15,8 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 Write-Host "Disabling UAC In the Registry"
     Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
 
-
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 

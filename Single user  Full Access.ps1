@@ -19,7 +19,7 @@ $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 # Option 2: Quit
 
 if ($decision -eq 2) {
-  Write-Output "Quitting"
+  Write-Host "Quitting"
   Get-PSSession | Remove-PSSession
   Exit
 }
@@ -32,7 +32,7 @@ if ($decision -eq 0) {
 
 Import-Module MSOnline
 
-Write-Output "Sign in to Office365 as Tenant Admin"
+Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic –AllowRedirection
 Import-PSSession $Session
@@ -60,7 +60,7 @@ do {
 $User = read-host "Enter Sync Service Account (Display Name)";
 $Identity = read-host "Enter user Email Address"
 
-Write-Output "Adding Add2Exchange Permissions to Single User"
+Write-Host "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 
   $repeat = Read-Host 'Do you want to run it again? [Y/N]'
@@ -68,7 +68,7 @@ Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess'
 } Until ($repeat -eq 'n')
 
 
-Write-Output "Quitting"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
@@ -81,13 +81,13 @@ do {
 $User = read-host "Enter Sync Service Account (Display Name)";
 $Identity = read-host "Enter user Email Address"
 
-Write-Output "Removing Add2Exchange Permissions to Single User"
+Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
   $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 } Until ($repeat -eq 'n')
 
-Write-Output "Quitting"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
@@ -95,7 +95,7 @@ Exit
 # Option 2: Office 365-Quit
 
 if ($decision -eq 2) {
-  Write-Output "Quitting"
+  Write-Host "Quitting"
   Get-PSSession | Remove-PSSession
   Exit
 }
@@ -112,7 +112,7 @@ Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 
 Set-ADServerSettings -ViewEntireForest $true
 
-Write-Output "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
+Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
 
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
@@ -135,16 +135,16 @@ do {
 $User = read-host "Enter Sync Service Account (Display Name)";
 $Identity = read-host "Enter user Email Address"
 
-Write-Output "Adding Add2Exchange Permissions to Single User"
+Write-Host "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-Write-Output "Writing Data......"
+Write-Host "Writing Data......"
 Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
   $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 } Until ($repeat -eq 'n')
 
-Write-Output "Quitting"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
@@ -156,16 +156,16 @@ do {
 $User = read-host "Enter Sync Service Account (Display Name)";
 $Identity = read-host "Enter user Email Address"
 
-Write-Output "Removing Add2Exchange Permissions to Single User"
+Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-Write-Output "Writing Data......"
+Write-Host "Writing Data......"
 Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like “NT AUTHORITY\SELF”)} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
   $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 } Until ($repeat -eq 'n')
 
-Write-Output "Quitting"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
@@ -173,7 +173,7 @@ Exit
 #Option 2: Exchange on Premise-Quit
 
 if ($decision -eq 2) {
-  Write-Output "Quitting"
+  Write-Host "Quitting"
   Get-PSSession | Remove-PSSession
   Exit
 }

@@ -18,8 +18,8 @@ Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16\ADDIN
 
 
 
-
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 

@@ -17,6 +17,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
 if ($decision -eq 2) {
+	Write-Host "Done"
 	Write-Host "Quitting"
 	Get-PSSession | Remove-PSSession
 	Exit
@@ -43,6 +44,7 @@ $Password = read-host "Enter the Account password"
 
 } Until ($repeat -eq 'n')
 
+Write-Host "Done"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit

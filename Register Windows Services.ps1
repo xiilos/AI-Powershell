@@ -17,8 +17,8 @@ C:\Windows\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe "Windows Services.dll" 
 
 
 
-
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 

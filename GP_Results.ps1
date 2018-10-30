@@ -26,6 +26,7 @@ $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 } Until ($repeat -eq 'n')
 
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit

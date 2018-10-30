@@ -14,8 +14,8 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 
 
-
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 

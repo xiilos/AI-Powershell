@@ -16,8 +16,8 @@ $IE = new-object -com internetexplorer.application
 
 
 
-
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 

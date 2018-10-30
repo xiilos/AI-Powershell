@@ -15,7 +15,8 @@ Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SO
 Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SOCIALPROVIDER.DLL*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALPROVIDER.DLL','SOCIALPROVIDERbckup.dll' }
 Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16\ADDINS" "*ColleagueImport.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'ColleagueImport.dll','ColleagueImportbckup.dll' }
 
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 

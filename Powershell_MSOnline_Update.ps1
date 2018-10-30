@@ -23,7 +23,7 @@ $start_time = Get-Date
 
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
 
-Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
+Write-Host "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
 
 }
 $confirmation = Read-Host "Would you like me to Install MSonline Module? [Y/N]"
@@ -34,7 +34,8 @@ Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
 
 }
 
-Write-Output "Quitting"
+Write-Host "Done"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 
