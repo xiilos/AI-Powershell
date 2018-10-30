@@ -338,7 +338,7 @@ Write-Host "Removing Add2Exchange Permissions"
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
-Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights �FullAccess� -InheritanceType all -Confirm:$false
+Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
 }
 Write-Host "Writing Data......"
 Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
