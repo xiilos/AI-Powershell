@@ -25,10 +25,10 @@ Switch ($svc.status) {
         $WaitForIt = 'Running'
         $svc.Start()}
     'Running' {
-        Write-host "Stopping $SvcName..."
-        $Verb = "stop"
-        $WaitForIt = 'Stopped'
-        $svc.Stop()}
+        Write-host "Restarting $SvcName..."
+        $Verb = "Restart"
+        $WaitForIt = 'Restarting'
+        Restart-Service $SvcName -Force}
     Default {
         Write-host "$SvcName is $($svc.status).  Taking no action."}
 }
