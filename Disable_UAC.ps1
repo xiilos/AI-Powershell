@@ -7,7 +7,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 #Execution Policy
 
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+#Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 
 # Disable UAC

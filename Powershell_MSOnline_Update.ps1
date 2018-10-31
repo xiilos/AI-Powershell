@@ -5,7 +5,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 # Execution Policy
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+#Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 Write-Host "Chekcing version of powershell"
 $PSVersionTable.PSVersion

@@ -5,6 +5,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
+#Execution Policy
+
+#Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 $message  = 'Please Pick How to Logon'
 $question = 'Pick one of the following from below'
