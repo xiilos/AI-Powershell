@@ -4,7 +4,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
   exit
 }
+
 # Execution Policy
+
 #Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 Write-Host "Chekcing version of powershell"
@@ -17,7 +19,7 @@ if ($confirmation -eq 'y') {
 Write-Host "Updating Powershell"
 Write-Host "Downloading the latest powershell Update"
 $url = "https://download.microsoft.com/download/6/F/5/6F5FF66C-6775-42B0-86C4-47D41F2DA187/W2K12-KB3191565-x64.msu"
-$output = "$PSScriptRoot\Powershell_5.msu"
+$output = "$PSScriptRoot\W2K12-KB3191565-x64.msu"
 $start_time = Get-Date
 
 
