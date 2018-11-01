@@ -5,10 +5,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
-#Execution Policy
-
-#Set-ExecutionPolicy -ExecutionPolicy Unrestricted
-
 
 Set-Location “C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup Initialize”
 

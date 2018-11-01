@@ -5,10 +5,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
-#Execution Policy
-
-#Set-ExecutionPolicy -ExecutionPolicy Unrestricted
-
 
 Write-Host "Updating Add2Exchange"
 Write-Host "Downloading the latest Add2Exchange"

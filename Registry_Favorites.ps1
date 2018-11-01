@@ -5,9 +5,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
-#Execution Policy
-
-#Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
 # Registry Favorites
 Write-Host "Creating Registry Favorites"

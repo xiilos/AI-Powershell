@@ -5,10 +5,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
-#Execution Policy
-
-#Set-ExecutionPolicy -ExecutionPolicy Unrestricted
-
 # Re-Enable Outlook Add-ins
 
 Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SOCIALCONNECTORbckup.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALCONNECTORbckup.dll','SOCIALCONNECTOR.dll' }
