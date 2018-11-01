@@ -44,7 +44,7 @@ param(
     [switch] $AllowRestart
 )
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'stop'
 
 function New-TerminatingErrorRecord
 {
@@ -99,7 +99,8 @@ function Test-Compatibility
 
     $release = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Release -ErrorAction SilentlyContinue -ErrorVariable evRelease).release
     $installed = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Install -ErrorAction SilentlyContinue -ErrorVariable evInstalled).install
-
+    
+    
     if($evRelease -or $evInstalled)
     {
         Write-Warning "WMF 5.1 requires .Net 4.5."
