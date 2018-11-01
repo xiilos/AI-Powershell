@@ -31,6 +31,10 @@ Exit
 
 if ($decision -eq 0) {
 
+Write-Host "Adding Azure MSonline module"
+Set-PSRepository -Name psgallery -InstallationPolicy Trusted
+Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
+
 Import-Module MSOnline
 
 Write-Host "Sign in to Office365 as Tenant Admin"

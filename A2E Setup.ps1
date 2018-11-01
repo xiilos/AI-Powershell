@@ -1,4 +1,4 @@
-<#
+<# 
 .NAME
     A2E Menu
 .SYNOPSIS
@@ -18,7 +18,7 @@ $A2EMenu.text                    = "Add2Exchange Setup"
 $A2EMenu.TopMost                 = $false
 
 $O365_onprem_permissions         = New-Object system.Windows.Forms.Button
-$O365_onprem_permissions.text    = "Office 365 & Exchange Permissions"
+$O365_onprem_permissions.text    = "O365 / Exchange On-Prem Permissions"
 $O365_onprem_permissions.width   = 270
 $O365_onprem_permissions.height  = 30
 $O365_onprem_permissions.location  = New-Object System.Drawing.Point(5,20)
@@ -31,12 +31,12 @@ $autologon.height                = 30
 $autologon.location              = New-Object System.Drawing.Point(5,60)
 $autologon.Font                  = 'Microsoft Sans Serif,10,style=Bold'
 
-$Windows10Virgin                 = New-Object system.Windows.Forms.Button
-$Windows10Virgin.text            = "Virginize Windows 10"
-$Windows10Virgin.width           = 270
-$Windows10Virgin.height          = 30
-$Windows10Virgin.location        = New-Object System.Drawing.Point(5,420)
-$Windows10Virgin.Font            = 'Microsoft Sans Serif,10,style=Bold'
+$Windows10Sanatize               = New-Object system.Windows.Forms.Button
+$Windows10Sanatize.text          = "Sanitize Windows 10"
+$Windows10Sanatize.width         = 270
+$Windows10Sanatize.height        = 30
+$Windows10Sanatize.location      = New-Object System.Drawing.Point(5,420)
+$Windows10Sanatize.Font          = 'Microsoft Sans Serif,10,style=Bold'
 
 $Add2ExchangeUpdate              = New-Object system.Windows.Forms.Button
 $Add2ExchangeUpdate.text         = "Upgrade Add2Exchange"
@@ -45,12 +45,12 @@ $Add2ExchangeUpdate.height       = 30
 $Add2ExchangeUpdate.location     = New-Object System.Drawing.Point(5,100)
 $Add2ExchangeUpdate.Font         = 'Microsoft Sans Serif,10,style=Bold'
 
-$PowershellUpdate                = New-Object system.Windows.Forms.Button
-$PowershellUpdate.text           = "MSOnline and PS Update"
-$PowershellUpdate.width          = 270
-$PowershellUpdate.height         = 30
-$PowershellUpdate.location       = New-Object System.Drawing.Point(5,140)
-$PowershellUpdate.Font           = 'Microsoft Sans Serif,10,style=Bold'
+$PowershellUpgrade               = New-Object system.Windows.Forms.Button
+$PowershellUpgrade.text          = "Upgrade Powershell"
+$PowershellUpgrade.width         = 270
+$PowershellUpgrade.height        = 30
+$PowershellUpgrade.location      = New-Object System.Drawing.Point(5,138)
+$PowershellUpgrade.Font          = 'Microsoft Sans Serif,10,style=Bold'
 
 $GPResults                       = New-Object system.Windows.Forms.Button
 $GPResults.text                  = "Check Group Policy"
@@ -80,12 +80,12 @@ $OutlookAddinsdisable.height     = 30
 $OutlookAddinsdisable.location   = New-Object System.Drawing.Point(5,300)
 $OutlookAddinsdisable.Font       = 'Microsoft Sans Serif,10,style=Bold'
 
-$outlookAddinsEnable             = New-Object system.Windows.Forms.Button
-$outlookAddinsEnable.text        = "Enable Outlook Add-ins"
-$outlookAddinsEnable.width       = 270
-$outlookAddinsEnable.height      = 30
-$outlookAddinsEnable.location    = New-Object System.Drawing.Point(5,340)
-$outlookAddinsEnable.Font        = 'Microsoft Sans Serif,10,style=Bold'
+$Outlook365Install               = New-Object system.Windows.Forms.Button
+$Outlook365Install.text          = "Install Outlook 365"
+$Outlook365Install.width         = 270
+$Outlook365Install.height        = 30
+$Outlook365Install.location      = New-Object System.Drawing.Point(5,340)
+$Outlook365Install.Font          = 'Microsoft Sans Serif,10,style=Bold'
 
 $ExportLicense_Profile1          = New-Object system.Windows.Forms.Button
 $ExportLicense_Profile1.text     = "Export License Info and Profile 1"
@@ -94,13 +94,6 @@ $ExportLicense_Profile1.height   = 30
 $ExportLicense_Profile1.location  = New-Object System.Drawing.Point(5,380)
 $ExportLicense_Profile1.Font     = 'Microsoft Sans Serif,10,style=Bold'
 
-$redemption                      = New-Object system.Windows.Forms.Button
-$redemption.text                 = "Legacy Redemption Un-Register"
-$redemption.width                = 270
-$redemption.height               = 30
-$redemption.location             = New-Object System.Drawing.Point(5,460)
-$redemption.Font                 = 'Microsoft Sans Serif,10,style=Bold'
-
 $ThatWasEasy                     = New-Object system.Windows.Forms.Button
 $ThatWasEasy.text                = "Make it Easy"
 $ThatWasEasy.width               = 270
@@ -108,20 +101,27 @@ $ThatWasEasy.height              = 30
 $ThatWasEasy.location            = New-Object System.Drawing.Point(5,500)
 $ThatWasEasy.Font                = 'Microsoft Sans Serif,16,style=Bold'
 
-$A2EMenu.controls.AddRange(@($O365_onprem_permissions,$autologon,$Windows10Virgin,$Add2ExchangeUpdate,$PowershellUpdate,$GPResults,$RegistryFavorites,$DisableUAC,$OutlookAddinsdisable,$outlookAddinsEnable,$ExportLicense_Profile1,$ThatWasEasy,$redemption))
+$redemption                      = New-Object system.Windows.Forms.Button
+$redemption.text                 = "Legacy Redemption Un-Register"
+$redemption.width                = 270
+$redemption.height               = 30
+$redemption.location             = New-Object System.Drawing.Point(5,460)
+$redemption.Font                 = 'Microsoft Sans Serif,10,style=Bold'
+
+$A2EMenu.controls.AddRange(@($O365_onprem_permissions,$autologon,$Windows10Sanatize,$Add2ExchangeUpdate,$PowershellUpgrade,$GPResults,$RegistryFavorites,$DisableUAC,$OutlookAddinsdisable,$Outlook365Install,$ExportLicense_Profile1,$ThatWasEasy,$redemption))
 
 #region gui events {
 $O365_onprem_permissions.Add_Click({PermissionsOnPremOrO365Combined})
 $autologon.Add_Click({AutoLogin})
 $Add2ExchangeUpdate.Add_Click({A2E_Updates})
-$PowershellUpdate.Add_Click({Powershell_MSOnline_Update})
+$PowershellUpgrade.Add_Click({Powershell_MSOnline_Update})
 $GPResults.Add_Click({GP_Results})
 $RegistryFavorites.Add_Click({Registry_Favorites})
 $DisableUAC.Add_Click({Disable_UAC})
 $OutlookAddinsdisable.Add_Click({Remove_Outlook_Add_ins})
-$outlookAddinsEnable.Add_Click({ReEnable_Outlook_Add_ins})
+$Outlook365Install.Add_Click({     })
 $ExportLicense_Profile1.Add_Click({Export_License_and_Profile1})
-$Windows10Virgin.Add_Click({VirginizeWindows10})
+$Windows10Sanatize.Add_Click({SanitizeWindows10})
 $redemption.Add_Click({Redemption})
 $ThatWasEasy.Add_Click({1ClickSetup})
 #endregion events }
