@@ -31,9 +31,12 @@ Exit
 
 if ($decision -eq 0) {
 
-Write-Host "Adding Azure MSonline module"
+$error.clear()
+Import-Module "MSonline" -ErrorAction SilentlyContinue
+If($error){Write-Host "Adding Azure MSonline module"
 Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
+Install-Module MSonline -Confirm:$false -WarningAction "Inquire"} 
+Else{Write-Host 'Module is installed'}
 
 Import-Module MSOnline
 
