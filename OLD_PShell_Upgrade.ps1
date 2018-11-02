@@ -103,8 +103,13 @@ function Test-Compatibility
     
     if($evRelease -or $evInstalled)
     {
-        Write-Warning "WMF 5.1 requires .Net 4.5."
-        $returnValue = $false
+Write-Host "We need to download .Net 4.5"
+$url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+$output = "$PSScriptRoot\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
+        Write-Host "Download Complete"
+        Start-Process -FilePath "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+        #$returnValue = $false
     }
     elseif (($installed -ne 1) -or ($release -lt 378389))
     {
@@ -133,10 +138,23 @@ $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
 if($BuildVersion.Major -lt '6'-and $BuildVersion.Minor -le '3')
 {
+
+Write-Host "Downloading WIMF 5.1"
+$url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
+$output = "$PSScriptRoot\Win8.1AndW2K12R2-KB3191564-x64.msu"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
+Write-Host "Download Complete"
+
     $packageName = 'Win8.1AndW2K12R2-KB3191564-x64.msu'
 }
 else
 {
+Write-Host "Downloading WIMF 5.1"
+$url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
+$output = "$PSScriptRoot\Win7AndW2K8R2-KB3191566-x64.msu"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
+Write-Host "Download Complete"
+    
     $packageName = 'Win7AndW2K8R2-KB3191566-x64.msu'
 }
 

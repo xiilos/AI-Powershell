@@ -17,34 +17,68 @@ $Password = read-host "Enter the Account password"
 # Disable UAC
 Write-Host "Disabling UAC In the Registry"
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
-Write-Output "Done"
+Write-Host "Done"
 
 
 # Powershell Update
-Write-Host "Chekcing version of powershell"
-$PSVersionTable.PSVersion
+# Check if .Net 4.5 or above is installed
 
-$confirmation = Read-Host "Would you like me to update powershell? *Note: If you are on version 3x or below you will need to update [Y/N]"
-if ($confirmation -eq 'y') {
-  
+$release = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Release -ErrorAction SilentlyContinue -ErrorVariable evRelease).release
+$installed = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Install -ErrorAction SilentlyContinue -ErrorVariable evInstalled).install
 
-Write-Host "Updating Powershell"
-Write-Host "Downloading the latest powershell Update"
-$url = "https://download.microsoft.com/download/6/F/5/6F5FF66C-6775-42B0-86C4-47D41F2DA187/W2K12-KB3191565-x64.msu"
-$output = "$PSScriptRoot\Powershell_5.msu"
-$start_time = Get-Date
-
-
-(New-Object System.Net.WebClient).DownloadFile($url, $output)
-
-Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
-
+if (($installed -ne 1) -or ($release -lt 378389))
+{
+    Write-Host "We need to download .Net 4.5.2"
+    Write-Host "Downloading"
+    Write-Host "You must reboot after install and run this again"
+    $url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+    $output = "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+    (New-Object System.Net.WebClient).DownloadFile($url, $output)
+    Write-Host "Download Complete"
+    
+    Invoke-item -Path "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 }
 
-Write-Host "Adding Azure MSonline module"
-Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
-Write-Output "Done"
+
+#Check Operating Sysetm
+
+$BuildVersion = [System.Environment]::OSVersion.Version
+
+
+#OS is 10+
+if($BuildVersion.Major -like '10')
+    {
+        Write-Host "WMF 5.1 is not supported for Windows 10 and above"
+        
+    }
+
+#OS is 7
+if($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '1')
+    {
+        
+Write-Host "Downloading WMF 5.1 for 7+"
+Write-Host "You must reboot after install"
+$url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
+$output = "c:\zlibrary\Win7AndW2K8R2-KB3191566-x64.msu"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
+Write-Host "Download Complete"
+    
+    Invoke-Item -Path 'c:\zlibrary\Win7AndW2K8R2-KB3191566-x64.msu'
+    }
+
+#OS is 8
+elseif($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '3')
+    {
+        
+Write-Host "Downloading WMF 5.1 for 8+"
+Write-Host "You must reboot after install"
+$url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
+$output = "c:\zlibrary\Win8.1AndW2K12R2-KB3191564-x64.msu"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
+Write-Host "Download Complete"
+    
+    Invoke-Item -Path 'c:\zlibrary\Win8.1AndW2K12R2-KB3191564-x64.msu'
+    }
 
 
 # Office 365 and on premise Exchange Permissions
@@ -61,7 +95,7 @@ $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 # Option 2: Quit
 
 if ($decision -eq 2) {
-Write-Output "Quitting"
+Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
@@ -71,10 +105,17 @@ Exit
 
 
 if ($decision -eq 0) {
+  
+  $error.clear()
+  Import-Module "MSonline" -ErrorAction SilentlyContinue
+  If($error){Write-Host "Adding Azure MSonline module"
+  Set-PSRepository -Name psgallery -InstallationPolicy Trusted
+  Install-Module MSonline -Confirm:$false -WarningAction "Inquire"} 
+  Else{Write-Host 'Module is installed'}
 
 Import-Module MSOnline
 
-Write-Output "Sign in to Office365 as Tenant Admin"
+Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
 Import-PSSession $Session
@@ -84,14 +125,14 @@ Connect-MsolService -Credential $Cred -ErrorAction "Inquire"
 
 # Office 365-Remove&Add Permissions
 
-Write-Output "Removing Add2Exchange Permissions"
+Write-Host "Removing Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess -verbose -confirm:$false
-Write-Output "Adding Add2Exchange Permissions"
+Write-Host "Adding Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-Write-Output "Writing Data......"
+Write-Host "Writing Data......"
 Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
 Invoke-Item "C:\A2E_Office365_permissions.txt"
-Write-Output "Done"
+Write-Host "Done"
 }
 
 # Option 1: Exchange on Premise
@@ -107,22 +148,22 @@ Set-ADServerSettings -ViewEntireForest $true
 # Option 2: Exchange on Premise-Remove/Add Permissions all
 
 Write-Host 'Removing'
-Write-Output "Removing Old zAdd2Exchange Permissions"
+Write-Host "Removing Old zAdd2Exchange Permissions"
 Remove-ADPermission -Identity "Exchange Administrative Group (FYDIBOHF23SPDLT)" -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
 Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess -verbose -Confirm:$false
-Write-Output "Checking.............................."
+Write-Host "Checking.............................."
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
-Write-Output "Success....."
-Write-Output "Adding Permissions to Users"
+Write-Host "Success....."
+Write-Host "Adding Permissions to Users"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-Write-Output "Checking............"
+Write-Host "Checking............"
 Start-Sleep -s 2
-Write-Output "All Done"
-Write-Output "Writing Data......"
+Write-Host "All Done"
+Write-Host "Writing Data......"
 Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
 Invoke-Item "C:\A2E_permissions.txt"
-Write-Output "Done"
+Write-Host "Done"
 }
 
 
