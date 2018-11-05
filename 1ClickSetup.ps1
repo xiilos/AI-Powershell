@@ -5,7 +5,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
-
 # Vairables #
 
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
@@ -13,73 +12,6 @@ $Domain = read-host "Enter your Domain name; If not on a domain please leave thi
 $Password = read-host "Enter the Account password"
 
 # Start of Automated Scripting #
-
-# Disable UAC
-Write-Host "Disabling UAC In the Registry"
-Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
-Write-Host "Done"
-
-
-# Powershell Update
-# Check if .Net 4.5 or above is installed
-
-$release = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Release -ErrorAction SilentlyContinue -ErrorVariable evRelease).release
-$installed = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Install -ErrorAction SilentlyContinue -ErrorVariable evInstalled).install
-
-if (($installed -ne 1) -or ($release -lt 378389))
-{
-    Write-Host "We need to download .Net 4.5.2"
-    Write-Host "Downloading"
-    Write-Host "You must reboot after install and run this again"
-    $url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-    $output = "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-    (New-Object System.Net.WebClient).DownloadFile($url, $output)
-    Write-Host "Download Complete"
-    
-    Invoke-item -Path "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-}
-
-
-#Check Operating Sysetm
-
-$BuildVersion = [System.Environment]::OSVersion.Version
-
-
-#OS is 10+
-if($BuildVersion.Major -like '10')
-    {
-        Write-Host "WMF 5.1 is not supported for Windows 10 and above"
-        
-    }
-
-#OS is 7
-if($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '1')
-    {
-        
-Write-Host "Downloading WMF 5.1 for 7+"
-Write-Host "You must reboot after install"
-$url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
-$output = "c:\zlibrary\Win7AndW2K8R2-KB3191566-x64.msu"
-(New-Object System.Net.WebClient).DownloadFile($url, $output)
-Write-Host "Download Complete"
-    
-    Invoke-Item -Path 'c:\zlibrary\Win7AndW2K8R2-KB3191566-x64.msu'
-    }
-
-#OS is 8
-elseif($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '3')
-    {
-        
-Write-Host "Downloading WMF 5.1 for 8+"
-Write-Host "You must reboot after install"
-$url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
-$output = "c:\zlibrary\Win8.1AndW2K12R2-KB3191564-x64.msu"
-(New-Object System.Net.WebClient).DownloadFile($url, $output)
-Write-Host "Download Complete"
-    
-    Invoke-Item -Path 'c:\zlibrary\Win8.1AndW2K12R2-KB3191564-x64.msu'
-    }
-
 
 # Office 365 and on premise Exchange Permissions
 $message  = 'Please Pick how you want to connect'
