@@ -41,7 +41,7 @@ if ($WaitForIt -ne "") {
 }
 
 Write-Host "Waiting for Service"
-Start-sleep -10
+Start-sleep -s 10
 
 [string]$WaitForIt = ""
 [string]$Verb = ""
