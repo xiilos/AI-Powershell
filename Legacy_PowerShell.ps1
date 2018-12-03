@@ -28,7 +28,7 @@ Invoke-item -Path "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 Write-Host "Download Complete"
 start-sleep 7
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
+$wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
