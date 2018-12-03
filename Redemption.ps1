@@ -10,7 +10,7 @@ Write-Host "Unregistering Old Redemption"
 regsvr32 -u "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Console\Redemption.dll"
 Start-Sleep -s 1
 Write-Host "Removing old Redemption"
-Remove-Item �path "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Console\Redemption.dll" -recurse
+Remove-Item -path "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Console\Redemption.dll" -recurse
 Start-Sleep -s 1
 Write-Host "Registering new Redemption"
 regsvr32 "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Service\Redemption.dll"

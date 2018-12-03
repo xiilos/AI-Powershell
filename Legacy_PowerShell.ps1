@@ -12,15 +12,26 @@ $installed = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Set
 
 if (($installed -ne 1) -or ($release -lt 378389))
 {
-    Write-Host "We need to download .Net 4.5.2"
-    Write-Host "Downloading"
-    Write-Host "You must reboot after install and run this again"
-    $url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-    $output = "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-    (New-Object System.Net.WebClient).DownloadFile($url, $output)
-    Write-Host "Download Complete"
-    
-    Invoke-item -Path "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+Write-Host "We need to download .Net 4.5.2"
+Write-Host "Downloading"
+$Directory = "C:\PowerShell"
+
+if ( -Not (Test-Path $Directory.trim() ))
+{
+    New-Item -ItemType directory -Path C:\PowerShell
+}
+
+$url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+$output = "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)    
+Invoke-item -Path "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+Write-Host "Download Complete"
+start-sleep 7
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
+Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
 }
 
 
@@ -41,13 +52,23 @@ if($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '1')
     {
         
 Write-Host "Downloading WMF 5.1 for 7+"
-Write-Host "You must reboot after install"
+$Directory = "C:\PowerShell"
+
+if ( -Not (Test-Path $Directory.trim() ))
+{
+    New-Item -ItemType directory -Path C:\PowerShell
+}
 $url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
-$output = "c:\zlibrary\Win7AndW2K8R2-KB3191566-x64.msu"
+$output = "C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
+Invoke-Item -Path 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu'
 Write-Host "Download Complete"
-    
-    Invoke-Item -Path 'c:\zlibrary\Win7AndW2K8R2-KB3191566-x64.msu'
+start-sleep 7
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
+Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
     }
 
 #OS is 8
@@ -55,20 +76,30 @@ elseif($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '3')
     {
         
 Write-Host "Downloading WMF 5.1 for 8+"
-Write-Host "You must reboot after install"
+$Directory = "C:\PowerShell"
+
+if ( -Not (Test-Path $Directory.trim() ))
+{
+    New-Item -ItemType directory -Path C:\PowerShell
+}
 $url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
-$output = "c:\zlibrary\Win8.1AndW2K12R2-KB3191564-x64.msu"
+$output = "C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
+Invoke-Item -Path 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu'
 Write-Host "Download Complete"
-    
-    Invoke-Item -Path 'c:\zlibrary\Win8.1AndW2K12R2-KB3191564-x64.msu'
-    }
-
-Write-Host "Done"
+start-sleep 7
 $wshell = New-Object -ComObject Wscript.Shell
-
 $wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
 Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
+    }
+
+
+Write-Host "Nothing to do"
+Write-Host "You Are on the latest version of PowerShell"
+Write-Host "Quitting"
+Start-Sleep 7
 Get-PSSession | Remove-PSSession
 Exit
 
