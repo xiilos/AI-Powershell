@@ -71,9 +71,7 @@ if ($decision -eq 0) {
 
 Write-Host "Adding Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
-Invoke-Item "C:\A2E_Office365_permissions.txt"
+Write-Host "Done"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -85,9 +83,7 @@ if ($decision -eq 1) {
 
 Write-Host "Removing Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess -verbose -confirm:$false
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
-Invoke-Item "C:\A2E_Office365_permissions.txt"
+Write-Host "Done"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -101,9 +97,7 @@ Write-Host "Removing Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess -Verbose -confirm:$false
 Write-Host "Adding Add2Exchange Permissions"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_Office365_permissions.txt
-Invoke-Item "C:\A2E_Office365_permissions.txt"
+Write-Host "Done"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -209,6 +203,7 @@ Exit
 
 }
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Option 1: Exchange on Premise
 
@@ -217,7 +212,6 @@ if ($decision -eq 1) {
 
 
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
-
 Set-ADServerSettings -ViewEntireForest $true
 
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
@@ -243,15 +237,14 @@ $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 # Option 0: Exchange on Premise-Adding new permissions all
 
 if ($decision -eq 0) {
-  Write-Host 'Adding'
-  Write-Host "Adding Permissions to Users"
+Write-Host "Adding Permissions to Users"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+Write-Host "Adding Throttling Policy"
+New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
+Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
 Write-Host "Checking............"
 Start-Sleep -s 2
 Write-Host "All Done"
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-Invoke-Item "C:\A2E_permissions.txt"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -260,20 +253,13 @@ Exit
 # Option 1: Exchange on Premise-Remove old Add2Exchange permissions
 
 if ($decision -eq 1) {
-  Write-Host 'Removing'
-  Write-Host "Removing Old zAdd2Exchange Permissions"
+Write-Host "Removing Old zAdd2Exchange Permissions"
 Remove-ADPermission -Identity "Exchange Administrative Group (FYDIBOHF23SPDLT)" -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
 Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess -verbose -Confirm:$false
 Write-Host "Checking.............................."
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
-Write-Host "Success....."
-Write-Host "Checking............"
-Start-Sleep -s 2
-Write-Host "All Done"
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-Invoke-Item "C:\A2E_permissions.txt"
+Write-Host "Done"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -282,8 +268,7 @@ Exit
 # Option 2: Exchange on Premise-Remove/Add Permissions all
 
 if ($decision -eq 2) {
-    Write-Host 'Removing'
-    Write-Host "Removing Old zAdd2Exchange Permissions"
+Write-Host "Removing Old zAdd2Exchange Permissions"
 Remove-ADPermission -Identity "Exchange Administrative Group (FYDIBOHF23SPDLT)" -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
 Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
 Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess -Verbose -Confirm:$false
@@ -293,11 +278,10 @@ Write-Host "Success....."
 Write-Host "Adding Permissions to Users"
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
 Write-Host "Checking............"
-Start-Sleep -s 2
+Write-Host "Adding Throttling Policy"
+New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
+Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
 Write-Host "All Done"
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-Invoke-Item "C:\A2E_permissions.txt"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -318,9 +302,12 @@ ForEach ($Member in $DistributionGroupName)
 {
 Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 }
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-Invoke-Item "C:\A2E_permissions.txt"
+$confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
+if ($confirmation -eq 'y') {
+Write-Host "Adding Throttling Policy"
+New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
+Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
+}
 
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
@@ -346,9 +333,6 @@ ForEach ($Member in $DistributionGroupName)
 {
 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
 }
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-Invoke-Item "C:\A2E_permissions.txt"
 
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
@@ -369,9 +353,13 @@ $Identity = read-host "Enter user Email Address";
 
 Write-Host "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-Invoke-Item "C:\A2E_permissions.txt"
+$confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
+if ($confirmation -eq 'y') {
+Write-Host "Adding Throttling Policy"
+New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
+Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
+}
+
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 } Until ($repeat -eq 'n')
@@ -390,9 +378,6 @@ $Identity = read-host "Enter user Email Address"
 
 Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-Write-Host "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2E_permissions.txt
-Invoke-Item "C:\A2E_permissions.txt"
 
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
