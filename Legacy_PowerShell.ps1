@@ -24,9 +24,8 @@ if ( -Not (Test-Path $Directory.trim() ))
 $url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 $output = "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)    
-Invoke-item -Path "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+Start-Process -FilePath "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe" -wait
 Write-Host "Download Complete"
-start-sleep 7
 $wshell = New-Object -ComObject Wscript.Shell
 $wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
 Write-Host "Quitting"
@@ -61,9 +60,8 @@ if ( -Not (Test-Path $Directory.trim() ))
 $url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
 $output = "C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
-Invoke-Item -Path 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu'
+Start-Process -FilePath 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu' -wait
 Write-Host "Download Complete"
-start-sleep 7
 $wshell = New-Object -ComObject Wscript.Shell
 $wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
 Write-Host "Quitting"
@@ -85,9 +83,8 @@ if ( -Not (Test-Path $Directory.trim() ))
 $url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
 $output = "C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
-Invoke-Item -Path 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu'
+Start-Process -FilePath 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu' -wait
 Write-Host "Download Complete"
-start-sleep 7
 $wshell = New-Object -ComObject Wscript.Shell
 $wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
 Write-Host "Quitting"
@@ -99,7 +96,7 @@ Exit
 Write-Host "Nothing to do"
 Write-Host "You Are on the latest version of PowerShell"
 Write-Host "Quitting"
-Start-Sleep 7
+Start-Sleep 4
 Get-PSSession | Remove-PSSession
 Exit
 

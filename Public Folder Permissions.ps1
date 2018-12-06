@@ -12,13 +12,14 @@ $question = 'Pick one of the following from below'
 $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Office 365'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Exchange2013-2016'))
+$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&MExchange2010'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
 
-$decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
+$decision = $Host.UI.PromptForChoice($message, $question, $choices, 3)
 
 # Option 2: Quit
 
-if ($decision -eq 2) {
+if ($decision -eq 3) {
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
@@ -171,6 +172,75 @@ if ($decision -eq 2) {
   Exit
 }
 }
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Option 1: Exchange 2010 on Premise
+
+
+if ($decision -eq 2) {
+
+    add-pssnapin Microsoft.Exchange.Management.PowerShell.E2010;
+    Set-ADServerSettings -ViewEntireForest $true
+    
+    $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
+    $question = 'Pick one of the following from below'
+    
+    $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&0 Add Exchange Perm'))
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1 Remove Exchange Perm'))
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
+    
+    $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
+    
+    # Option 0: Exchange 2010 on Premise-Adding Public Folder Permissions
+    
+    #Variables
+    $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
+    
+    
+    # Option 0: Exchange 2010 on Premise-Adding Public Folder Permissions
+    
+    if ($decision -eq 0) {
+    Write-Host "Getting a list of Public Folders"
+    Get-PublicFolder -Identity "\" -Recurse
+        do {
+        $Identity = read-host "Public Folder Name (Alias)"
+        Write-Host "Adding Permissions to Public Folders"
+        Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+        Write-Host "Done"
+        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+        
+        } Until ($repeat -eq 'n')
+    Get-PSSession | Remove-PSSession
+    Exit
+    }
+    
+    # Option 1: Exchange 2010 on Premise-Remove Public Folder Permissions
+    
+    if ($decision -eq 1) {
+        Write-Host "Getting a list of Public Folders"
+        Get-PublicFolder -Identity "\" -Recurse
+            do {
+            $Identity = read-host "Public Folder Name (Alias)"
+            Write-Host "Removing Permissions to Public Folders"
+            Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+            Write-Host "Done"
+            $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+            
+            } Until ($repeat -eq 'n')
+        Get-PSSession | Remove-PSSession
+        Exit
+        }
+    
+    # Option 2: Exchange 2010 on Premise- Quit
+    
+    if ($decision -eq 2) {
+      Write-Host "Quitting"
+      Get-PSSession | Remove-PSSession
+      Exit
+    }
+    }
 
 
 # End Scripting

@@ -7,14 +7,14 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 # Start of Automated Scripting #
 
+# Step 1-----------------------------------------------------------------------------------------------------------------------------------------------------Step 1
+
 # Disable UAC
 Write-Host "Disabling UAC In the Registry"
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
 Write-Host "Done"
 
-
-#Create zLibrary
-New-Item -ItemType directory -Path C:\zlibrary
+# Step 2-----------------------------------------------------------------------------------------------------------------------------------------------------Step 2
 
 # Powershell Update
 # Check if .Net 4.5 or above is installed
@@ -24,17 +24,26 @@ $installed = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Set
 
 if (($installed -ne 1) -or ($release -lt 378389))
 {
-    Write-Host "We need to download .Net 4.5.2"
-    Write-Host "Downloading"
-    $url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-    $output = "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-    (New-Object System.Net.WebClient).DownloadFile($url, $output)
-    Write-Host "Download Complete"
-    
-    Invoke-item -Path "c:\zlibrary\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-    $wshell = New-Object -ComObject Wscript.Shell
+Write-Host "We need to download .Net 4.5.2"
+Write-Host "Downloading"
+$Directory = "C:\PowerShell"
 
-$wshell.Popup("Please Reboot After Install and run this again",0,"Done",0x1)
+if ( -Not (Test-Path $Directory.trim() ))
+{
+    New-Item -ItemType directory -Path C:\PowerShell
+}
+
+$url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+$output = "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)    
+Invoke-item -Path "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+Write-Host "Download Complete"
+start-sleep 7
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
+Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
 }
 
 
@@ -55,15 +64,23 @@ if($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '1')
     {
         
 Write-Host "Downloading WMF 5.1 for 7+"
-$url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
-$output = "c:\zlibrary\Win7AndW2K8R2-KB3191566-x64.msu"
-(New-Object System.Net.WebClient).DownloadFile($url, $output)
-Write-Host "Download Complete"
-    
-    Invoke-Item -Path 'c:\zlibrary\Win7AndW2K8R2-KB3191566-x64.msu'
-    $wshell = New-Object -ComObject Wscript.Shell
+$Directory = "C:\PowerShell"
 
-$wshell.Popup("Please Reboot after install and run this again",0,"Done",0x1)
+if ( -Not (Test-Path $Directory.trim() ))
+{
+    New-Item -ItemType directory -Path C:\PowerShell
+}
+$url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
+$output = "C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
+Invoke-Item -Path 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu'
+Write-Host "Download Complete"
+start-sleep 7
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
+Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
     }
 
 #OS is 8
@@ -71,18 +88,60 @@ elseif($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '3')
     {
         
 Write-Host "Downloading WMF 5.1 for 8+"
-$url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
-$output = "c:\zlibrary\Win8.1AndW2K12R2-KB3191564-x64.msu"
-(New-Object System.Net.WebClient).DownloadFile($url, $output)
-Write-Host "Download Complete"
-    
-    Invoke-Item -Path 'c:\zlibrary\Win8.1AndW2K12R2-KB3191564-x64.msu'
-    $wshell = New-Object -ComObject Wscript.Shell
+$Directory = "C:\PowerShell"
 
-$wshell.Popup("Please Reboot after install and run this again",0,"Done",0x1)
+if ( -Not (Test-Path $Directory.trim() ))
+{
+    New-Item -ItemType directory -Path C:\PowerShell
+}
+$url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
+$output = "C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu"
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
+Invoke-Item -Path 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu'
+Write-Host "Download Complete"
+start-sleep 7
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
+Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
     }
 
-# Outlook 365 / 2016 Install 32Bit
+Write-Host "Nothing to do"
+Write-Host "You Are on the latest version of PowerShell"
+
+
+#Step 3-----------------------------------------------------------------------------------------------------------------------------------------------------Step 3
+
+#Create zLibrary
+$TestPath = "C:\zlibrary"
+
+if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
+
+Write-Host "zLibrary exists...Resuming"
+ }
+Else {
+New-Item -ItemType directory -Path C:\zlibrary
+ }
+
+#Download the latest Full Installation
+$confirmation = Read-Host "Would you like me to download the latest Add2Exchange? [Y/N]"
+    if ($confirmation -eq 'y') {
+
+        Write-Host "Downloading Add2Exchange......"
+        Write-Host "This will take a couple of Minutes"
+        $url = "ftp://ftp.diditbetter.com/A2E-Enterprise/A2ENewInstall/a2e-enterprise.exe"
+        $output = "C:\zlibrary\a2e-enterprise.exe"
+        (New-Object System.Net.WebClient).DownloadFile($url, $output)    
+        Start-Process -filepath "C:\zlibrary\a2e-enterprise.exe" -workingdirectory "c:\zlibrary" -Wait
+
+}
+
+
+
+# Step 4-----------------------------------------------------------------------------------------------------------------------------------------------------Step 4
+
+# Outlook Install 32Bit
 If (Get-ItemProperty HKLM:\SOFTWARE\Classes\Outlook.Application -ErrorAction SilentlyContinue) {
     Write-Output "Outlook Is Installed"
 }
@@ -91,11 +150,12 @@ Write-host "We need to install Outlook on this machine"
 $confirmation = Read-Host "Would you like me to Install Outlook 365? [Y/N]"
     if ($confirmation -eq 'y') {
 
+Start-Process -filepath "C:\zLibrary\O365Outlook32\OfficeProPlus_x32.msi" -wait
 
 }
-
-
 }
+
+#Step 5-----------------------------------------------------------------------------------------------------------------------------------------------------Step 5
 
 $message  = 'Have you created an account for Add2Exchange'
 $question = 'Pick one of the following from below'
@@ -127,6 +187,8 @@ Write-host "Please create a new account called zadd2exchange (or any name of you
 Write-host "Add the new account as a local administrator to this box"
 Write-Host "Once done, log off and back on as that account"
 Write-Host "Then Run this again"
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Please Log Off and back on as the Service account for Add2Exchange",0,"Done",0x1)
 }
 
 if ($confirmation -eq 'n') {
