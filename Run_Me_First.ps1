@@ -5,6 +5,15 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
+#Goal
+# Create Initial Environment for Add2Exchange Install
+# 5 Steps
+#Step 1: Disable UAC
+#Strp 2: Upgrade .Net and Powershell if needed
+#Step 4: Create zLibrary and Download Add2Exchange Software
+#Step 5: Account Creation
+
+
 # Start of Automated Scripting #
 
 # Step 1-----------------------------------------------------------------------------------------------------------------------------------------------------Step 1
@@ -36,9 +45,8 @@ if ( -Not (Test-Path $Directory.trim() ))
 $url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 $output = "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)    
-Invoke-item -Path "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+Start-Process -FilePath "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe" -wait
 Write-Host "Download Complete"
-start-sleep 7
 $wshell = New-Object -ComObject Wscript.Shell
 $wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
 Write-Host "Quitting"
@@ -73,9 +81,8 @@ if ( -Not (Test-Path $Directory.trim() ))
 $url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
 $output = "C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
-Invoke-Item -Path 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu'
+Start-Process -FilePath 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu' -wait
 Write-Host "Download Complete"
-start-sleep 7
 $wshell = New-Object -ComObject Wscript.Shell
 $wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
 Write-Host "Quitting"
@@ -97,9 +104,8 @@ if ( -Not (Test-Path $Directory.trim() ))
 $url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
 $output = "C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
-Invoke-Item -Path 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu'
+Start-Process -FilePath 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu' -wait
 Write-Host "Download Complete"
-start-sleep 7
 $wshell = New-Object -ComObject Wscript.Shell
 $wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
 Write-Host "Quitting"
@@ -130,10 +136,10 @@ $confirmation = Read-Host "Would you like me to download the latest Add2Exchange
 
         Write-Host "Downloading Add2Exchange......"
         Write-Host "This will take a couple of Minutes"
-        $url = "ftp://ftp.diditbetter.com/A2E-Enterprise/A2ENewInstall/a2e-enterprise.exe"
-        $output = "C:\zlibrary\a2e-enterprise.exe"
+        $url = "ftp://ftp.diditbetter.com/A2E-Enterprise/A2ENewInstall/a2e-enterprise.zip"
+        $output = "C:\zlibrary\a2e-enterprise.zip"
         (New-Object System.Net.WebClient).DownloadFile($url, $output)    
-        Start-Process -filepath "C:\zlibrary\a2e-enterprise.exe" -workingdirectory "c:\zlibrary" -Wait
+        Expand-Archive -Path "C:\zlibrary\a2e-enterprise.zip" -DestinationPath "c:\zlibrary"
 
 }
 
@@ -157,7 +163,7 @@ Start-Process -filepath "C:\zLibrary\O365Outlook32\OfficeProPlus_x32.msi" -wait
 
 #Step 5-----------------------------------------------------------------------------------------------------------------------------------------------------Step 5
 
-$message  = 'Have you created an account for Add2Exchange'
+$message  = 'Have you created an account for Add2Exchange?'
 $question = 'Pick one of the following from below'
 
 $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
@@ -195,10 +201,10 @@ if ($confirmation -eq 'n') {
 Write-Host "Lets create a new user for Add2Exchange"
 $Username = Read-Host "Username for new account"
 $Fullname = Read-host "User Full Name"    
-$password = Read-Host "Password for new account"
+$password = Read-Host "Password for new account" -AsSecureString
 $description = read-host "Description of this account."
 
-    New-LocalUser $Username -Password $Password -FullName $Fullname -Description $description
+    New-LocalUser "$Username" -Password $Password -FullName "$Fullname" -Description "$description"
     Add-LocalGroupMember -Group "Administrators" -Member $Username
 
 }
