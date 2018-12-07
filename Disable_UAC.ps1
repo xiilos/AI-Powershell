@@ -8,10 +8,22 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 # Disable UAC
 
-Write-Host "Disabling UAC In the Registry"
-    Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
+$Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
 
-Write-Host "Done"
+if($val.EnableLUA -ne 0)
+
+{
+Set-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA" -value 0
+Write-Host "UAC is now Disabled"
+}
+
+Else {
+
+Write-Host "UAC is already Disabled"
+Write-Host "Resuming"
+
+}
+
 $wshell = New-Object -ComObject Wscript.Shell
 
 $wshell.Popup("Please Reboot",0,"Done",0x1)

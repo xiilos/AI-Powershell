@@ -10,8 +10,11 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 # 5 Steps
 #Step 1: Disable UAC
 #Strp 2: Upgrade .Net and Powershell if needed
-#Step 4: Create zLibrary and Download Add2Exchange Software
+#Step 3: Create zLibrary and Download Add2Exchange Software
+#Step 4: Install Outlook and Setup Profile
 #Step 5: Account Creation
+#Step 6: Mailbox Creation
+#Step 7: Create a Mail Profile
 
 
 # Start of Automated Scripting #
@@ -19,9 +22,22 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 # Step 1-----------------------------------------------------------------------------------------------------------------------------------------------------Step 1
 
 # Disable UAC
-Write-Host "Disabling UAC In the Registry"
-Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | out-null
-Write-Host "Done"
+
+$Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
+
+if($val.EnableLUA -ne 0)
+
+{
+Set-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA" -value 0
+Write-Host "UAC is now Disabled"
+}
+
+Else {
+
+Write-Host "UAC is already Disabled"
+Write-Host "Resuming"
+
+}
 
 # Step 2-----------------------------------------------------------------------------------------------------------------------------------------------------Step 2
 
@@ -189,12 +205,13 @@ if ($decision -eq 0) {
 Write-host "We need to create an account for Add2Exchange"
 $confirmation = Read-Host "Are you on a domain? [Y/N]"
 if ($confirmation -eq 'y') {
-Write-host "Please create a new account called zadd2exchange (or any name of your choosing)"
-Write-host "Add the new account as a local administrator to this box"
-Write-Host "Once done, log off and back on as that account"
-Write-Host "Then Run this again"
+
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please Log Off and back on as the Service account for Add2Exchange",0,"Done",0x1)
+$wshell.Popup("Please create a new account called zadd2exchange (or any name of your choosing).
+Note* The account only needs Domain User and Public Folder management permissions
+Once Done, add the new user account as a local Administrator of this box.
+Log off and back on as the new Sync Service account and run this again.",0,"Done",0x1)
+
 }
 
 if ($confirmation -eq 'n') {
@@ -218,10 +235,40 @@ if ($decision -eq 1) {
 
     
     if ($confirmation -eq 'n') {  
-    Write-Host "Please logg off and log back on as the new Sync Account"
-    Write-Host "Then run this again"
+    $wshell = New-Object -ComObject Wscript.Shell
+    $wshell.Popup("Add the new user account as a local Administrator of this box.
+    Log off and back on as the new Sync Service account and run this again.",0,"Done",0x1)
     }
 }
+
+# Step 6-----------------------------------------------------------------------------------------------------------------------------------------------------Step 6
+
+# Mailbox Creation
+
+$confirmation = Read-Host "Are you on Office 365 or Exchange on Premise [O/E]"
+if ($confirmation -eq 'O') {
+Write-host "Make sure to create a mailbox for the sync service account and add an E3 License to it"
+$wshell = New-Object -ComObject Wscript.Shell
+
+$wshell.Popup("When this is Done, click OK",0,"Create a Mailbox",0x1)
+}
+
+if ($confirmation -eq 'E') {
+Write-Host "Create a Mailboix for the new Sync Service account"
+$wshell = New-Object -ComObject Wscript.Shell
+
+$wshell.Popup("When this is Done, Click OK",0,"Create a Mailbox",0x1)
+}
+
+# Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
+
+# Mail Profile
+
+$wshell = New-Object -ComObject Wscript.Shell
+
+$wshell.Popup("The next step is to Create a Profile for your new account. Open Control panel and go to Mail. Create a new profile and follow through the steps that pertain to your Organization. 
+Note* Make sure you do not have Cache checked.",0,"Creating an Outlook Profile",0x1)
+
 
 
 Write-Host "Done"
