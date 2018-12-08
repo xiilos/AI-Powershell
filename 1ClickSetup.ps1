@@ -13,11 +13,10 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 #Step 1: Add Permissions
 #Strp 2: Add Public Folder Permissions
-#Step 3: Install Add2Exchange
-#Step 4: Ensure the SQL Service is set too Local
-#Step 5: Add Registry Favs
-#Step 6: Add Shortcuts
-#Step 7: Cleanup
+#Step 3: Enable AutoLogon
+#Step 4: Install Add2Exchange
+#Step 5: Add Registry Favs and Shortcuts
+#Step 6: Cleanup
 
 
 # Start of Automated Scripting #
@@ -841,34 +840,61 @@ Exit
 }
   }
 
-
 # Step 3-----------------------------------------------------------------------------------------------------------------------------------------------------Step 3
+# Auto Logon
+
+$wshell = New-Object -ComObject Wscript.Shell
+
+$wshell.Popup("Excellent!! Permissions are done and now we can set the AutoLogon feature for this account.
+Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
+Click OK to Continue",0,"AutoLogin",0x1)
+
+Start-Process -FilePath "C:\zlibrary\A2E-Enterprise\Setup\AutoLogon.exe" -wait -ErrorAction Stop
+
+
+# Step 4-----------------------------------------------------------------------------------------------------------------------------------------------------Step 4
 # Installing the Software
 
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("Permissions Complete. Lets Install the Software",0,"Complete",0x1)
+$wshell.Popup("System Setup Complete. Lets Install the Software",0,"Complete",0x1)
 
-
-# Step 4-----------------------------------------------------------------------------------------------------------------------------------------------------Step 4
-
-#Make Sure SQL is started as local account
+Start-Process -FilePath "C:\zlibrary\A2E-Enterprise\Add2ExchangeSetup.msi" -wait -ErrorAction Stop
 
 
 
 # Step 5-----------------------------------------------------------------------------------------------------------------------------------------------------Step 5
-# Registry Favorites
+# Registry Favorites & Shortcuts
 
+$wshell = New-Object -ComObject Wscript.Shell
 
+$wshell.Popup("Once the Install is complete, Clcik OK to finish the setup",0,"Finishing Installation",0x1)
 
+Write-Host "Creating Registry Favorites"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Session Manager" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "EnableLUA" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name ".Net Framework" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\.NETFramework" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "OpenDoor Software" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Software®" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Add2Exchange"  -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Pendingfilerename" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "AutoDiscover" -Type string -Value "Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Office" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Group Policy History" -Type string -Value "Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Group Policy\History" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Windows Logon" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" | out-null
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Windows Update" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" | out-null
+
+# Desktop Shortcuts
+
+$wshShell = New-Object -ComObject "WScript.Shell"
+$urlShortcut = $wshShell.CreateShortcut(
+(Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "Disable Outlook Social Connector through GPO.url")
+)
+$urlShortcut.TargetPath = "https://support.microsoft.com/en-us/help/2020103/how-to-manage-the-outlook-social-connector-by-using-group-policy"
+$urlShortcut.Save()
+
+Copy-Item -Path "C:\zlibrary\A2E-Enterprise\support.txt" -Destination "$home\Desktop\Support.txt"
 
 # Step 6-----------------------------------------------------------------------------------------------------------------------------------------------------Step 6
-
-# Add shortcuts
-
-
-
-# Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
 # Completion and Wrap-Up
 
 $wshell = New-Object -ComObject Wscript.Shell

@@ -7,36 +7,94 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 #Goal
 # Create Initial Environment for Add2Exchange Install
-# 5 Steps
-#Step 1: Disable UAC
-#Strp 2: Upgrade .Net and Powershell if needed
+# 7 Steps
+
+#Step 1: Account Creation
+#Step 2: Upgrade .Net and Powershell if needed
 #Step 3: Create zLibrary and Download Add2Exchange Software
 #Step 4: Install Outlook and Setup Profile
-#Step 5: Account Creation
-#Step 6: Mailbox Creation
-#Step 7: Create a Mail Profile
+#Step 5: Mailbox Creation
+#Step 6: Create a Mail Profile
+#Step 7: Disable UAC
 
 
 # Start of Automated Scripting #
 
-# Step 1-----------------------------------------------------------------------------------------------------------------------------------------------------Step 1
+#Step 1-----------------------------------------------------------------------------------------------------------------------------------------------------Step 1
+# Account Creation
 
-# Disable UAC
+$message  = 'Have you created an account for Add2Exchange?'
+$question = 'Pick one of the following from below'
 
-$Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
+$choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
+$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&No'))
+$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Yes'))
+$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
 
-if($val.EnableLUA -ne 0)
+$decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
-{
-Set-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA" -value 0
-Write-Host "UAC is now Disabled"
+# Option 2: Quit
+
+if ($decision -eq 2) {
+Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
 }
 
-Else {
 
-Write-Host "UAC is already Disabled"
-Write-Host "Resuming"
+if ($decision -eq 0) {
 
+
+# Account Creation
+Write-host "We need to create an account for Add2Exchange"
+$confirmation = Read-Host "Are you on a domain? [Y/N]"
+if ($confirmation -eq 'y') {
+
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Please create a new account called zadd2exchange (or any name of your choosing).
+Note* The account only needs Domain User and Public Folder management permissions.
+Note* You cannot hide this account.
+Once Done, add the new user account as a local Administrator of this box.
+Log off and back on as the new Sync Service account and run this again before you Proceed.",0,"Account Creation",0x1)
+$confirmation = Read-host "Do you want to continue [Y/N]"
+if ($confirmation -eq 'y') {
+Write-Host "Resumming"
+}
+
+if ($confirmation -eq 'n') {
+Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
+    }
+}
+
+
+
+if ($confirmation -eq 'n') {
+Write-Host "Lets create a new user for Add2Exchange"
+$Username = Read-Host "Username for new account"
+$Fullname = Read-host "User Full Name"    
+$password = Read-Host "Password for new account" -AsSecureString
+$description = read-host "Description of this account."
+
+    New-LocalUser "$Username" -Password $Password -FullName "$Fullname" -Description "$description"
+    Add-LocalGroupMember -Group "Administrators" -Member $Username
+
+}
+}
+
+if ($decision -eq 1) {
+    $confirmation = Read-Host "Are you logged into this box as the new sync account? [Y/N]"
+    if ($confirmation -eq 'y') {
+    Write-Host "Resumming"
+    }
+
+    
+    if ($confirmation -eq 'n') {  
+    $wshell = New-Object -ComObject Wscript.Shell
+    $wshell.Popup("Add the new user account as a local Administrator of this box.
+    Log off and back on as the new Sync Service account and run this again before proceeding.",0,"Account Creation",0x1)
+    }
 }
 
 # Step 2-----------------------------------------------------------------------------------------------------------------------------------------------------Step 2
@@ -100,7 +158,7 @@ $output = "C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu"
 Start-Process -FilePath 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu' -wait
 Write-Host "Download Complete"
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
+$wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -123,7 +181,7 @@ $output = "C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu"
 Start-Process -FilePath 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu' -wait
 Write-Host "Download Complete"
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please Reboot after Installing",0,"Done",0x1)
+$wshell.Popup("PPlease Reboot after Installing and run this again",0,"Done",0x1)
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -136,6 +194,7 @@ Write-Host "You Are on the latest version of PowerShell"
 #Step 3-----------------------------------------------------------------------------------------------------------------------------------------------------Step 3
 
 #Create zLibrary
+
 $TestPath = "C:\zlibrary"
 
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
@@ -151,10 +210,12 @@ $confirmation = Read-Host "Would you like me to download the latest Add2Exchange
     if ($confirmation -eq 'y') {
 
         Write-Host "Downloading Add2Exchange......"
-        Write-Host "This will take a couple of Minutes"
+        Write-Host "This can take a few Minutes"
         $url = "ftp://ftp.diditbetter.com/A2E-Enterprise/A2ENewInstall/a2e-enterprise.zip"
         $output = "C:\zlibrary\a2e-enterprise.zip"
-        (New-Object System.Net.WebClient).DownloadFile($url, $output)    
+        (New-Object System.Net.WebClient).DownloadFile($url, $output)
+        Write-Host "Download Done"
+        Write-Host "Unpacking"    
         Expand-Archive -Path "C:\zlibrary\a2e-enterprise.zip" -DestinationPath "c:\zlibrary"
 
 }
@@ -164,6 +225,7 @@ $confirmation = Read-Host "Would you like me to download the latest Add2Exchange
 # Step 4-----------------------------------------------------------------------------------------------------------------------------------------------------Step 4
 
 # Outlook Install 32Bit
+
 If (Get-ItemProperty HKLM:\SOFTWARE\Classes\Outlook.Application -ErrorAction SilentlyContinue) {
     Write-Output "Outlook Is Installed"
 }
@@ -172,76 +234,21 @@ Write-host "We need to install Outlook on this machine"
 $confirmation = Read-Host "Would you like me to Install Outlook 365? [Y/N]"
     if ($confirmation -eq 'y') {
 
-Start-Process -filepath "C:\zLibrary\O365Outlook32\OfficeProPlus_x32.msi" -wait
-
-}
-}
-
-#Step 5-----------------------------------------------------------------------------------------------------------------------------------------------------Step 5
-
-$message  = 'Have you created an account for Add2Exchange?'
-$question = 'Pick one of the following from below'
-
-$choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&No'))
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Yes'))
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
-
-$decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
-
-# Option 2: Quit
-
-if ($decision -eq 2) {
-Write-Host "Quitting"
-Get-PSSession | Remove-PSSession
-Exit
-}
-
-
-if ($decision -eq 0) {
-
-
-# Account Creation
-Write-host "We need to create an account for Add2Exchange"
-$confirmation = Read-Host "Are you on a domain? [Y/N]"
-if ($confirmation -eq 'y') {
-
-$wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please create a new account called zadd2exchange (or any name of your choosing).
-Note* The account only needs Domain User and Public Folder management permissions
-Once Done, add the new user account as a local Administrator of this box.
-Log off and back on as the new Sync Service account and run this again.",0,"Done",0x1)
+Start-Process -filepath "C:\zLibrary\A2E-Enterprise\O365Outlook32\OfficeProPlus_x32.msi" -wait
 
 }
 
 if ($confirmation -eq 'n') {
-Write-Host "Lets create a new user for Add2Exchange"
-$Username = Read-Host "Username for new account"
-$Fullname = Read-host "User Full Name"    
-$password = Read-Host "Password for new account" -AsSecureString
-$description = read-host "Description of this account."
 
-    New-LocalUser "$Username" -Password $Password -FullName "$Fullname" -Description "$description"
-    Add-LocalGroupMember -Group "Administrators" -Member $Username
-
-}
-}
-
-if ($decision -eq 1) {
-    $confirmation = Read-Host "Are you logged into this box as the new sync account? [Y/N]"
-    if ($confirmation -eq 'y') {
-    Write-Host "Resumming"
-    }
-
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("If you choose to install your own Outlook; ensure that it is Outlook 2016 and above, and 32Bit Only.
+When Done, click OK",0,"Outlook Install",0x1)
     
-    if ($confirmation -eq 'n') {  
-    $wshell = New-Object -ComObject Wscript.Shell
-    $wshell.Popup("Add the new user account as a local Administrator of this box.
-    Log off and back on as the new Sync Service account and run this again.",0,"Done",0x1)
     }
 }
 
-# Step 6-----------------------------------------------------------------------------------------------------------------------------------------------------Step 6
+
+# Step 5-----------------------------------------------------------------------------------------------------------------------------------------------------Step 5
 
 # Mailbox Creation
 
@@ -254,27 +261,51 @@ $wshell.Popup("When this is Done, click OK",0,"Create a Mailbox",0x1)
 }
 
 if ($confirmation -eq 'E') {
-Write-Host "Create a Mailboix for the new Sync Service account"
+Write-Host "Create a Mailboix for the new Sync Service account in Exchange"
 $wshell = New-Object -ComObject Wscript.Shell
 
 $wshell.Popup("When this is Done, Click OK",0,"Create a Mailbox",0x1)
 }
 
-# Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
+# Step 6-----------------------------------------------------------------------------------------------------------------------------------------------------Step 6
 
 # Mail Profile
 
 $wshell = New-Object -ComObject Wscript.Shell
 
 $wshell.Popup("The next step is to Create a Profile for your new account. Open Control panel and go to Mail. Create a new profile and follow through the steps that pertain to your Organization. 
-Note* Make sure you do not have Cache checked.",0,"Creating an Outlook Profile",0x1)
+Note* Make sure you do not have Cache checked. When this is finished click OK",0,"Creating an Outlook Profile",0x1)
 
+# Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
 
+# Disable UAC
+Write-Host "Checking UAC"
 
+$Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
+
+if($val.EnableLUA -ne 0)
+
+{
+Set-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA" -value 0
+Write-Host "Done"
+Write-Host "UAC is now Disabled"
+$wshell = New-Object -ComObject Wscript.Shell
+    
+$wshell.Popup("Initinal Setup is Complete. Please Reboot and run 1 click install",0,"Done",0x1)
+  
+}
+
+Else {
+
+Write-Host "UAC is already Disabled"
+Write-Host "Resuming"
 Write-Host "Done"
 $wshell = New-Object -ComObject Wscript.Shell
+    
+$wshell.Popup("Initinal Setup is Complete. Please run 1 click install",0,"Done",0x1)
+    
+}
 
-$wshell.Popup("Initinal Setup is Complete. Please Reboot and run 1 click install",0,"Done",0x1)
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
