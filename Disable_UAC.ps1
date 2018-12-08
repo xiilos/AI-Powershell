@@ -15,18 +15,17 @@ if($val.EnableLUA -ne 0)
 {
 Set-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA" -value 0
 Write-Host "UAC is now Disabled"
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Please Reboot",0,"Done",0x1)
 }
 
 Else {
 
-Write-Host "UAC is already Disabled"
-Write-Host "Resuming"
+  $wshell = New-Object -ComObject Wscript.Shell
+  $wshell.Popup("UAC Is already Disabled",0,"Done",0x1)
 
 }
 
-$wshell = New-Object -ComObject Wscript.Shell
-
-$wshell.Popup("Please Reboot",0,"Done",0x1)
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
