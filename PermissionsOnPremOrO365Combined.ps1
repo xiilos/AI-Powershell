@@ -9,7 +9,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Goal
 # Assign Permissions for Add2Exchange
 
-
 # Start of Automated Scripting #
 
 
@@ -20,7 +19,7 @@ $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.H
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Office 365'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Exchange 2013-2016'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&MExchange 2010'))
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Skip'))
+$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Skip-Take me to Public Folder Permissions'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 4)
@@ -60,8 +59,9 @@ $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService -Credential $Cred -ErrorAction "Inquire"
+Connect-MsolService -Credential $Cred -ErrorAction Inquire
 
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
 
 $message  = 'Please Pick what you want to do'
 $question = 'Pick one of the following from below'
@@ -78,7 +78,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
 
 # Option 0: Office 365-Adding Add2Exchange Permissions
 
@@ -215,18 +214,27 @@ Exit
 
 if ($decision -eq 1) {
 
+$confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+if ($confirmation -eq 'y') {
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
+Set-ADServerSettings -ViewEntireForest $true
+}
+
+if ($confirmation -eq 'n') {
 $wshell = New-Object -ComObject Wscript.Shell
 
 $wshell.Popup("Before Continuing, please remote into your Exchange server.
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
-
+        
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
 $UserCredential = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
-Set-ADServerSettings -ViewEntireForest $true
+Set-ADServerSettings -ViewEntireForest $true   
+}
+
 
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
@@ -404,18 +412,26 @@ Exit
 
 if ($decision -eq 2) {
 
+$confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+if ($confirmation -eq 'y') {
+Add-PSsnapin Microsoft.Exchange.Management.PowerShell.E2010;
+Set-ADServerSettings -ViewEntireForest $true
+}
+    
+if ($confirmation -eq 'n') {
 $wshell = New-Object -ComObject Wscript.Shell
-
+    
 $wshell.Popup("Before Continuing, please remote into your Exchange server.
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
-
+            
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
 $UserCredential = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
-Set-ADServerSettings -ViewEntireForest $true
+Set-ADServerSettings -ViewEntireForest $true   
+}
   
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
@@ -590,7 +606,7 @@ Write-host "Resuming"
 
 if ($confirmation -eq 'Y') {
 Write-Host "Taking you there now"
-
+Get-Module | Remove-Module
 
 $message  = 'Please Pick how you want to connect'
 $question = 'Pick one of the following from below'
@@ -632,8 +648,10 @@ $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService -Credential $Cred -ErrorAction "Inquire"
+Connect-MsolService -Credential $Cred -ErrorAction Inquire
 
+#Variables
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 
 $message  = 'Please Pick what you want to do'
 $question = 'Pick one of the following from below'
@@ -645,8 +663,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
-#Variables
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 
 
 # Option 0: Office 365-Adding Public Folder Permissions
@@ -654,30 +670,30 @@ $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 if ($decision -eq 0) {
 Write-Host "Getting a list of Public Folders"
 Get-PublicFolder -Identity "\" -Recurse
-    do {
-    $Identity = read-host "Public Folder Name (Alias)"
-    Write-Host "Adding Permissions to Public Folders"
-    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
-    Write-Host "Done"
-    $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+do {
+$Identity = read-host "Public Folder Name (Alias)"
+Write-Host "Adding Permissions to Public Folders"
+Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+Write-Host "Done"
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
     
-    } Until ($repeat -eq 'n')
+} Until ($repeat -eq 'n')
 
 }
 
 # Option 1: Office 365-Removing Public Folder Permissions
 
 if ($decision -eq 1) {
-    Write-Host "Getting a list of Public Folders"
-    Get-PublicFolder -Identity "\" -Recurse
-        do {
-        $Identity = read-host "Public Folder Name (Alias)"
-        Write-Host "Removing Permissions to Public Folders"
-        Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
-        Write-Host "Done"
-        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+Write-Host "Getting a list of Public Folders"
+Get-PublicFolder -Identity "\" -Recurse
+do {
+$Identity = read-host "Public Folder Name (Alias)"
+Write-Host "Removing Permissions to Public Folders"
+Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+Write-Host "Done"
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
         
-        } Until ($repeat -eq 'n')
+} Until ($repeat -eq 'n')
   
 }
     
@@ -691,10 +707,32 @@ Exit
 
 }
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Option 1: Exchange on Premise
-
+# Option 1: Exchange on Premise-Public Folders
 
 if ($decision -eq 1) {
+$confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+if ($confirmation -eq 'y') {
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+Set-ADServerSettings -ViewEntireForest $true
+}
+    
+if ($confirmation -eq 'n') {
+$wshell = New-Object -ComObject Wscript.Shell
+    
+$wshell.Popup("Before Continuing, please remote into your Exchange server.
+Open Powershell as administrator
+Type: *Enable-PSRemoting* without the stars and hit enter.
+Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
+            
+$Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
+$UserCredential = Get-Credential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
+Import-PSSession $Session -DisableNameChecking
+Set-ADServerSettings -ViewEntireForest $true   
+ }
+
+#Variables
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
@@ -705,12 +743,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
-
-# Option 0: Exchange on Premise-Adding Public Folder Permissions
-
-#Variables
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
-
 
 # Option 0: Exchange on Premise-Adding Public Folder Permissions
 
@@ -757,11 +789,34 @@ Exit
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# Option 1: Exchange 2010 on Premise
+# Option 1: Exchange 2010 on Premise Public Folders
 
 
 if ($decision -eq 2) {
 
+$confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+if ($confirmation -eq 'y') {
+Add-PSsnapin Microsoft.Exchange.Management.PowerShell.E2010
+Set-ADServerSettings -ViewEntireForest $true
+}
+    
+if ($confirmation -eq 'n') {
+$wshell = New-Object -ComObject Wscript.Shell
+$wshell.Popup("Before Continuing, please remote into your Exchange server.
+Open Powershell as administrator
+Type: *Enable-PSRemoting* without the stars and hit enter.
+Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
+            
+$Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
+$UserCredential = Get-Credential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
+Import-PSSession $Session -DisableNameChecking
+Set-ADServerSettings -ViewEntireForest $true   
+}
+
+#Variables
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
+    
     
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
@@ -772,11 +827,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
     
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
-    
-# Option 0: Exchange 2010 on Premise-Adding Public Folder Permissions
-    
-#Variables
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
     
     
 # Option 0: Exchange 2010 on Premise-Adding Public Folder Permissions
