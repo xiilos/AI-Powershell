@@ -5,11 +5,22 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
-#Notes: Resumes and Resyncs all Missions Critical VMs
-
 # Script #
 
-Resume-VMReplication –VMName "3cx-phone","DIBDC","DIBDC1","DIBEX10","Docker-a","IIS","MOJO-B","Redmine","SpamTitan","Spree-B","SQL","Veeam" -Resynchronize
+$Hosts = "Hyper-V08"
+ForEach ($Server in $Hosts)
+{
+$Server
+Invoke-Command -ComputerName $Server {
+$FailedReplicas = Get-VMReplication | Where-Object{$_.Health -EQ 'Critical'}
+ForEach ($VM in $FailedReplicas)
+{
+$VMName = $VM.Name
+$VMName
+Resume-VMReplication $VMName -Resynchronize
+}
+}
+}
 
 Write-Host "Done"
 Write-Host "Quitting"
