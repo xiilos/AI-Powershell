@@ -22,18 +22,18 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Skip-Take me to Public Folder Permissions'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
 
-$decision = $Host.UI.PromptForChoice($message, $question, $choices, 4)
+$choice = $Host.UI.PromptForChoice($message, $question, $choices, 4)
 
 # Option 3: Skip
 
-if ($decision -eq 3) {
+if ($choice -eq 3) {
 
 Write-Host "Skipping"
 }
 
 # Option 4: Quit
 
-if ($decision -eq 4) {
+if ($choice -eq 4) {
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -43,7 +43,7 @@ Exit
 # Option 1: Office 365
 
 
-if ($decision -eq 0) {
+if ($choice -eq 0) {
 
 $error.clear()
 Import-Module "MSonline" -ErrorAction SilentlyContinue
@@ -209,10 +209,10 @@ Exit
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# Option 1: Exchange on Premise
+# Option 1: Exchange on Premise (2013-2016)
 
 
-if ($decision -eq 1) {
+if ($choice -eq 1) {
 
 $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
 if ($confirmation -eq 'y') {
@@ -310,9 +310,7 @@ if ($decision -eq 3) {
 do {
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
-
 Write-Host "Adding Add2Exchange Permissions"
-
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
@@ -339,9 +337,7 @@ if ($decision -eq 4) {
 do {
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
-
 Write-Host "Removing Add2Exchange Permissions"
-
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
@@ -385,10 +381,8 @@ if ($decision -eq 6) {
 do {
 
 $Identity = read-host "Enter user Email Address"
-
 Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 } Until ($repeat -eq 'n')
@@ -409,8 +403,7 @@ Exit
 
 # Option 2: Exchange 2010
 
-
-if ($decision -eq 2) {
+if ($choice -eq 2) {
 
 $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
 if ($confirmation -eq 'y') {
@@ -707,7 +700,7 @@ Exit
 
 }
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Option 1: Exchange on Premise-Public Folders
+# Option 1: Exchange on Premise-Public Folders (2013-2016)
 
 if ($decision -eq 1) {
 $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
