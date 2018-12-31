@@ -235,6 +235,11 @@ $urlShortcut.Save()
  Copy-Item -Path ".\support.txt" -Destination "$home\Desktop\Support.txt"
  Copy-Item -Path ".\Setup\PermissionsOnPremOrO365Combined.ps1" -Destination "$home\Desktop\PermissionsOnPremOrO365Combined.ps1"
 
+ $WshShell = New-Object -comObject WScript.Shell
+ $Shortcut = $WshShell.CreateShortcut("$Home\Desktop\zLibrary.lnk")
+ $Shortcut.TargetPath = "C:\zlibrary"
+ $Shortcut.Save()
+
 #Download the latest Full Installation
 
 ##IN-PRODUCTION##
