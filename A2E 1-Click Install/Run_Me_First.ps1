@@ -23,7 +23,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Step 1-----------------------------------------------------------------------------------------------------------------------------------------------------Step 1
 # Account Creation
 
-$message  = 'Have you created an account for Add2Exchange?'
+$message  = 'Have you created an account for Add2Exchange to install under?'
 $question = 'Pick one of the following from below'
 
 $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
@@ -46,16 +46,19 @@ if ($decision -eq 0) {
 
 
 # Account Creation
+
 Write-host "We need to create an account for Add2Exchange"
 $confirmation = Read-Host "Are you on a domain? [Y/N]"
 if ($confirmation -eq 'y') {
 
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please create a new account called zadd2exchange (or any name of your choosing).
+$answer = $wshell.Popup("Please create a new account called zadd2exchange (or any name of your choosing).
 Note* The account only needs Domain User and Public Folder management permissions.
 Note* You cannot hide this account.
 Once Done, add the new user account as a local Administrator of this box.
 Log off and back on as the new Sync Service account and run this again before you Proceed.",0,"Account Creation",0x1)
+if($answer -eq 2){Break}
+
 $confirmation = Read-host "Do you want to continue [Y/N]"
 if ($confirmation -eq 'y') {
 Write-Host "Resumming"
@@ -77,23 +80,36 @@ $Fullname = Read-host "User Full Name"
 $password = Read-Host "Password for new account" -AsSecureString
 $description = read-host "Description of this account."
 
-    New-LocalUser "$Username" -Password $Password -FullName "$Fullname" -Description "$description"
-    Add-LocalGroupMember -Group "Administrators" -Member $Username
+New-LocalUser "$Username" -Password $Password -FullName "$Fullname" -Description "$description"
+Add-LocalGroupMember -Group "Administrators" -Member $Username
 
 }
 }
 
 if ($decision -eq 1) {
-    $confirmation = Read-Host "Are you logged into this box as the new sync account? [Y/N]"
-    if ($confirmation -eq 'y') {
-    Write-Host "Resumming"
+$confirmation = Read-Host "Are you logged into this box as the new sync account? [Y/N]"
+if ($confirmation -eq 'y') {
+Write-Host "Resumming"
     }
 
     
-    if ($confirmation -eq 'n') {  
-    $wshell = New-Object -ComObject Wscript.Shell
-    $wshell.Popup("Add the new user account as a local Administrator of this box.
-    Log off and back on as the new Sync Service account and run this again before proceeding.",0,"Account Creation",0x1)
+if ($confirmation -eq 'n') {  
+$wshell = New-Object -ComObject Wscript.Shell
+$answer = $wshell.Popup("Add the new user account as a local Administrator of this box.
+Log off and back on as the new Sync Service account and run this again before proceeding.",0,"Account Creation",0x1)
+if($answer -eq 2){Break}
+
+$confirmation = Read-host "Do you want to continue [Y/N]"
+if ($confirmation -eq 'y') {
+Write-Host "Resumming"
+}
+
+if ($confirmation -eq 'n') {
+Write-Host "Quitting"
+Get-PSSession | Remove-PSSession
+Exit
+    }
+
     }
 }
 
@@ -122,7 +138,8 @@ $output = "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 Start-Process -FilePath "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe" -wait
 Write-Host "Download Complete"
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
+$answer = $wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
+if($answer -eq 2){Break}
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -138,7 +155,6 @@ $BuildVersion = [System.Environment]::OSVersion.Version
 if($BuildVersion.Major -like '10')
     {
         Write-Host "WMF 5.1 is not supported for Windows 10 and above"
-        
     }
 
 #OS is 7
@@ -158,7 +174,8 @@ $output = "C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu"
 Start-Process -FilePath 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu' -wait
 Write-Host "Download Complete"
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
+$answer = $wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
+if($answer -eq 2){Break}
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -181,7 +198,8 @@ $output = "C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu"
 Start-Process -FilePath 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu' -wait
 Write-Host "Download Complete"
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("PPlease Reboot after Installing and run this again",0,"Done",0x1)
+$answer = $wshell.Popup("Please Reboot after Installing and run this again",0,"Done",0x1)
+if($answer -eq 2){Break}
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -193,7 +211,7 @@ Write-Host "You Are on the latest version of PowerShell"
 
 #Step 3-----------------------------------------------------------------------------------------------------------------------------------------------------Step 3
 
-#Create zLibrary
+#Create zLibrary & Copy Shortcuts to Desktop
 
 $TestPath = "C:\zlibrary"
 
@@ -205,22 +223,21 @@ Else {
 New-Item -ItemType directory -Path C:\zlibrary
  }
 
+ # Desktop Shortcuts
+
+$wshShell = New-Object -ComObject "WScript.Shell"
+$urlShortcut = $wshShell.CreateShortcut(
+(Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "Disable Outlook Social Connector through GPO.url")
+)
+$urlShortcut.TargetPath = "https://support.microsoft.com/en-us/help/2020103/how-to-manage-the-outlook-social-connector-by-using-group-policy"
+$urlShortcut.Save()
+
+ Copy-Item -Path ".\support.txt" -Destination "$home\Desktop\Support.txt"
+ Copy-Item -Path ".\Setup\PermissionsOnPremOrO365Combined.ps1" -Destination "$home\Desktop\PermissionsOnPremOrO365Combined.ps1"
+
 #Download the latest Full Installation
-$confirmation = Read-Host "Would you like me to download the latest Add2Exchange? [Y/N]"
-    if ($confirmation -eq 'y') {
 
-        Write-Host "Downloading Add2Exchange......"
-        Write-Host "This can take a few Minutes"
-        $url = "ftp://ftp.diditbetter.com/A2E-Enterprise/A2ENewInstall/a2e-enterprise.zip"
-        $output = "C:\zlibrary\a2e-enterprise.zip"
-        (New-Object System.Net.WebClient).DownloadFile($url, $output)
-        Write-Host "Download Done"
-        Write-Host "Unpacking"    
-        Expand-Archive -Path "C:\zlibrary\a2e-enterprise.zip" -DestinationPath "c:\zlibrary"
-
-}
-
-
+##IN-PRODUCTION##
 
 # Step 4-----------------------------------------------------------------------------------------------------------------------------------------------------Step 4
 
@@ -232,18 +249,20 @@ If (Get-ItemProperty HKLM:\SOFTWARE\Classes\Outlook.Application -ErrorAction Sil
 Else {
 Write-host "We need to install Outlook on this machine"
 $confirmation = Read-Host "Would you like me to Install Outlook 365? [Y/N]"
-    if ($confirmation -eq 'y') {
+if ($confirmation -eq 'y') {
 
-Start-Process -filepath "C:\zLibrary\A2E-Enterprise\O365Outlook32\OfficeProPlus_x32.msi" -wait
+Push-Location -Path ".\O365Outlook32"
+.\setup.exe /configure Office365x32bit.xml
 
 }
 
 if ($confirmation -eq 'n') {
 
 $wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("If you choose to install your own Outlook; ensure that it is Outlook 2016 and above, and 32Bit Only.
+$answer = $wshell.Popup("If you choose to install your own Outlook; ensure that it is Outlook 2016 and above, and 32bit Only.
 When Done, click OK",0,"Outlook Install",0x1)
-    
+if($answer -eq 2){Break}
+
     }
 }
 
@@ -254,17 +273,19 @@ When Done, click OK",0,"Outlook Install",0x1)
 
 $confirmation = Read-Host "Are you on Office 365 or Exchange on Premise [O/E]"
 if ($confirmation -eq 'O') {
-Write-host "Make sure to create a mailbox for the sync service account and add an E3 License to it"
+Write-host "Make sure to create a mailbox for the sync service account and add an *E* License to it"
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("When this is Done, click OK",0,"Create a Mailbox",0x1)
+$answer = $wshell.Popup("When this is Done, click OK to Continue",0,"Create a Mailbox",0x1)
+if($answer -eq 2){Break}
 }
 
 if ($confirmation -eq 'E') {
 Write-Host "Create a Mailboix for the new Sync Service account in Exchange"
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("When this is Done, Click OK",0,"Create a Mailbox",0x1)
+$answer = $wshell.Popup("When this is Done, Click OK to Continue",0,"Create a Mailbox",0x1)
+if($answer -eq 2){Break}
 }
 
 # Step 6-----------------------------------------------------------------------------------------------------------------------------------------------------Step 6
@@ -273,8 +294,9 @@ $wshell.Popup("When this is Done, Click OK",0,"Create a Mailbox",0x1)
 
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("The next step is to Create a Profile for your new account. Open Control panel and go to Mail. Create a new profile and follow through the steps that pertain to your Organization. 
-Note* Make sure you do not have Cache checked. When this is finished click OK",0,"Creating an Outlook Profile",0x1)
+$answer = $wshell.Popup("The next step is to Create a Profile for your new account. Open Control panel and go to Mail. Create a new profile and follow through the steps that pertain to your Organization. 
+Note* Make sure you do not have Cache checked. When this is finished click OK to Continue",0,"Creating an Outlook Profile",0x1)
+if($answer -eq 2){Break}
 
 # Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
 
@@ -291,7 +313,8 @@ Write-Host "Done"
 Write-Host "UAC is now Disabled"
 $wshell = New-Object -ComObject Wscript.Shell
     
-$wshell.Popup("Initinal Setup is Complete. Please Reboot and run 1 click install",0,"Done",0x1)
+$answer = $wshell.Popup("Initinal Setup is Complete. Please Reboot and run 1-click install",0,"Done",0x1)
+if($answer -eq 2){Break}
   
 }
 
@@ -302,7 +325,8 @@ Write-Host "Resuming"
 Write-Host "Done"
 $wshell = New-Object -ComObject Wscript.Shell
     
-$wshell.Popup("Initinal Setup is Complete. Please run 1 click install",0,"Done",0x1)
+$answer = $wshell.Popup("Initinal Setup is Complete. Please run 1-click install",0,"Done",0x1)
+if($answer -eq 2){Break}
     
 }
 

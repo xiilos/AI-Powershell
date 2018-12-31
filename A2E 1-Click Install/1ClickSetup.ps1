@@ -15,7 +15,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Strp 2: Add Public Folder Permissions
 #Step 3: Enable AutoLogon
 #Step 4: Install Add2Exchange
-#Step 5: Add Registry Favs and Shortcuts
+#Step 5: Add Registry Favs
 #Step 6: Cleanup
 
 
@@ -28,9 +28,10 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("In this step, we will assign the service account full mailbox access to the users that will be syncing with Add2Exchange. 
+$answer = $wshell.Popup("In this step, we will assign the service account full mailbox access to the users that will be syncing with Add2Exchange. 
 Instead of adding permissions to everyone, create a Distribution list with all users that will be syncing with Add2Exchange. 
 Reminder*** You cannot hide this Distribution list, so it helps to put a Z in front of it to drop it to the bottom of the GAL",0,"Assigning Mailbox Permissions",0x1)
+if($answer -eq 2){Break}
 
 $message  = 'Please Pick how you want to connect'
 $question = 'Pick one of the following from below'
@@ -39,21 +40,21 @@ $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.H
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Office 365'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Exchange 2013-2016'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&MExchange 2010'))
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Skip'))
+$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Skip-Take me to Public Folder Permissions'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
 
-$decision = $Host.UI.PromptForChoice($message, $question, $choices, 4)
+$choice = $Host.UI.PromptForChoice($message, $question, $choices, 4)
 
 # Option 3: Skip
 
-if ($decision -eq 3) {
+if ($choice -eq 3) {
 
 Write-Host "Skipping"
 }
 
 # Option 4: Quit
 
-if ($decision -eq 4) {
+if ($choice -eq 4) {
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
@@ -63,7 +64,7 @@ Exit
 # Option 1: Office 365
 
 
-if ($decision -eq 0) {
+if ($choice -eq 0) {
 
 $error.clear()
 Import-Module "MSonline" -ErrorAction SilentlyContinue
@@ -79,8 +80,9 @@ $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService -Credential $Cred -ErrorAction "Inquire"
+Connect-MsolService -Credential $Cred -ErrorAction Inquire
 
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
 
 $message  = 'Please Pick what you want to do'
 $question = 'Pick one of the following from below'
@@ -97,7 +99,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
 
 # Option 0: Office 365-Adding Add2Exchange Permissions
 
@@ -227,25 +228,36 @@ Exit
 
 }
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# Option 1: Exchange on Premise
+# Option 1: Exchange on Premise (2013-2016)
 
 
-if ($decision -eq 1) {
+if ($choice -eq 1) {
 
-$wshell = New-Object -ComObject Wscript.Shell
+$confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+if ($confirmation -eq 'y') {
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
+Set-ADServerSettings -ViewEntireForest $true
+}
 
-$wshell.Popup("Before Continuing, please remote into your Exchange server.
+if ($confirmation -eq 'n') {
+$wshell = New-Object -ComObject Wscript.She$answer = ll
+
+$answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
-
+if($answer -eq 2){Break}
+if($answer -eq 2){Break}
+        
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
 $UserCredential = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
-Set-ADServerSettings -ViewEntireForest $true
+Set-ADServerSettings -ViewEntireForest $true   
+}
+
 
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
@@ -321,9 +333,7 @@ if ($decision -eq 3) {
 do {
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
-
 Write-Host "Adding Add2Exchange Permissions"
-
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
@@ -350,9 +360,7 @@ if ($decision -eq 4) {
 do {
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
-
 Write-Host "Removing Add2Exchange Permissions"
-
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
@@ -396,10 +404,8 @@ if ($decision -eq 6) {
 do {
 
 $Identity = read-host "Enter user Email Address"
-
 Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-
 $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 } Until ($repeat -eq 'n')
@@ -416,25 +422,34 @@ Exit
     }
 }
 
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Option 2: Exchange 2010
 
+if ($choice -eq 2) {
 
-if ($decision -eq 2) {
-
+$confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+if ($confirmation -eq 'y') {
+Add-PSsnapin Microsoft.Exchange.Management.PowerShell.E2010;
+Set-ADServerSettings -ViewEntireForest $true
+}
+    
+if ($confirmation -eq 'n') {
 $wshell = New-Object -ComObject Wscript.Shell
-
-$wshell.Popup("Before Continuing, please remote into your Exchange server.
+    
+$answer = $answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
-
+if($answer -eq 2){Break}
+if($answer -eq 2){Break}
+            
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
 $UserCredential = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
-Set-ADServerSettings -ViewEntireForest $true
+Set-ADServerSettings -ViewEntireForest $true   
+}
   
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
@@ -598,7 +613,7 @@ Exit
     }
 }
 
-# Step 2-----------------------------------------------------------------------------------------------------------------------------------------------------Step 2
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Public Folder Permissions
 
 $confirmation = Read-Host "Do we need to add permissions to any Public Folders? [Y/N]"
@@ -609,7 +624,7 @@ Write-host "Resuming"
 
 if ($confirmation -eq 'Y') {
 Write-Host "Taking you there now"
-
+Get-Module | Remove-Module
 
 $message  = 'Please Pick how you want to connect'
 $question = 'Pick one of the following from below'
@@ -651,8 +666,10 @@ $Cred = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
 Import-PSSession $Session
 Import-Module MSOnline
-Connect-MsolService -Credential $Cred -ErrorAction "Inquire"
+Connect-MsolService -Credential $Cred -ErrorAction Inquire
 
+#Variables
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 
 $message  = 'Please Pick what you want to do'
 $question = 'Pick one of the following from below'
@@ -664,8 +681,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
-#Variables
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 
 
 # Option 0: Office 365-Adding Public Folder Permissions
@@ -673,30 +688,30 @@ $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 if ($decision -eq 0) {
 Write-Host "Getting a list of Public Folders"
 Get-PublicFolder -Identity "\" -Recurse
-    do {
-    $Identity = read-host "Public Folder Name (Alias)"
-    Write-Host "Adding Permissions to Public Folders"
-    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
-    Write-Host "Done"
-    $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+do {
+$Identity = read-host "Public Folder Name (Alias)"
+Write-Host "Adding Permissions to Public Folders"
+Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+Write-Host "Done"
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
     
-    } Until ($repeat -eq 'n')
+} Until ($repeat -eq 'n')
 
 }
 
 # Option 1: Office 365-Removing Public Folder Permissions
 
 if ($decision -eq 1) {
-    Write-Host "Getting a list of Public Folders"
-    Get-PublicFolder -Identity "\" -Recurse
-        do {
-        $Identity = read-host "Public Folder Name (Alias)"
-        Write-Host "Removing Permissions to Public Folders"
-        Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
-        Write-Host "Done"
-        $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+Write-Host "Getting a list of Public Folders"
+Get-PublicFolder -Identity "\" -Recurse
+do {
+$Identity = read-host "Public Folder Name (Alias)"
+Write-Host "Removing Permissions to Public Folders"
+Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+Write-Host "Done"
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
         
-        } Until ($repeat -eq 'n')
+} Until ($repeat -eq 'n')
   
 }
     
@@ -709,11 +724,35 @@ Exit
       }
 
 }
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Option 1: Exchange on Premise
-
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Option 1: Exchange on Premise-Public Folders (2013-2016)
 
 if ($decision -eq 1) {
+$confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+if ($confirmation -eq 'y') {
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+Set-ADServerSettings -ViewEntireForest $true
+}
+    
+if ($confirmation -eq 'n') {
+$wshell = New-Object -ComObject Wscript.Shell
+    
+$answer = $answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
+Open Powershell as administrator
+Type: *Enable-PSRemoting* without the stars and hit enter.
+Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
+if($answer -eq 2){Break}
+if($answer -eq 2){Break}
+            
+$Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
+$UserCredential = Get-Credential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
+Import-PSSession $Session -DisableNameChecking
+Set-ADServerSettings -ViewEntireForest $true   
+ }
+
+#Variables
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
@@ -724,12 +763,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
 
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
-
-# Option 0: Exchange on Premise-Adding Public Folder Permissions
-
-#Variables
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
-
 
 # Option 0: Exchange on Premise-Adding Public Folder Permissions
 
@@ -776,11 +809,36 @@ Exit
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# Option 1: Exchange 2010 on Premise
+# Option 1: Exchange 2010 on Premise Public Folders
 
 
 if ($decision -eq 2) {
 
+$confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+if ($confirmation -eq 'y') {
+Add-PSsnapin Microsoft.Exchange.Management.PowerShell.E2010
+Set-ADServerSettings -ViewEntireForest $true
+}
+    
+if ($confirmation -eq 'n') {
+$wshell = New-Object -ComObject Wscript.Shell
+$answer = $wshell.Popup("Before Continuing, please $answer = remote into your Exchange server.
+Open Powershell as administrator
+Type: *Enable-PSRemoting* without the stars and hit enter.
+Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
+if($answer -eq 2){Break}
+if($answer -eq 2){Break}
+            
+$Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
+$UserCredential = Get-Credential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
+Import-PSSession $Session -DisableNameChecking
+Set-ADServerSettings -ViewEntireForest $true   
+}
+
+#Variables
+$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
+    
     
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
@@ -791,11 +849,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
     
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
-    
-# Option 0: Exchange 2010 on Premise-Adding Public Folder Permissions
-    
-#Variables
-$User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
     
     
 # Option 0: Exchange 2010 on Premise-Adding Public Folder Permissions
@@ -845,11 +898,12 @@ Exit
 
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("Excellent!! Permissions are done and now we can set the AutoLogon feature for this account.
+$answer = $wshell.Popup("Excellent!! Permissions are done and now we can set the AutoLogon feature for this account.
 Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
 Click OK to Continue",0,"AutoLogin",0x1)
+if($answer -eq 2){Break}
 
-Start-Process -FilePath "C:\zlibrary\A2E-Enterprise\Setup\AutoLogon.exe" -wait -ErrorAction Stop
+Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
 
 
 # Step 4-----------------------------------------------------------------------------------------------------------------------------------------------------Step 4
@@ -857,9 +911,10 @@ Start-Process -FilePath "C:\zlibrary\A2E-Enterprise\Setup\AutoLogon.exe" -wait -
 
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("System Setup Complete. Lets Install the Software",0,"Complete",0x1)
+$answer = $wshell.Popup("System Setup Complete. Lets Install the Software",0,"Complete",0x1)
+if($answer -eq 2){Break}
 
-Start-Process -FilePath "C:\zlibrary\A2E-Enterprise\Add2ExchangeSetup.msi" -wait -ErrorAction Stop
+Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction Stop
 
 
 
@@ -868,38 +923,30 @@ Start-Process -FilePath "C:\zlibrary\A2E-Enterprise\Add2ExchangeSetup.msi" -wait
 
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("Once the Install is complete, Clcik OK to finish the setup",0,"Finishing Installation",0x1)
+$answer = $wshell.Popup("Once the Install is complete, Clcik OK to finish the setup",0,"Finishing Installation",0x1)
+if($answer -eq 2){Break}
 
 Write-Host "Creating Registry Favorites"
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Session Manager" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "EnableLUA" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name ".Net Framework" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\.NETFramework" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "OpenDoor Software" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Software®" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Add2Exchange"  -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Pendingfilerename" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "AutoDiscover" -Type string -Value "Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Office" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Group Policy History" -Type string -Value "Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Group Policy\History" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Windows Logon" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" | out-null
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Windows Update" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Session Manager" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlNew\Control\Session Manager" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "EnableLUA" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name ".Net Framework" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\.NETFramework" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "OpenDoor Software" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Software®" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Add2Exchange"  -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Pendingfilerename" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\ControlNew001\Control\Session Manager" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "AutoDiscover" -Type string -Value "Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Office" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Group Policy History" -Type string -Value "Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Group Policy\History" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Windows Logon" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" | out-null
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Windows Update" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" | out-null
 
-# Desktop Shortcuts
-
-$wshShell = New-Object -ComObject "WScript.Shell"
-$urlShortcut = $wshShell.CreateShortcut(
-(Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "Disable Outlook Social Connector through GPO.url")
-)
-$urlShortcut.TargetPath = "https://support.microsoft.com/en-us/help/2020103/how-to-manage-the-outlook-social-connector-by-using-group-policy"
-$urlShortcut.Save()
-
-Copy-Item -Path "C:\zlibrary\A2E-Enterprise\support.txt" -Destination "$home\Desktop\Support.txt"
 
 # Step 6-----------------------------------------------------------------------------------------------------------------------------------------------------Step 6
 # Completion and Wrap-Up
 
 $wshell = New-Object -ComObject Wscript.Shell
 
-$wshell.Popup("Setup is Complete. You can now start the Add2Echange Console",0,"Done",0x1)
+$answer = $wshell.Popup("Setup is Complete. You can now start the Add2Echange Console",0,"Done",0x1)
+if($answer -eq 2){Break}
 Get-PSSession | Remove-PSSession
 Exit
 # End Scripting

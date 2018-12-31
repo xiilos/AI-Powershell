@@ -26,17 +26,23 @@ New-Item -ItemType directory -Path C:\zlibrary
  }
 
 #Download the latest Full Installation
-$confirmation = Read-Host "Would you like me to download the latest Add2Exchange? [Y/N]"
+$confirmation = Read-Host "Have you already downloaded the latest Full Add2Exchange? [Y/N]"
     if ($confirmation -eq 'y') {
 
-        Write-Host "Downloading Add2Exchange......"
-        Write-Host "This can take a few Minutes"
-        $url = "ftp://ftp.diditbetter.com/A2E-Enterprise/A2ENewInstall/a2e-enterprise.zip"
-        $output = "C:\zlibrary\a2e-enterprise.zip"
-        (New-Object System.Net.WebClient).DownloadFile($url, $output)
-        Write-Host "Download Done"
-        Write-Host "Unpacking"    
-        Expand-Archive -Path "C:\zlibrary\a2e-enterprise.zip" -DestinationPath "c:\zlibrary"
+      
+
+}
+
+if ($confirmation -eq 'n') {
+
+    Write-Host "Downloading Add2Exchange......"
+    Write-Host "This can take a few Minutes"
+    $url = "ftp://ftp.diditbetter.com/A2E-Enterprise/A2ENewInstall/a2e-enterprise.zip"
+    $output = "C:\zlibrary\a2e-enterprise.zip"
+    (New-Object System.Net.WebClient).DownloadFile($url, $output)
+    Write-Host "Download Done"
+    Write-Host "Unpacking"    
+    Expand-Archive -Path "C:\zlibrary\a2e-enterprise.zip" -DestinationPath "c:\zlibrary"
 
 }
 
