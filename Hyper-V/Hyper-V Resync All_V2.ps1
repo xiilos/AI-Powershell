@@ -7,7 +7,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 # Script #
 
-$Hosts = "Hyper-V08"
+$Hosts = Read-Host "Hyper-V Host Name?"
 ForEach ($Server in $Hosts)
 {
 $Server
