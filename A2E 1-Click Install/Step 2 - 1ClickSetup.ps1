@@ -242,13 +242,12 @@ Set-ADServerSettings -ViewEntireForest $true
 }
 
 if ($confirmation -eq 'n') {
-$wshell = New-Object -ComObject Wscript.She$answer = ll
+$wshell = New-Object -ComObject Wscript.Shell
 
 $answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
-if($answer -eq 2){Break}
 if($answer -eq 2){Break}
         
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
@@ -441,7 +440,6 @@ $answer = $answer = $wshell.Popup("Before Continuing, please remote into your Ex
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
-if($answer -eq 2){Break}
 if($answer -eq 2){Break}
             
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
@@ -742,7 +740,6 @@ Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
 if($answer -eq 2){Break}
-if($answer -eq 2){Break}
             
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
 $UserCredential = Get-Credential
@@ -826,7 +823,6 @@ $answer = $wshell.Popup("Before Continuing, please $answer = remote into your Ex
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
-if($answer -eq 2){Break}
 if($answer -eq 2){Break}
             
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
