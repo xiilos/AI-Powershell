@@ -11,7 +11,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 #Step 1: Account Creation
 #Step 2: Upgrade .Net and Powershell if needed
-#Step 3: Create zLibrary and Download Add2Exchange Software
+#Step 3: Create zLibrary and Create Shortcuts :Download Add2Exchange Software
 #Step 4: Install Outlook and Setup Profile
 #Step 5: Mailbox Creation
 #Step 6: Create a Mail Profile
