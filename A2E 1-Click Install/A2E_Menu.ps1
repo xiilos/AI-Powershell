@@ -14,18 +14,18 @@ $Add2Exchange_Menu.text          = "DidItBetter Software Add2Exchange Setup"
 $Add2Exchange_Menu.BackColor     = "#ffffff"
 $Add2Exchange_Menu.TopMost       = $false
 
-$Step1Initital                   = New-Object system.Windows.Forms.Button
-$Step1Initital.text              = "Step 1: Run Me First"
-$Step1Initital.width             = 165
-$Step1Initital.height            = 30
-$Step1Initital.location          = New-Object System.Drawing.Point(14,58)
-$Step1Initital.Font              = 'Microsoft Sans Serif,10'
+$Step1Initialize                   = New-Object system.Windows.Forms.Button
+$Step1Initialize.text              = "Step 1: Run Me First"
+$Step1Initialize.width             = 165
+$Step1Initialize.height            = 30
+$Step1Initialize.location          = New-Object System.Drawing.Point(14,58)
+$Step1Initialize.Font              = 'Microsoft Sans Serif,10'
 
 $DIB_Logo                        = New-Object system.Windows.Forms.PictureBox
 $DIB_Logo.width                  = 274
 $DIB_Logo.height                 = 64
 $DIB_Logo.location               = New-Object System.Drawing.Point(8,346)
-$DIB_Logo.imageLocation          = "\\FILESERV-DB1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\A2E 1-Click Install/DidItBetter_logo.png"
+$DIB_Logo.imageLocation          = ".\Setup\DidItBetter_logo.png"
 $DIB_Logo.SizeMode               = [System.Windows.Forms.PictureBoxSizeMode]::zoom
 
 $Step2Setup                      = New-Object system.Windows.Forms.Button
@@ -230,25 +230,25 @@ $PiblictoPublic.height           = 30
 $PiblictoPublic.location         = New-Object System.Drawing.Point(533,345)
 $PiblictoPublic.Font             = 'Microsoft Sans Serif,10'
 
-$Add2Exchange_Menu.controls.AddRange(@($Step1Initital,$DIB_Logo,$Step2Setup,$FirstTimeInstall,$ExchangePermissions,$O365OnPremPermissions,$Add2OutlookPermissions,$Tools,$RunAutoLogon,$Dir_Sync,$DisableUAC,$GroupPolicyResults,$LegacyPowershell,$OutlookAddins,$RegFavs,$ExportProfile1,$Downloads,$DownloadLink,$SQLExpress,$Support,$GetSupport,$SearchDidItBetter,$GuideA2E,$FTPdownloads,$SyncConcepts,$GALSync,$PrivatetoProvate,$PrivatetoPublic,$PublictoPrivate,$PiblictoPublic))
+$Add2Exchange_Menu.controls.AddRange(@($Step1Initialize,$DIB_Logo,$Step2Setup,$FirstTimeInstall,$ExchangePermissions,$O365OnPremPermissions,$Add2OutlookPermissions,$Tools,$RunAutoLogon,$Dir_Sync,$DisableUAC,$GroupPolicyResults,$LegacyPowershell,$OutlookAddins,$RegFavs,$ExportProfile1,$Downloads,$DownloadLink,$SQLExpress,$Support,$GetSupport,$SearchDidItBetter,$GuideA2E,$FTPdownloads,$SyncConcepts,$GALSync,$PrivatetoProvate,$PrivatetoPublic,$PublictoPrivate,$PiblictoPublic))
 
-$Step1Initital.Add_Click({RUN_ME_FIRST})
-$Step2Setup.Add_Click({  })
-$O365OnPremPermissions.Add_Click({  })
-$Add2OutlookPermissions.Add_Click({  })
-$RunAutoLogon.Add_Click({  })
-$Dir_Sync.Add_Click({  })
-$DisableUAC.Add_Click({  })
-$GroupPolicyResults.Add_Click({  })
-$LegacyPowershell.Add_Click({  })
-$OutlookAddins.Add_Click({  })
-$RegFavs.Add_Click({  })
-$ExportProfile1.Add_Click({  })
+$Step1Initialize.Add_Click({.\Step1Initialize.ps1})
+$Step2Setup.Add_Click({.\Step2Setup.ps1})
+$O365OnPremPermissions.Add_Click({.\setup\PermissionsOnPremOrO365Combined.ps1})
+$Add2OutlookPermissions.Add_Click({.\setup\Add2Outlook Set Granular permissions.ps1})
+$RunAutoLogon.Add_Click({Start-Process -FilePath ".\Setup\AutoLogon.exe"})
+$Dir_Sync.Add_Click({.\setup\Dir_Sync.ps1})
+$DisableUAC.Add_Click({.\setup\Disable_UAC.ps1})
+$GroupPolicyResults.Add_Click({.\setup\GP_Results.ps1})
+$LegacyPowershell.Add_Click({.\setup\Legacy_PowerShell.ps1})
+$OutlookAddins.Add_Click({.\setup\Remove_Outlook_Add_ins.ps1})
+$RegFavs.Add_Click({.\setup\Registry_Favorites.ps1})
+$ExportProfile1.Add_Click({.\setup\Export_License_and_Profile1.ps1})
 $DownloadLink.Add_Click({Start-Process http://support.DidItBetter.com/Secure/Login.aspx?returnurl=/downloads.aspx})
 $SQLExpress.Add_Click({Start-Process ftp://ftp.DidItBetter.com/SQL/SQL2012Management/2012SQLManagementStudio_x64_ENU.exe})
 $GetSupport.Add_Click({Start-Process http://support.DidItBetter.com/support-request.aspx})
 $SearchDidItBetter.Add_Click({Start-Process http://support.DidItBetter.com/})
-$GuideA2E.Add_Click({  })
+$GuideA2E.Add_Click({Start-Process "2019 Add2Exchange Quick Start Guide.pdf"})
 $GALSync.Add_Click({  })
 $PrivatetoProvate.Add_Click({  })
 $PrivatetoPublic.Add_Click({  })
@@ -259,83 +259,5 @@ $FTPdownloads.Add_Click({Start-Process ftp.DidItBetter.com})
 
 
 #Functions start below here
-
-Function Step1Initital {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-& $setup\RUN_ME_First.ps1
-}
-
-
-Function AutoLogin {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\AutoLogin.ps1
-}
-
-
-Function A2E_Updates {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\A2E_Updates.ps1
-
-}
-
-
-Function Powershell_MSOnline_Update {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\Powershell_MSOnline_Update.ps1
-
-}
-
-Function GP_Results {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\GP_Results.ps1
-
-}
-
-
-Function Registry_Favorites {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\Registry_Favorites.ps1
-}
-
-Function Disable_UAC {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\Disable_UAC.ps1
-
-}
-
-
-Function Remove_Outlook_Add_ins {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\ReEnable_Outlook_Add_ins.ps1
-
-}
-
-Function ReEnable_Outlook_Add_ins {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\Remove_Outlook_Add_ins.ps1
-}
-
-Function Export_License_and_Profile1 {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\Export_License_and_Profile1.ps1
-
-}
-
-Function VirginizeWindows10 {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\VirginizeWindows10.ps1
-
-}
-
-
-Function Redemption {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\Redemption.ps1
-}
-
-Function 1ClickSetup {
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-    & $setup\1ClickSetup.ps1
-}
 
 [void]$Add2Exchange_Menu.ShowDialog()

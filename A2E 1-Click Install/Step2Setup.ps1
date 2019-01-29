@@ -73,7 +73,7 @@ Set-PSRepository -Name psgallery -InstallationPolicy Trusted
 Install-Module MSonline -Confirm:$false -WarningAction "Inquire"} 
 Else{Write-Host 'Module is installed'}
 
-Import-Module MSOnline
+#Import-Module MSOnline
 
 Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
@@ -83,6 +83,8 @@ Import-Module MSOnline
 Connect-MsolService -Credential $Cred -ErrorAction Inquire
 
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
+
+do {
 
 $message  = 'Please Pick what you want to do'
 $question = 'Pick one of the following from below'
@@ -136,7 +138,6 @@ Write-Host "Done"
 
 if ($decision -eq 3) {
 
-do {
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
 
@@ -147,12 +148,7 @@ ForEach ($Member in $DistributionGroupName)
 {
 Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 }
-
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
-
-Write-Host "Quitting"
+Write-Host "Done"
 
 }
 
@@ -160,7 +156,6 @@ Write-Host "Quitting"
 
 if ($decision -eq 4) {
 
-do {
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
 
@@ -171,12 +166,7 @@ ForEach ($Member in $DistributionGroupName)
 {
 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
 }
-
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
-
-Write-Host "Quitting"
+Write-Host "Done"
 
 }
 
@@ -184,18 +174,12 @@ Write-Host "Quitting"
 
 if ($decision -eq 5) {
 
-do {
 
 $Identity = read-host "Enter user Email Address"
 
 Write-Host "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
-
-Write-Host "Quitting"
+Write-Host "Done"
 
 }
 
@@ -203,18 +187,12 @@ Write-Host "Quitting"
 
 if ($decision -eq 6) {
 
-do {
 
 $Identity = read-host "Enter user Email Address"
 
 Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
-
-Write-Host "Quitting"
+Write-Host "Done"
 
 }
 
@@ -225,6 +203,9 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
   }
+
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
+} Until ($repeat -eq 'n')
 
 }
 
@@ -261,6 +242,8 @@ Set-ADServerSettings -ViewEntireForest $true
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
 
+Do {
+
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
 
@@ -288,7 +271,7 @@ New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurr
 Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
 Write-Host "Checking............"
 Start-Sleep -s 2
-Write-Host "All Done"
+Write-Host "Done"
 
 } 
 
@@ -321,15 +304,13 @@ Write-Host "Checking............"
 Write-Host "Adding Throttling Policy"
 New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
 Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
-Write-Host "All Done"
+Write-Host "Done"
 
 }
 
 # Option 3: Exchange on Premise-Adding Permissions to dist. list
 
 if ($decision -eq 3) {
-
-do {
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
 Write-Host "Adding Add2Exchange Permissions"
@@ -338,17 +319,14 @@ ForEach ($Member in $DistributionGroupName)
 {
 Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 }
+Write-Host "Done"
 $confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
 if ($confirmation -eq 'y') {
 Write-Host "Adding Throttling Policy"
 New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
 Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
 }
-
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
-
+Write-Host "Done"
 
 }
 
@@ -356,7 +334,6 @@ $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 if ($decision -eq 4) {
 
-do {
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
 Write-Host "Removing Add2Exchange Permissions"
@@ -365,11 +342,7 @@ ForEach ($Member in $DistributionGroupName)
 {
 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
 }
-
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
-
+Write-Host "Done"
 
 }
 
@@ -377,39 +350,29 @@ $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
 if ($decision -eq 5) {
 
-do {
-
 $Identity = read-host "Enter user Email Address";
 
 Write-Host "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+Write-Host "Done"
 $confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
 if ($confirmation -eq 'y') {
 Write-Host "Adding Throttling Policy"
 New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
 Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
 }
-
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
-
+Write-Host "Done"
 
 }
 
 # Option 6: Exchange on Premise-Removing permissions to single user
 
 if ($decision -eq 6) {
-do {
 
 $Identity = read-host "Enter user Email Address"
 Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
-
-
+Write-Host "Done"
 }
   
 # Option 7: Exchange on Premise-Quit
@@ -419,6 +382,10 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
     }
+
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
+} Until ($repeat -eq 'n')
+
 }
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -436,7 +403,7 @@ Set-ADServerSettings -ViewEntireForest $true
 if ($confirmation -eq 'n') {
 $wshell = New-Object -ComObject Wscript.Shell
     
-$answer = $answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
+$answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
@@ -452,6 +419,8 @@ Set-ADServerSettings -ViewEntireForest $true
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
   
+do {
+
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
   
@@ -478,7 +447,7 @@ New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $nul
 Set-Mailbox $User -ThrottlingPolicy A2EPolicy
 Write-Host "Checking............"
 Start-Sleep -s 2
-Write-Host "All Done"
+Write-Host "Done"
   
 } 
   
@@ -511,14 +480,13 @@ Write-Host "Checking............"
 Write-Host "Adding Throttling Policy"
 New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
 Set-Mailbox $User -ThrottlingPolicy A2EPolicy
-Write-Host "All Done"
+Write-Host "Done"
   
 }
   
 # Option 3: Exchange 2010 on Premise-Adding Permissions to dist. list
   
 if ($decision -eq 3) {
-  do {
   
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
   
@@ -529,23 +497,19 @@ ForEach ($Member in $DistributionGroupName)
 {
 Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 }
+Write-Host "Done"
 $confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
 if ($confirmation -eq 'y') {
 Write-Host "Adding Throttling Policy"
 New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
 Set-Mailbox $User -ThrottlingPolicy A2EPolicy
 }
-  
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-  
-} Until ($repeat -eq 'n')
-  
+Write-Host "Done"  
 }
   
 # Option 4: Exchange 2010 on Premise-Removing dist. list permissions
   
 if ($decision -eq 4) {
- do {  
 
 $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
   
@@ -556,10 +520,7 @@ ForEach ($Member in $DistributionGroupName)
 {
 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
 }
-  
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-  
-} Until ($repeat -eq 'n')  
+Write-Host "Done"
   
 }
   
@@ -567,41 +528,31 @@ $repeat = Read-Host 'Do you want to run it again? [Y/N]'
   
 if ($decision -eq 5) {
   
-do {
-  
 $Identity = read-host "Enter user Email Address";
   
 Write-Host "Adding Add2Exchange Permissions to Single User"
 Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+Write-Host "Done"
 $confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
 if ($confirmation -eq 'y') {
 Write-Host "Adding Throttling Policy"
 New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
 Set-Mailbox $User -ThrottlingPolicy A2EPolicy
 }
-  
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-  
-} Until ($repeat -eq 'n')
-   
+Write-Host "Done"   
 }
   
 # Option 6: Exchange 2010 on Premise-Removing permissions to single user
   
 if ($decision -eq 6) {
-do {
   
 $Identity = read-host "Enter user Email Address"
   
 Write-Host "Removing Add2Exchange Permissions to Single User"
 Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-  
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
- 
-} Until ($repeat -eq 'n')
-    
+Write-Host "Done"
 }
-  
+
 # Option 7: Exchange 2010 on Premise-Quit
   
 if ($decision -eq 7) {
@@ -609,6 +560,10 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
     }
+
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
+} Until ($repeat -eq 'n')
+
 }
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -616,7 +571,8 @@ Exit
 
 $confirmation = Read-Host "Do we need to add permissions to any Public Folders? [Y/N]"
 if ($confirmation -eq 'N') {
-Write-host "Resuming"
+Write-Host "Done"
+Write-Host "Quitting"
 
 }
 
@@ -657,7 +613,7 @@ Set-PSRepository -Name psgallery -InstallationPolicy Trusted
 Install-Module MSonline -Confirm:$false -WarningAction "Inquire"} 
 Else{Write-Host 'Module is installed'}
 
-Import-Module MSOnline
+#Import-Module MSOnline
 
 Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
@@ -668,6 +624,8 @@ Connect-MsolService -Credential $Cred -ErrorAction Inquire
 
 #Variables
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
+
+Do {
 
 $message  = 'Please Pick what you want to do'
 $question = 'Pick one of the following from below'
@@ -686,14 +644,10 @@ $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 if ($decision -eq 0) {
 Write-Host "Getting a list of Public Folders"
 Get-PublicFolder -Identity "\" -Recurse
-do {
 $Identity = read-host "Public Folder Name (Alias)"
 Write-Host "Adding Permissions to Public Folders"
 Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
 Write-Host "Done"
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-    
-} Until ($repeat -eq 'n')
 
 }
 
@@ -702,24 +656,23 @@ $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 if ($decision -eq 1) {
 Write-Host "Getting a list of Public Folders"
 Get-PublicFolder -Identity "\" -Recurse
-do {
 $Identity = read-host "Public Folder Name (Alias)"
 Write-Host "Removing Permissions to Public Folders"
 Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
 Write-Host "Done"
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-        
-} Until ($repeat -eq 'n')
   
 }
-    
+
 # Option 2: Office 365-Quit
     
 if ($decision -eq 2) {
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
-      }
+}
+
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
+} Until ($repeat -eq 'n')
 
 }
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -735,7 +688,7 @@ Set-ADServerSettings -ViewEntireForest $true
 if ($confirmation -eq 'n') {
 $wshell = New-Object -ComObject Wscript.Shell
     
-$answer = $answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
+$answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
@@ -750,6 +703,8 @@ Set-ADServerSettings -ViewEntireForest $true
 
 #Variables
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
+
+Do {
 
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
@@ -766,14 +721,10 @@ $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 if ($decision -eq 0) {
 Write-Host "Getting a list of Public Folders"
 Get-PublicFolder -Identity "\" -Recurse
-do {
 $Identity = read-host "Public Folder Name (Alias)"
 Write-Host "Adding Permissions to Public Folders"
 Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
 Write-Host "Done"
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-    
-} Until ($repeat -eq 'n')
 
 }
 
@@ -782,18 +733,12 @@ $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 if ($decision -eq 1) {
 Write-Host "Getting a list of Public Folders"
 Get-PublicFolder -Identity "\" -Recurse
-do {
 $Identity = read-host "Public Folder Name (Alias)"
 Write-Host "Removing Permissions to Public Folders"
 Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
 Write-Host "Done"
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-        
-} Until ($repeat -eq 'n')
  
     }
-
-
     
 # Option 2: Exchange on Premise-Quit
     
@@ -802,6 +747,10 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
       }
+
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
+} Until ($repeat -eq 'n')
+
 }
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -819,7 +768,7 @@ Set-ADServerSettings -ViewEntireForest $true
     
 if ($confirmation -eq 'n') {
 $wshell = New-Object -ComObject Wscript.Shell
-$answer = $wshell.Popup("Before Continuing, please $answer = remote into your Exchange server.
+$wshell.Popup("Before Continuing, please $answer = remote into your Exchange server.
 Open Powershell as administrator
 Type: *Enable-PSRemoting* without the stars and hit enter.
 Once Done, click OK to Continue",0,"Enable PSRemoting",0x1)
@@ -834,7 +783,8 @@ Set-ADServerSettings -ViewEntireForest $true
 
 #Variables
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
-    
+
+Do {
     
 $message  = 'Do you Want to remove or Add Add2Exchange Permissions'
 $question = 'Pick one of the following from below'
@@ -852,14 +802,10 @@ $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 if ($decision -eq 0) {
 Write-Host "Getting a list of Public Folders"
 Get-PublicFolder -Identity "\" -Recurse
-do {
 $Identity = read-host "Public Folder Name (Alias)"
 Write-Host "Adding Permissions to Public Folders"
 Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
 Write-Host "Done"
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-        
-} Until ($repeat -eq 'n')
    
 }
     
@@ -868,17 +814,13 @@ $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 if ($decision -eq 1) {
 Write-Host "Getting a list of Public Folders"
 Get-PublicFolder -Identity "\" -Recurse
-do {
 $Identity = read-host "Public Folder Name (Alias)"
 Write-Host "Removing Permissions to Public Folders"
 Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
 Write-Host "Done"
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
-            
-} Until ($repeat -eq 'n')
        
 }
-    
+
 # Option 2: Exchange 2010 on Premise- Quit
     
 if ($decision -eq 2) {
@@ -886,6 +828,10 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+
+$repeat = Read-Host 'Do you want to run it again? [Y/N]'
+} Until ($repeat -eq 'n')
+
 }
   }
 
