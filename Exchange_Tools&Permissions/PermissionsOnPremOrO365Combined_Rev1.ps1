@@ -52,7 +52,7 @@ Set-PSRepository -Name psgallery -InstallationPolicy Trusted
 Install-Module MSonline -Confirm:$false -WarningAction "Inquire"} 
 Else{Write-Host 'Module is installed'}
 
-Import-Module MSOnline
+#Import-Module MSOnline
 
 Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
