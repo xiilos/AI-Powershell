@@ -248,7 +248,7 @@ $DownloadLink.Add_Click({Start-Process http://support.DidItBetter.com/Secure/Log
 $SQLExpress.Add_Click({Start-Process ftp://ftp.DidItBetter.com/SQL/SQL2012Management/2012SQLManagementStudio_x64_ENU.exe})
 $GetSupport.Add_Click({Start-Process http://support.DidItBetter.com/support-request.aspx})
 $SearchDidItBetter.Add_Click({Start-Process http://support.DidItBetter.com/})
-$GuideA2E.Add_Click({Start-Process "2019 Add2Exchange Quick Start Guide.pdf"})
+$GuideA2E.Add_Click({Start-Process "2019 Add2Exchange Enterprise Guide.pdf"})
 $GALSync.Add_Click({  })
 $PrivatetoProvate.Add_Click({  })
 $PrivatetoPublic.Add_Click({  })
