@@ -258,7 +258,7 @@ $Add2Exchange_Menu.controls.AddRange(@($UpgradeAdd2Exchange,$DIB_Logo,$UpgradeRM
 $UpgradeAdd2Exchange.Add_Click({Start-Process ftp://ftp.diditbetter.com/A2E-Enterprise/Upgrades/a2e-enterprise_upgrade.exe})
 $UpgradeRMM.Add_Click({Start-Process ftp://ftp.diditbetter.com/RMM-Enterprise/Upgrades/rmm-enterprise.exe})
 $O365OnPremPermissions.Add_Click({.\setup\PermissionsOnPremOrO365Combined.ps1})
-$Add2OutlookPermissions.Add_Click({.\setup\Add2Outlook Set Granular permissions.ps1})
+$Add2OutlookPermissions.Add_Click({.\setup\Add2Outlook_Set_Granular_permissions.ps1})
 $RunAutoLogon.Add_Click({.\Setup\AutoLogon.exe})
 $Dir_Sync.Add_Click({.\setup\Dir_Sync.ps1})
 $DisableUAC.Add_Click({.\setup\Disable_UAC.ps1})
