@@ -32,12 +32,12 @@ Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
 
 Import-Module MSOnline
 
-Write-Output "Sign in to Office365 as Tenant Admin"
+Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
-Import-PSSession $Session
+Connect-MsolService -Credential $Cred
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
+Import-PSSession $Session -DisableNameChecking
 Import-Module MSOnline
-Connect-MsolService -Credential $Cred -ErrorAction "Inquire"
 
 
 $message  = 'Please Pick what you want to do'

@@ -73,14 +73,13 @@ Set-PSRepository -Name psgallery -InstallationPolicy Trusted
 Install-Module MSonline -Confirm:$false -WarningAction "Inquire"} 
 Else{Write-Host 'Module is installed'}
 
-#Import-Module MSOnline
 
 Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
-Import-PSSession $Session
+Connect-MsolService -Credential $Cred
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
+Import-PSSession $Session -DisableNameChecking
 Import-Module MSOnline
-Connect-MsolService -Credential $Cred -ErrorAction Inquire
 
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
 
@@ -613,14 +612,12 @@ Set-PSRepository -Name psgallery -InstallationPolicy Trusted
 Install-Module MSonline -Confirm:$false -WarningAction "Inquire"} 
 Else{Write-Host 'Module is installed'}
 
-#Import-Module MSOnline
-
 Write-Host "Sign in to Office365 as Tenant Admin"
 $Cred = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $Cred -Authentication Basic -AllowRedirection
-Import-PSSession $Session
+Connect-MsolService -Credential $Cred
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
+Import-PSSession $Session -DisableNameChecking
 Import-Module MSOnline
-Connect-MsolService -Credential $Cred -ErrorAction Inquire
 
 #Variables
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";

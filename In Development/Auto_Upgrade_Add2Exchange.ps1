@@ -37,9 +37,18 @@ New-Item -ItemType directory -Path C:\zlibrary
 
 #Downloading Add2Exchange
 
-Write-Host "Downloading Add2Exchange; Please wait...."
-Invoke-WebRequest "ftp://ftp.diditbetter.com/A2E-Enterprise/Upgrades/a2e-enterprise_upgrade.exe" -outfile "c:\zlibrary\a2e-enterprise_upgrade.exe"
-Write-Host "Done"
+Write-Host "Downloading Add2Exchange"
+Write-Host "Please Wait......"
+
+$URL = "ftp://ftp.diditbetter.com/A2E-Enterprise/Upgrades/a2e-enterprise_upgrade.exe"
+$Output = "c:\zlibrary\a2e-enterprise_upgrade.exe"
+$Start_Time = Get-Date
+
+(New-Object System.Net.WebClient).DownloadFile($URL, $Output)
+
+Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+
+Write-Host "Finished Downloading"
 
 #Unpacking Add2Exchange
 
