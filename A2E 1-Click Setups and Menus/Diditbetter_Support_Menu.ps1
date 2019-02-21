@@ -255,7 +255,7 @@ $ExchangeMigrate.Font            = 'Microsoft Sans Serif,10'
 
 $Add2Exchange_Menu.controls.AddRange(@($UpgradeAdd2Exchange,$DIB_Logo,$UpgradeRMM,$UpgradeA2E,$ExchangePermissions,$O365OnPremPermissions,$Add2OutlookPermissions,$Tools,$RunAutoLogon,$Dir_Sync,$DisableUAC,$GroupPolicyResults,$LegacyPowershell,$OutlookAddins,$RegFavs,$ExportProfile1,$Downloads,$DownloadLink,$SQLExpress,$Support,$GetSupport,$SearchDiditbetter,$GuideA2E,$FTPdownloads,$SyncConcepts,$GALSync,$PrivatetoPrivate,$PrivatetoPublic,$PublictoPrivate,$PiblictoPublic,$TemplateRels,$Migrations,$ExchangeMigrate))
 
-$UpgradeAdd2Exchange.Add_Click({Start-Process ftp://ftp.diditbetter.com/A2E-Enterprise/Upgrades/a2e-enterprise_upgrade.exe})
+$UpgradeAdd2Exchange.Add_Click({.\Setup\Auto_Upgrade_Add2Exchange.ps1})
 $UpgradeRMM.Add_Click({Start-Process ftp://ftp.diditbetter.com/RMM-Enterprise/Upgrades/rmm-enterprise.exe})
 $O365OnPremPermissions.Add_Click({.\setup\PermissionsOnPremOrO365Combined.ps1})
 $Add2OutlookPermissions.Add_Click({.\setup\Add2Outlook_Set_Granular_permissions.ps1})
