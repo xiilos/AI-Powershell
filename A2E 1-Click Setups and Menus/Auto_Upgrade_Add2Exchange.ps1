@@ -18,7 +18,7 @@ Write-Host "Done"
 #Remove Add2Exchange
 
 Write-Host "Removing Add2Exchange"
-Write-Hist "Please Wait...."
+Write-Host "Please Wait...."
 $Program = Get-WmiObject -Class Win32_Product -Filter "Name = 'Add2Exchange'"
 $Program.Uninstall()
 Write-Host "Done"
@@ -65,6 +65,7 @@ $Location = Get-ChildItem -Path . -Recurse | Where-Object {$_.LastWriteTime -gt 
 Set-Location $Location
 Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Stop
 Write-Host "Finished...Upgrade Complete"
+Start-Sleep -Seconds 3
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
