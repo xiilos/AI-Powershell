@@ -7,11 +7,22 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 #Execution Policy
 
-#Set-ExecutionPolicy -ExecutionPolicy Unrestricted
-
+Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
+
+  $Service = Get-Service -Name Add2Exchange Service
+  if ($Service.Status -ne "Running"){
+  Start-Service $ServiceName
+  Write-Host "Starting " $ServiceName " service" 
+  " ---------------------- " 
+  " Service is now started"
+  }
+  if ($arrService.Status -eq "running"){ 
+  Write-Host "$ServiceName service is already started"
+  }
+  }
 
 
 Write-Host "Done"
