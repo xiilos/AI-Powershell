@@ -27,7 +27,7 @@ $DIB_Logo                        = New-Object system.Windows.Forms.PictureBox
 $DIB_Logo.width                  = 274
 $DIB_Logo.height                 = 64
 $DIB_Logo.location               = New-Object System.Drawing.Point(15,391)
-$DIB_Logo.imageLocation          = ".\Setup\DidItBetter_logo.png"
+$DIB_Logo.imageLocation          = ".\DidItBetter_logo.png"
 $DIB_Logo.SizeMode               = [System.Windows.Forms.PictureBoxSizeMode]::zoom
 
 $UpgradeRMM                      = New-Object system.Windows.Forms.Button
@@ -255,18 +255,18 @@ $ExchangeMigrate.Font            = 'Microsoft Sans Serif,10'
 
 $Add2Exchange_Menu.controls.AddRange(@($UpgradeAdd2Exchange,$DIB_Logo,$UpgradeRMM,$UpgradeA2E,$ExchangePermissions,$O365OnPremPermissions,$Add2OutlookPermissions,$Tools,$RunAutoLogon,$Dir_Sync,$DisableUAC,$GroupPolicyResults,$LegacyPowershell,$OutlookAddins,$RegFavs,$ExportProfile1,$Downloads,$DownloadLink,$SQLExpress,$Support,$GetSupport,$SearchDiditbetter,$GuideA2E,$FTPdownloads,$SyncConcepts,$GALSync,$PrivatetoPrivate,$PrivatetoPublic,$PublictoPrivate,$PiblictoPublic,$TemplateRels,$Migrations,$ExchangeMigrate))
 
-$UpgradeAdd2Exchange.Add_Click({.\Setup\Auto_Upgrade_Add2Exchange.ps1})
-$UpgradeRMM.Add_Click({.\Setup\Auto_Upgrade_RMM.ps1})
-$O365OnPremPermissions.Add_Click({.\setup\PermissionsOnPremOrO365Combined.ps1})
-$Add2OutlookPermissions.Add_Click({.\setup\Add2Outlook_Set_Granular_permissions.ps1})
-$RunAutoLogon.Add_Click({.\Setup\AutoLogon.exe})
-$Dir_Sync.Add_Click({.\setup\Dir_Sync.ps1})
-$DisableUAC.Add_Click({.\setup\Disable_UAC.ps1})
-$GroupPolicyResults.Add_Click({.\setup\GP_Results.ps1})
-$LegacyPowershell.Add_Click({.\setup\Legacy_PowerShell.ps1})
-$OutlookAddins.Add_Click({.\setup\Remove_Outlook_Add_ins.ps1})
-$RegFavs.Add_Click({.\setup\Registry_Favorites.ps1})
-$ExportProfile1.Add_Click({.\setup\Export_License_and_Profile1.ps1})
+$UpgradeAdd2Exchange.Add_Click({.\Auto_Upgrade_Add2Exchange.ps1})
+$UpgradeRMM.Add_Click({.\Auto_Upgrade_RMM.ps1})
+$O365OnPremPermissions.Add_Click({.\PermissionsOnPremOrO365Combined.ps1})
+$Add2OutlookPermissions.Add_Click({.\Add2Outlook_Set_Granular_permissions.ps1})
+$RunAutoLogon.Add_Click({.\AutoLogon.exe})
+$Dir_Sync.Add_Click({.\Dir_Sync.ps1})
+$DisableUAC.Add_Click({.\Disable_UAC.ps1})
+$GroupPolicyResults.Add_Click({.\GP_Results.ps1})
+$LegacyPowershell.Add_Click({.\Legacy_PowerShell.ps1})
+$OutlookAddins.Add_Click({.\Remove_Outlook_Add_ins.ps1})
+$RegFavs.Add_Click({.\Registry_Favorites.ps1})
+$ExportProfile1.Add_Click({.\Export_License_and_Profile1.ps1})
 $DownloadLink.Add_Click({Start-Process http://support.DidItBetter.com/Secure/Login.aspx?returnurl=/downloads.aspx})
 $SQLExpress.Add_Click({Start-Process ftp://ftp.DidItBetter.com/SQL/SQL2012Management/2012SQLManagementStudio_x64_ENU.exe})
 $GetSupport.Add_Click({Start-Process http://support.DidItBetter.com/support-request.aspx})

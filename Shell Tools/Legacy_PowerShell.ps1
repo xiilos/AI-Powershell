@@ -20,7 +20,7 @@ if ( -Not (Test-Path $Directory.trim() ))
 {
     New-Item -ItemType directory -Path C:\PowerShell
 }
-
+Write-Host "Downloading the Latest! Please Wait....."
 $url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 $output = "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)    
@@ -57,6 +57,7 @@ if ( -Not (Test-Path $Directory.trim() ))
 {
     New-Item -ItemType directory -Path C:\PowerShell
 }
+Write-Host "Downloading the Latest! Please Wait....."
 $url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
 $output = "C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
@@ -80,6 +81,7 @@ if ( -Not (Test-Path $Directory.trim() ))
 {
     New-Item -ItemType directory -Path C:\PowerShell
 }
+Write-Host "Downloading the Latest! Please Wait....."
 $url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
 $output = "C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu"
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
