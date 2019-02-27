@@ -26,13 +26,13 @@ Write-Host "Done"
 #Create zLibrary
 
 Write-Host "Creating Landing Zone"
-$TestPath = "C:\zlibrary"
+$TestPath = "C:\zlibrary\Add2Exchange Upgrades"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
-Write-Host "zLibrary exists...Resuming"
+Write-Host "Add2Exchange Upgrades exists...Resuming"
  }
 Else {
-New-Item -ItemType directory -Path C:\zlibrary
+New-Item -ItemType directory -Path "C:\zlibrary\Add2Exchange Upgrades"
  }
 
 #Downloading Add2Exchange
@@ -41,7 +41,7 @@ Write-Host "Downloading Add2Exchange"
 Write-Host "Please Wait......"
 
 $URL = "ftp://ftp.diditbetter.com/A2E-Enterprise/Upgrades/a2e-enterprise_upgrade.exe"
-$Output = "c:\zlibrary\a2e-enterprise_upgrade.exe"
+$Output = "c:\zlibrary\Add2Exchange Upgrades\a2e-enterprise_upgrade.exe"
 $Start_Time = Get-Date
 
 (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
@@ -54,15 +54,15 @@ Write-Host "Finished Downloading"
 
 Write-Host "Unpacking Add2exchange"
 Write-Host "please Wait....."
-Set-Location c:\zlibrary
-Start-Process "c:\zlibrary\a2e-enterprise_upgrade.exe" -wait
+Push-Location "c:\zlibrary\Add2Exchange Upgrades"
+Start-Process "c:\zlibrary\Add2Exchange Upgrades\a2e-enterprise_upgrade.exe" -wait
 Write-Host "Done"
 
 #Installing Add2Exchange
 
 Write-Host "Installing Add2Exchange"
 $Location = Get-ChildItem -Path . -Recurse | Where-Object {$_.LastWriteTime -gt (Get-Date).AddSeconds(-20)}
-Set-Location $Location
+Push-Location $Location
 Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Stop
 Write-Host "Finished...Upgrade Complete"
 Start-Sleep -Seconds 3

@@ -54,7 +54,7 @@ Write-Host "Finished Downloading"
 
 Write-Host "Unpacking Recovery and Migration Manager"
 Write-Host "please Wait....."
-Set-Location c:\zlibrary\RMM
+Push-Location c:\zlibrary\RMM
 Start-Process "c:\zlibrary\RMM\rmm-enterprise.exe" -wait
 Write-Host "Done"
 
@@ -62,7 +62,7 @@ Write-Host "Done"
 
 Write-Host "Installing Recovery and Migration Manager"
 $Location = Get-ChildItem -Path . -Recurse | Where-Object {$_.LastWriteTime -gt (Get-Date).AddSeconds(-1)}
-Set-Location $Location
+Push-Location $Location
 Start-Process -FilePath "./rmm-enterprise.msi" -wait -ErrorAction Stop
 Write-Host "Finished...Upgrade Complete"
 Start-Sleep -Seconds 3
