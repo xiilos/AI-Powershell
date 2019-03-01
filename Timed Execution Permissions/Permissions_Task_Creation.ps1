@@ -128,6 +128,23 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    Read-Host "Type in your Sync Service Account Same. Example: zAdd2Exchange Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
    }
 
+
+#Check If Tasks Already Exists
+
+if(Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction Ignore) 
+{
+  Write-Host "Add2Exchange Permissions Task Already Exists..."
+}
+ else { Write-Host "Add2Exchange Permissions Tasks Does not Exist Yet... Resuming..."}
+
+ $confirmation = Read-Host "Create a New Task and Overwrite Old A2E Task? [Y/N]"
+   if ($confirmation -eq 'N') {
+   Write-Host "Resuming"
+   }
+   
+   if ($confirmation -eq 'Y') {
+    Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
+   } 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Connection Method
@@ -153,8 +170,8 @@ if ($choice -eq 0) {
   $question = 'Pick one of the following from below'
   
   $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Add Permissions to All Users'))
-  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Add Permissions to only Distribution Lists'))
+  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1-Add Permissions to All Users'))
+  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2-Add Permissions to only Distribution Lists'))
   $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
   
   $Decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
@@ -191,8 +208,8 @@ if ($choice -eq 1) {
   $question = 'Pick one of the following from below'
   
   $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Add Permissions to All Users'))
-  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Add Permissions to only Distribution Lists'))
+  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1-Add Permissions to All Users'))
+  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2-Add Permissions to only Distribution Lists'))
   $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
   
   $Decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
@@ -230,8 +247,8 @@ if ($choice -eq 2) {
   $question = 'Pick one of the following from below'
   
   $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Add Permissions to All Users'))
-  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Add Permissions to only Distribution Lists'))
+  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1-Add Permissions to All Users'))
+  $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2-Add Permissions to only Distribution Lists'))
   $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
   
   $Decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
