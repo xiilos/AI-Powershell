@@ -67,6 +67,13 @@ $Add2OutlookPermissions.height   = 30
 $Add2OutlookPermissions.location  = New-Object System.Drawing.Point(289,98)
 $Add2OutlookPermissions.Font     = 'Microsoft Sans Serif,10'
 
+$TaskCreation                    = New-Object system.Windows.Forms.Button
+$TaskCreation.text               = "Automate Pemrissions on a Schedule"
+$TaskCreation.width              = 300
+$TaskCreation.height             = 30
+$TaskCreation.location           = New-Object System.Drawing.Point(289,138)
+$TaskCreation.Font               = 'Microsoft Sans Serif,10'
+
 $Tools                           = New-Object system.Windows.Forms.Label
 $Tools.text                      = "Tools"
 $Tools.AutoSize                  = $true
@@ -253,12 +260,13 @@ $ExchangeMigrate.height          = 35
 $ExchangeMigrate.location        = New-Object System.Drawing.Point(905,94)
 $ExchangeMigrate.Font            = 'Microsoft Sans Serif,10'
 
-$Add2Exchange_Menu.controls.AddRange(@($UpgradeAdd2Exchange,$DIB_Logo,$UpgradeRMM,$UpgradeA2E,$ExchangePermissions,$O365OnPremPermissions,$Add2OutlookPermissions,$Tools,$RunAutoLogon,$Dir_Sync,$DisableUAC,$GroupPolicyResults,$LegacyPowershell,$OutlookAddins,$RegFavs,$ExportProfile1,$Downloads,$DownloadLink,$SQLExpress,$Support,$GetSupport,$SearchDiditbetter,$GuideA2E,$FTPdownloads,$SyncConcepts,$GALSync,$PrivatetoPrivate,$PrivatetoPublic,$PublictoPrivate,$PiblictoPublic,$TemplateRels,$Migrations,$ExchangeMigrate))
+$Add2Exchange_Menu.controls.AddRange(@($UpgradeAdd2Exchange,$DIB_Logo,$UpgradeRMM,$UpgradeA2E,$ExchangePermissions,$O365OnPremPermissions,$TaskCreation,$Add2OutlookPermissions,$Tools,$RunAutoLogon,$Dir_Sync,$DisableUAC,$GroupPolicyResults,$LegacyPowershell,$OutlookAddins,$RegFavs,$ExportProfile1,$Downloads,$DownloadLink,$SQLExpress,$Support,$GetSupport,$SearchDiditbetter,$GuideA2E,$FTPdownloads,$SyncConcepts,$GALSync,$PrivatetoPrivate,$PrivatetoPublic,$PublictoPrivate,$PiblictoPublic,$TemplateRels,$Migrations,$ExchangeMigrate))
 
 $UpgradeAdd2Exchange.Add_Click({Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1})
 $UpgradeRMM.Add_Click({Start-Process Powershell .\Auto_Upgrade_RMM.ps1})
 $O365OnPremPermissions.Add_Click({Start-Process Powershell .\PermissionsOnPremOrO365Combined.ps1})
 $Add2OutlookPermissions.Add_Click({Start-Process Powershell .\Add2Outlook_Set_Granular_permissions.ps1})
+$TaskCreation.Add_Click({.\Permissions_Task_Creation.ps1})
 $RunAutoLogon.Add_Click({Start-Process Powershell .\AutoLogon.exe})
 $Dir_Sync.Add_Click({Start-Process Powershell .\Dir_Sync.ps1})
 $DisableUAC.Add_Click({Start-Process Powershell .\Disable_UAC.ps1})

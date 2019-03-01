@@ -41,7 +41,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
 
   Else {
-  Read-Host "Type in the Admin Username to Connect to your Exchange Server. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
+  Read-Host "Type in a Username to Connect to the Exchange Server. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
    }
    $confirmation = Read-Host "Do it Again? or Create a New One? [Y/N]"
    if ($confirmation -eq 'N') {
@@ -49,7 +49,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
    
    if ($confirmation -eq 'Y') {
-   Read-Host "Type in the Admin Username to Connect to your Exchange Server. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
+   Read-Host "Type in a Username to Connect to the Exchange Server. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
    }
 
 #Checking Source Tenent or Exchange Admin Password
@@ -60,7 +60,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
 
   Else {
-  Read-Host "Type in the Admin Password or Tenent Admin Password to Connect to your Exchange Server/Office 365. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
+  Read-Host "Type in the Admin/Tenent Admin Password to Connect to your Exchange Server/Office 365. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
    }
    $confirmation = Read-Host "Do it Again? or Create a New One? [Y/N]"
    if ($confirmation -eq 'N') {
@@ -68,7 +68,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
    
    if ($confirmation -eq 'Y') {
-   Read-Host "Type in the Admin Password or Tenent Admin Password to Connect to your Exchange Server/Office 365. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
+   Read-Host "Type in the Admin/Tenent Admin Password to Connect to your Exchange Server/Office 365. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
    }
 
 #Checking Source Exchange Name
@@ -79,7 +79,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
 
   Else {
-  Read-Host "Type in your Exchange Server Name. Example: ExchangeServer01 Press Enter for none or when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
+  Read-Host "Type in your Exchange Server Name. Example: ExchangeServer01 Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
    }
    $confirmation = Read-Host "Do it Again? or Create a New One? [Y/N]"
    if ($confirmation -eq 'N') {
@@ -87,7 +87,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
    
    if ($confirmation -eq 'Y') {
-   Read-Host "Type in your Exchange Server Name. Example: ExchangeServer01 Press Enter for none or when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
+   Read-Host "Type in your Exchange Server Name. Example: ExchangeServer01 Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
    }
 
 #Checking Source Distribution List Name
@@ -98,7 +98,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
 
   Else {
-  Read-Host "Type in your Distribution List Name. Example: zFirmCalendarSync or for multiple list: 'zFirmCalendar','ZFirmContacts' <-Exactley as shown. Press Enter for none or when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
+  Read-Host "Type in your Distribution List Name. Example: zFirmCalendarSync Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
    }
    $confirmation = Read-Host "Do it Again? or Create a New One? [Y/N]"
    if ($confirmation -eq 'N') {
@@ -106,7 +106,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
    
    if ($confirmation -eq 'Y') {
-   Read-Host "Type in your Distribution List Name. Example: zFirmCalendarSync or for multiple list: 'zFirmCalendar','ZFirmContacts' <-Exactley as shown. Press Enter for none or when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
+   Read-Host "Type in your Distribution List Name. Example: zFirmCalendarSync Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
    }
 
 #Checking Source Service Account Name
@@ -135,9 +135,9 @@ if(Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction Ignore)
 {
   Write-Host "Add2Exchange Permissions Task Already Exists..."
 }
- else { Write-Host "Add2Exchange Permissions Tasks Does not Exist Yet... Resuming..."}
+ else { Write-Host "Add2Exchange Permissions Task Does not Exist Yet... Resuming..."}
 
- $confirmation = Read-Host "Create a New Task and Overwrite Old A2E Task? [Y/N]"
+ $confirmation = Read-Host "Create a New Task and Overwrite Old Add2Exchange Task? [Y/N]"
    if ($confirmation -eq 'N') {
    Write-Host "Resuming"
    }

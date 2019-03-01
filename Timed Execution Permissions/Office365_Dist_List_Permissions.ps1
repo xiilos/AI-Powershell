@@ -12,20 +12,28 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
-$Exchangename = Get-Content "C:\Timed Permissions\Creds\Exchangename.txt"
-$ServiceAccount = Get-Content "C:\Timed Permissions\Creds\ServiceAccount.txt"
-$Username = Get-Content "C:\Timed Permissions\Creds\ServerUser.txt"
-$Password = Get-Content "C:\Timed Permissions\Creds\ServerPass.txt" | convertto-securestring
+#Variables
+
+$ServiceAccount = Get-Content ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
+$Username = Get-Content ".\Setup\Timed Permissions\Creds\ServerUser.txt"
+$Password = Get-Content ".\Setup\Timed Permissions\Creds\ServerPass.txt" | convertto-securestring
+$DistributionGroupName = Get-Content ".\Setup\Timed Permissions\Creds\DistributionName.txt"
 
 $Cred = New-Object -typename System.Management.Automation.PSCredential `
          -Argumentlist $Username, $Password
 
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
-Import-PSSession $Session -DisableNameChecking
-Set-ADServerSettings -ViewEntireForest $true
+         Connect-MsolService -Credential $Cred
+         $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
+         Import-PSSession $Session -DisableNameChecking
+         Import-Module MSOnline
 
-#Timed Execution Permissions to All Users
-Get-Mailbox -Resultsize Unlimited | Where-Object {$_.WhenCreated –ge ((Get-Date).Adddays(-1))} | Add-MailboxPermission -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+#Timed Execution Permissions to Distribution Lists
+$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+ForEach ($Member in $DistributionGroupName)
+{
+Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+}
+
 
 Get-PSSession | Remove-PSSession
 Exit
