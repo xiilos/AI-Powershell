@@ -266,7 +266,7 @@ $UpgradeAdd2Exchange.Add_Click({Start-Process Powershell .\Auto_Upgrade_Add2Exch
 $UpgradeRMM.Add_Click({Start-Process Powershell .\Auto_Upgrade_RMM.ps1})
 $O365OnPremPermissions.Add_Click({Start-Process Powershell .\PermissionsOnPremOrO365Combined.ps1})
 $Add2OutlookPermissions.Add_Click({Start-Process Powershell .\Add2Outlook_Set_Granular_permissions.ps1})
-$TaskCreation.Add_Click({.\Permissions_Task_Creation.ps1})
+$TaskCreation.Add_Click({Start-Process PowerShell .\Permissions_Task_Creation.ps1})
 $RunAutoLogon.Add_Click({Start-Process Powershell .\AutoLogon.exe})
 $Dir_Sync.Add_Click({Start-Process Powershell .\Dir_Sync.ps1})
 $DisableUAC.Add_Click({Start-Process Powershell .\Disable_UAC.ps1})
