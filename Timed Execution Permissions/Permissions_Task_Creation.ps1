@@ -68,7 +68,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
    }
    
    if ($confirmation -eq 'Y') {
-   Read-Host "Type in the Admin/Tenent Admin Password to Connect to your Exchange Server/Office 365. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
+    Read-Host "Type in the Admin/Tenent Admin Password to Connect to your Exchange Server/Office 365. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
    }
 
 #Checking Source Exchange Name
