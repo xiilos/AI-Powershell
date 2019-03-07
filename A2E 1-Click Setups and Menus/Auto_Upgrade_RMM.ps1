@@ -7,14 +7,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
-
-#Stop Add2Exchange Service
-
-Write-Host "Stopping Add2Exchange Service"
-Stop-Service -Name "Add2Exchange Service"
-Start-sleep -s 5
-Write-Host "Done"
-
 #Remove Recovery and Migration Manager
 
 Write-Host "Removing Recovery and Migration Manager"
