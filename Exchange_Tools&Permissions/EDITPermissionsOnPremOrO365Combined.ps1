@@ -11,6 +11,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 # Start of Automated Scripting #
 
+
 $message  = 'Please Pick how you want to connect'
 $question = 'Pick one of the following from below'
 
@@ -20,6 +21,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&MExchange 2010'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Skip-Take me to Public Folder Permissions'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&Quit'))
+
 $choice = $Host.UI.PromptForChoice($message, $question, $choices, 4)
 
 # Option 3: Skip
@@ -37,6 +39,7 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Option 1: Office 365
 
@@ -233,8 +236,6 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&6 Remove Single Perm'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&7 Quit'))
 
-
-
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 
 # Option 0: Exchange on Premise-Adding new permissions all
@@ -338,7 +339,6 @@ New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurr
 Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
 }
 Write-Host "Done"
-
 }
 
 # Option 6: Exchange on Premise-Removing permissions to single user
@@ -387,9 +387,9 @@ if($answer -eq 2){Break}
             
 $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
 $UserCredential = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
-Set-ADServerSettings -ViewEntireForest $true
+Set-ADServerSettings -ViewEntireForest $true   
 }
   
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"

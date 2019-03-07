@@ -12,11 +12,8 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
-function Show-Menu
-{
-     param (
-           [string]$Title = 'Add2Exchange Permissions'
-     )
+
+$Title = 'Add2Exchange Permissions'
      Clear-Host
      Write-Host "================ $Title ================"
      
@@ -28,16 +25,10 @@ function Show-Menu
      Write-Host "4: Press '4' for Public Folder Permissions"
      Write-Host "Q: Press 'Q' to Quit"
 
-}
-
-
-
-
-     Show-Menu
-     $input = Read-Host "Please make a selection"
-     switch ($input)
+     $MainMenu = Read-Host "Please make a selection"
+     Switch ($MainMenu)
      {
-
+     
 # Option 1: Office 365
 
 '1' {
@@ -59,8 +50,9 @@ Import-Module MSOnline
 
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange or zAdd2Exchange@domain.com";
 }
+     
 
-do {
+Do {
     Write-Host "Pick one of the following from below"
 
     Write-Host "1: Press '1' for Add Perm O365"
@@ -71,7 +63,9 @@ do {
     Write-Host "4: Press '6' for Add Single Perm"
     Write-Host "4: Press '7' for Remove Single Perm"
     Write-Host "Q: Press 'Q' to Quit"
-
+    $SubMenu1 = Read-Host "Please make a selection"
+    Switch ($SubMenu1)
+    {
 # Option 1: Office 365-Adding Add2Exchange Permissions
  '1' {
 Clear-Host
@@ -110,9 +104,10 @@ $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
 Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+Write-Host "Done"  
 }
-Write-Host "Done"    
 }
+
 
 # Option 5: Office 365-Remove Permissions within a dist. list
 
@@ -124,8 +119,9 @@ $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-}
 Write-Host "Done" 
+}
+
 }
 # Option 6: Office 365-Add Permissions to single user
 
@@ -155,7 +151,7 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
-
+    }
  } until ($input -eq 'q')
 
 
@@ -187,7 +183,7 @@ $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri ht
 Import-PSSession $Session -DisableNameChecking
 Set-ADServerSettings -ViewEntireForest $true   
 }
-  
+}
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
   
@@ -202,7 +198,9 @@ do {
     Write-Host "4: Press '6' for Add Single Perm"
     Write-Host "4: Press '7' for Remove Single Perm"
     Write-Host "Q: Press 'Q' to Quit"
-
+    $SubMenu2 = Read-Host "Please make a selection"
+    Switch ($SubMenu2)
+    {
 # Option 1: Exchange 2010 on Premise-Adding new permissions all
 '1' {
 Clear-Host
@@ -266,8 +264,8 @@ if ($confirmation -eq 'y') {
 Write-Host "Adding Throttling Policy"
 New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
 Set-Mailbox $User -ThrottlingPolicy A2EPolicy
-}
 Write-Host "Done"  
+}
 }
 
 # Option 5: Exchange 2010 on Premise-Removing dist. list permissions
@@ -280,8 +278,8 @@ $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName)
 {
 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-}
 Write-Host "Done"
+}
 }
 
 # Option 6: Exchange 2010 on Premise-Adding permissions to single user
@@ -297,8 +295,8 @@ if ($confirmation -eq 'y') {
 Write-Host "Adding Throttling Policy"
 New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
 Set-Mailbox $User -ThrottlingPolicy A2EPolicy
-}
-Write-Host "Done"   
+Write-Host "Done" 
+}  
 }
 
 # Option 7: Exchange 2010 on Premise-Removing permissions to single user
@@ -319,7 +317,7 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
-     
+}
 } until ($input -eq 'q')
 
 
@@ -350,7 +348,7 @@ $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri ht
 Import-PSSession $Session -DisableNameChecking
 Set-ADServerSettings -ViewEntireForest $true   
 }
-
+}
 
 Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
 $User = read-host "Enter Sync Service Account";
@@ -366,7 +364,9 @@ Do {
     Write-Host "4: Press '6' for Add Single Perm"
     Write-Host "4: Press '7' for Remove Single Perm"
     Write-Host "Q: Press 'Q' to Quit"
-
+    $SubMenu3 = Read-Host "Please make a selection"
+    Switch ($SubMenu3)
+    {
 
 
 # Option 1: Exchange on Premise-Adding new permissions all
@@ -485,6 +485,7 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }      
+    }
     } until ($input -eq 'q')
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -503,13 +504,11 @@ Get-Module | Remove-Module
 
 '4' {
 Clear-Host
-function Show-Menu
-{
-     param (
-           [string]$Title = 'Add2Exchange Public Folder Permissions'
-     )
+
+$Title2 = 'Add2Exchange Public Folder Permissions'
+     
      Clear-Host
-     Write-Host "================ $Title ================"
+     Write-Host "================ $Title2 ================"
      
      Write-Host "Please Pick how you want to connect"
 
@@ -519,13 +518,8 @@ function Show-Menu
      Write-Host "Q: Press 'Q' to Quit"
 }
 
-
-
-
-
-     Show-Menu
-     $input = Read-Host "Please make a selection"
-     switch ($input)
+$SubMenu4 = Read-Host "Please make a selection"
+switch ($SubMenu4)
      {
 
 '1' {
@@ -545,7 +539,7 @@ Clear-Host
     $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
     Import-PSSession $Session -DisableNameChecking
     Import-Module MSOnline
-    
+}
     #Variables
     $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
     
@@ -555,7 +549,9 @@ Clear-Host
         Write-Host "1: Press '1' for Add Perm O365"
         Write-Host "2: Press '2' for Remove Perm O365"
         Write-Host "Q: Press 'Q' to Quit"
-
+        $SubMenu5 = Read-Host "Please make a selection"
+        switch ($SubMenu5)
+        {
 # Option 1: Office 365-Adding Public Folder Permissions
 
 '1' {
@@ -580,7 +576,7 @@ Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:
 Write-Host "Done"
 }
 
-Option Q: Office 365-Quit
+#Option Q: Office 365-Quit
     
 'Q' {
 Clear-Host
@@ -588,6 +584,7 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+        }
 } until ($input -eq 'q')
 
 
@@ -620,7 +617,7 @@ Exit
     Import-PSSession $Session -DisableNameChecking
     Set-ADServerSettings -ViewEntireForest $true   
     }
-      
+} 
     Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
     $User = read-host "Enter Sync Service Account";
       
@@ -630,7 +627,9 @@ Exit
         Write-Host "1: Press '1' for Add Perm Exchange 2010"
         Write-Host "2: Press '2' for Remove Perm Exchange 2010"
         Write-Host "Q: Press 'Q' to Quit"
-
+        $SubMenu6 = Read-Host "Please make a selection"
+        switch ($SubMenu6)
+        {
 # Option 1: Exchange 2010 on Premise-Adding Public Folder Permissions
 
 '1' {
@@ -663,6 +662,7 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }
+}
 } until ($input -eq 'q')
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -690,7 +690,7 @@ $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri ht
 Import-PSSession $Session -DisableNameChecking
 Set-ADServerSettings -ViewEntireForest $true   
 }
-    
+}  
 #Variables
 $User = read-host "Enter Sync Service Account name Example: zAdd2Exchange";
 
@@ -700,7 +700,9 @@ Do {
     Write-Host "1: Press '1' for Add Perm Exchange 2013-2016"
     Write-Host "2: Press '2' for Remove Perm Exchange 2013-2016"
     Write-Host "Q: Press 'Q' to Quit"
-
+    $SubMenu7 = Read-Host "Please make a selection"
+    switch ($SubMenu7)
+    {
 # Option 1: Exchange on Premise-Adding Public Folder Permissions
 
 '1' {
@@ -733,6 +735,7 @@ Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
 }      
+}
 } until ($input -eq 'q')
 
 
