@@ -39,7 +39,6 @@ Get-PSSession | Remove-PSSession
 Exit
 }
 
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Option 1: Office 365
 
@@ -236,6 +235,8 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&6 Remove Single Perm'))
 $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&7 Quit'))
 
+
+
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 7)
 
 # Option 0: Exchange on Premise-Adding new permissions all
@@ -339,6 +340,7 @@ New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurr
 Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
 }
 Write-Host "Done"
+
 }
 
 # Option 6: Exchange on Premise-Removing permissions to single user
