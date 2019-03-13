@@ -1,8 +1,7 @@
-if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-  # Relaunch as an elevated process:
-  Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-  exit
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    # Relaunch as an elevated process:
+    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+    exit
 }
 
 
@@ -20,18 +19,17 @@ $Password = Get-Content ".\Setup\Timed Permissions\Creds\ServerPass.txt" | conve
 $DistributionGroupName = Get-Content ".\Setup\Timed Permissions\Creds\DistributionName.txt"
 
 $Cred = New-Object -typename System.Management.Automation.PSCredential `
-         -Argumentlist $Username, $Password
+    -Argumentlist $Username, $Password
 
-         Connect-MsolService -Credential $Cred
-         $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
-         Import-PSSession $Session -DisableNameChecking
-         Import-Module MSOnline
+Connect-MsolService -Credential $Cred
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
+Import-PSSession $Session -DisableNameChecking
+Import-Module MSOnline
 
 #Timed Execution Permissions to Distribution Lists
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-ForEach ($Member in $DistributionGroupName)
-{
-Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+ForEach ($Member in $DistributionGroupName) {
+    Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 }
 
 
