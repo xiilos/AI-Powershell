@@ -1,8 +1,7 @@
-if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-  # Relaunch as an elevated process:
-  Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-  exit
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    # Relaunch as an elevated process:
+    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+    exit
 }
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
@@ -29,11 +28,11 @@ Write-Host "Creating Landing Zone"
 $TestPath = "C:\zlibrary\Add2Exchange Upgrades"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
-Write-Host "Add2Exchange Upgrades exists...Resuming"
- }
+    Write-Host "Add2Exchange Upgrades exists...Resuming"
+}
 Else {
-New-Item -ItemType directory -Path "C:\zlibrary\Add2Exchange Upgrades"
- }
+    New-Item -ItemType directory -Path "C:\zlibrary\Add2Exchange Upgrades"
+}
 
 #Downloading Add2Exchange
 
