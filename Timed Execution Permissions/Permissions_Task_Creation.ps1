@@ -17,12 +17,12 @@ Set-Location $Location
 
 #Check and Create Stored Credentials
 
-Write-Host "Creating Secure Location"
 $TestPath = ".\Setup\Timed Permissions\Creds"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
     Write-Host "Secure Location Exists...Resuming"
 }
 Else {
+    Write-Host "Creating Secure Location"
     New-Item -ItemType directory -Path ".\Setup\Timed Permissions\Creds"
 }
 
@@ -37,35 +37,35 @@ Do {
     $TestPath = ".\Setup\Timed Permissions\Creds\ServerUser.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Exchange/Tenent Admin Username File Exists..."
-    }
-    $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-    if ($confirmation -eq 'N') {
-        Write-Host "Resuming"
-    }
+        $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
+        if ($confirmation -eq 'N') {
+            Write-Host "Resuming"
+        }
    
-    if ($confirmation -eq 'Y') {
-        Read-Host "Type in your Global Admin or Exchange Admin Username. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
+        if ($confirmation -eq 'Y') {
+            Read-Host "Type in your Global Admin or Exchange Admin Username. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
+        }
+
     }
 
     Else {
         Read-Host "Type in your Global Admin or Exchange Admin Username. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
     }
    
-
     #Checking Source Tenent or Exchange Admin Password
 
     $TestPath = ".\Setup\Timed Permissions\Creds\ServerPass.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Exchange/Tenent Admin Password File Exists..."
-    }
-
-    $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-    if ($confirmation -eq 'N') {
-        Write-Host "Resuming"
-    }
+        $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
+        if ($confirmation -eq 'N') {
+            Write-Host "Resuming"
+        }
    
-    if ($confirmation -eq 'Y') {
-        Read-Host "Type in your Global Admin or Exchange Admin Password. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
+        if ($confirmation -eq 'Y') {
+            Read-Host "Type in your Global Admin or Exchange Admin Password. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
+        }
+
     }
 
     Else {
@@ -78,15 +78,14 @@ Do {
     $TestPath = ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Exchange Server Name File Exists..."
-    }
-
-    $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-    if ($confirmation -eq 'N') {
-        Write-Host "Resuming"
-    }
-   
-    if ($confirmation -eq 'Y') {
-        Read-Host "If on Premise; Type in your Exchange Server Name. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
+        $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
+        if ($confirmation -eq 'N') {
+            Write-Host "Resuming"
+        }
+       
+        if ($confirmation -eq 'Y') {
+            Read-Host "If on Premise; Type in your Exchange Server Name. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
+        }
     }
    
     Else {
@@ -98,15 +97,14 @@ Do {
     $TestPath = ".\Setup\Timed Permissions\Creds\DistributionName.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Distribution List Name File Exists..."
-    }
-
-    $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-    if ($confirmation -eq 'N') {
-        Write-Host "Resuming"
-    }
+        $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
+        if ($confirmation -eq 'N') {
+            Write-Host "Resuming"
+        }
    
-    if ($confirmation -eq 'Y') {
-        Read-Host "If Adding Permissions to a Distribution List Type in the Distribution List Name. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
+        if ($confirmation -eq 'Y') {
+            Read-Host "If Adding Permissions to a Distribution List Type in the Distribution List Name. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
+        }
     }
 
     Else {
@@ -118,15 +116,14 @@ Do {
     $TestPath = ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Service Account Name File Exists..."
-    }
-
-    $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-    if ($confirmation -eq 'N') {
-        Write-Host "Resuming"
-    }
+        $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
+        if ($confirmation -eq 'N') {
+            Write-Host "Resuming"
+        }
    
-    if ($confirmation -eq 'Y') {
-        Read-Host "Type in the Sync Service Account Same. Example: zAdd2Exchange Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
+        if ($confirmation -eq 'Y') {
+            Read-Host "Type in the Sync Service Account Same. Example: zAdd2Exchange Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
+        }
     }
 
     Else {
@@ -138,19 +135,17 @@ Do {
 
     if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction Ignore) {
         Write-Host "Add2Exchange Permissions Task Already Exists..."
-    }
-
-    $confirmation = Read-Host "Would You Like to Update the Current Task? [Y/N]"
-    if ($confirmation -eq 'N') {
-        Write-Host "Resuming"
-    }
+        $confirmation = Read-Host "Would You Like to Update the Current Task? [Y/N]"
+        if ($confirmation -eq 'N') {
+            Write-Host "Resuming"
+        }
    
-    if ($confirmation -eq 'Y') {
-        Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
+        if ($confirmation -eq 'Y') {
+            Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
+        }
     }
 
-
-    else { Write-Host "How are you logging on?"}
+    Else { Write-Host "How are you logging on?"}
 
     #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
