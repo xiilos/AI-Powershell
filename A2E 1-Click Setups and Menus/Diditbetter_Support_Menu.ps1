@@ -68,7 +68,7 @@ $Add2OutlookPermissions.location  = New-Object System.Drawing.Point(289,98)
 $Add2OutlookPermissions.Font     = 'Microsoft Sans Serif,10'
 
 $TaskCreation                    = New-Object system.Windows.Forms.Button
-$TaskCreation.text               = "Automate Pemrissions on a Schedule"
+$TaskCreation.text               = "Automate Permissions on a Schedule"
 $TaskCreation.width              = 300
 $TaskCreation.height             = 30
 $TaskCreation.location           = New-Object System.Drawing.Point(289,138)
