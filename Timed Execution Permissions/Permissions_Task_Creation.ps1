@@ -36,7 +36,7 @@ Do {
 
     $TestPath = ".\Setup\Timed Permissions\Creds\ServerUser.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-        Write-Host "Exchange/Tenent Admin Username File Exists...Resuming"
+        Write-Host "Exchange/Tenent Admin Username File Exists..."
     }
     $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
     if ($confirmation -eq 'N') {
@@ -44,11 +44,11 @@ Do {
     }
    
     if ($confirmation -eq 'Y') {
-        Read-Host "Type in a Username to Connect to the Exchange Server. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
+        Read-Host "Type in your Global Admin or Exchange Admin Username. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
     }
 
     Else {
-        Read-Host "Type in a Username to Connect to the Exchange Server. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
+        Read-Host "Type in your Global Admin or Exchange Admin Username. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServerUser.txt"
     }
    
 
@@ -56,7 +56,7 @@ Do {
 
     $TestPath = ".\Setup\Timed Permissions\Creds\ServerPass.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-        Write-Host "Exchange/Tenent Admin Password File Exists...Resuming"
+        Write-Host "Exchange/Tenent Admin Password File Exists..."
     }
 
     $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
@@ -65,11 +65,11 @@ Do {
     }
    
     if ($confirmation -eq 'Y') {
-        Read-Host "Type in the Admin/Tenent Admin Password to Connect to your Exchange Server/Office 365. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
+        Read-Host "Type in your Global Admin or Exchange Admin Password. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
     }
 
     Else {
-        Read-Host "Type in the Admin/Tenent Admin Password to Connect to your Exchange Server/Office 365. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
+        Read-Host "Type in your Global Admin or Exchange Admin Password. Press Enter when Finished." -assecurestring | convertfrom-securestring | out-file ".\Setup\Timed Permissions\Creds\ServerPass.txt"
     }
    
 
@@ -77,7 +77,7 @@ Do {
 
     $TestPath = ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-        Write-Host "Exchange Server Name File Exists...Resuming"
+        Write-Host "Exchange Server Name File Exists..."
     }
 
     $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
@@ -86,18 +86,18 @@ Do {
     }
    
     if ($confirmation -eq 'Y') {
-        Read-Host "Type in your Exchange Server Name. Example: ExchangeServer01 Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
+        Read-Host "If on Premise; Type in your Exchange Server Name. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
     }
    
     Else {
-        Read-Host "Type in your Exchange Server Name. Example: ExchangeServer01 Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
+        Read-Host "If on Premise; Type in your Exchange Server Name. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ExchangeName.txt"
     }
 
     #Checking Source Distribution List Name
 
     $TestPath = ".\Setup\Timed Permissions\Creds\DistributionName.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-        Write-Host "Distribution List Name File Exists...Resuming"
+        Write-Host "Distribution List Name File Exists..."
     }
 
     $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
@@ -106,18 +106,18 @@ Do {
     }
    
     if ($confirmation -eq 'Y') {
-        Read-Host "Type in your Distribution List Name. Example: zFirmCalendarSync Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
+        Read-Host "If Adding Permissions to a Distribution List Type in the Distribution List Name. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
     }
 
     Else {
-        Read-Host "Type in your Distribution List Name. Example: zFirmCalendarSync Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
+        Read-Host "If Adding Permissions to a Distribution List Type in the Distribution List Name. Leave Blank for None. Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\DistributionName.txt"
     }
 
     #Checking Source Service Account Name
 
     $TestPath = ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-        Write-Host "Service Account Name File Exists...Resuming"
+        Write-Host "Service Account Name File Exists..."
     }
 
     $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
@@ -126,11 +126,11 @@ Do {
     }
    
     if ($confirmation -eq 'Y') {
-        Read-Host "Type in your Sync Service Account Same. Example: zAdd2Exchange Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
+        Read-Host "Type in the Sync Service Account Same. Example: zAdd2Exchange Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
     }
 
     Else {
-        Read-Host "Type in your Sync Service Account Same. Example: zAdd2Exchange Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
+        Read-Host "Type in the Sync Service Account Same. Example: zAdd2Exchange Press Enter when Finished." | out-file ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
     }
 
 
@@ -150,7 +150,7 @@ Do {
     }
 
 
-    else { Write-Host "Add2Exchange Permissions Task Does not Exist Yet... Resuming..."}
+    else { Write-Host "How are you logging on?"}
 
     #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
