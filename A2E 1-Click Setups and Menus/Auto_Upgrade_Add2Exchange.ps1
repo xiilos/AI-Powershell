@@ -60,7 +60,7 @@ Write-Host "Done"
 #Installing Add2Exchange
 
 Write-Host "Installing Add2Exchange"
-$Location = Get-ChildItem -Path . -Recurse | Where-Object {$_.LastWriteTime -gt (Get-Date).AddSeconds(-3)}
+$Location = Get-ChildItem -Path . -Recurse | Where-Object {$_.LastWriteTime -gt (Get-Date).AddSeconds(-1)}
 Push-Location $Location
 Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Stop
 Write-Host "Finished...Upgrade Complete"
