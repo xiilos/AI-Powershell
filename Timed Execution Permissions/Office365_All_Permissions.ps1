@@ -13,9 +13,9 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Variables
 
-$ServiceAccount = Get-Content ".\Setup\Timed Permissions\Creds\ServiceAccount.txt"
-$Username = Get-Content ".\Setup\Timed Permissions\Creds\ServerUser.txt"
-$Password = Get-Content ".\Setup\Timed Permissions\Creds\ServerPass.txt" | convertto-securestring
+$ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServiceAccount.txt"
+$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
+$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
 
 $Cred = New-Object -typename System.Management.Automation.PSCredential `
     -Argumentlist $Username, $Password
