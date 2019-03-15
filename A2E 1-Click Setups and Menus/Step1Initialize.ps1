@@ -224,8 +224,9 @@ $urlShortcut = $wshShell.CreateShortcut(
 $urlShortcut.TargetPath = "https://support.microsoft.com/en-us/help/2020103/how-to-manage-the-outlook-social-connector-by-using-group-policy"
 $urlShortcut.Save()
 
-Copy-Item -Path ".\support.txt" -Destination "$home\Desktop\Support.txt"
+<#>Copy-Item -Path ".\support.txt" -Destination "$home\Desktop\Support.txt"
 Copy-Item -Path ".\Setup\PermissionsOnPremOrO365Combined.ps1" -Destination "$home\Desktop\PermissionsOnPremOrO365Combined.ps1"
+#>
 
 $WshShell = New-Object -comObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$Home\Desktop\zLibrary.lnk")
@@ -302,8 +303,7 @@ Write-Host "Checking UAC"
 
 $Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
 
-if ($val.EnableLUA -ne 0)
-{
+if ($val.EnableLUA -ne 0) {
     Set-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA" -value 0
     Write-Host "Done"
     Write-Host "UAC is now Disabled"
