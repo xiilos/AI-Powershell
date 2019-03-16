@@ -1,13 +1,16 @@
-<# 
+<#
 .NAME
-    New A2E Menu
+    A2EMenu
+.DESCRIPTION
+    Add2Exchange Menu
 #>
+
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $DidItBetterSupportMenu          = New-Object system.Windows.Forms.Form
-$DidItBetterSupportMenu.ClientSize  = '614,575'
+$DidItBetterSupportMenu.ClientSize  = '547,529'
 $DidItBetterSupportMenu.text     = "DidItBetter Software Support Menu"
 $DidItBetterSupportMenu.BackColor  = "#ffffff"
 $DidItBetterSupportMenu.TopMost  = $false
@@ -49,15 +52,15 @@ $AddingPermissions.text          = "Adding Permissions"
 $AddingPermissions.AutoSize      = $true
 $AddingPermissions.width         = 25
 $AddingPermissions.height        = 10
-$AddingPermissions.location      = New-Object System.Drawing.Point(295,10)
+$AddingPermissions.location      = New-Object System.Drawing.Point(11,125)
 $AddingPermissions.Font          = 'Microsoft Sans Serif,12,style=Bold,Underline'
 
 $O365ExchangePermissions         = New-Object system.Windows.Forms.Label
 $O365ExchangePermissions.text    = "Office 365 and On-Premise Exchange Permissions"
 $O365ExchangePermissions.AutoSize  = $true
-$O365ExchangePermissions.width   = 25
+$O365ExchangePermissions.width   = 150
 $O365ExchangePermissions.height  = 10
-$O365ExchangePermissions.location  = New-Object System.Drawing.Point(295,35)
+$O365ExchangePermissions.location  = New-Object System.Drawing.Point(11,150)
 $O365ExchangePermissions.Font    = 'Microsoft Sans Serif,9'
 
 $A2OPermissions                  = New-Object system.Windows.Forms.Label
@@ -65,7 +68,7 @@ $A2OPermissions.text             = "Add2Outlook Granular Permissions"
 $A2OPermissions.AutoSize         = $true
 $A2OPermissions.width            = 150
 $A2OPermissions.height           = 10
-$A2OPermissions.location         = New-Object System.Drawing.Point(295,55)
+$A2OPermissions.location         = New-Object System.Drawing.Point(11,170)
 $A2OPermissions.Font             = 'Microsoft Sans Serif,9'
 
 $AutoPermissions                 = New-Object system.Windows.Forms.Label
@@ -73,7 +76,7 @@ $AutoPermissions.text            = "Automate Permissions on a Schedule"
 $AutoPermissions.AutoSize        = $true
 $AutoPermissions.width           = 150
 $AutoPermissions.height          = 10
-$AutoPermissions.location        = New-Object System.Drawing.Point(295,75)
+$AutoPermissions.location        = New-Object System.Drawing.Point(11,190)
 $AutoPermissions.Font            = 'Microsoft Sans Serif,9'
 
 $Downloads                       = New-Object system.Windows.Forms.Label
@@ -81,7 +84,7 @@ $Downloads.text                  = "Downloads"
 $Downloads.AutoSize              = $true
 $Downloads.width                 = 150
 $Downloads.height                = 10
-$Downloads.location              = New-Object System.Drawing.Point(11,114)
+$Downloads.location              = New-Object System.Drawing.Point(295,10)
 $Downloads.Font                  = 'Microsoft Sans Serif,12,style=Bold,Underline'
 
 $DownloadAdd2Exchange            = New-Object system.Windows.Forms.Label
@@ -89,7 +92,7 @@ $DownloadAdd2Exchange.text       = "Download Add2Exchange"
 $DownloadAdd2Exchange.AutoSize   = $true
 $DownloadAdd2Exchange.width      = 150
 $DownloadAdd2Exchange.height     = 10
-$DownloadAdd2Exchange.location   = New-Object System.Drawing.Point(11,139)
+$DownloadAdd2Exchange.location   = New-Object System.Drawing.Point(295,35)
 $DownloadAdd2Exchange.Font       = 'Microsoft Sans Serif,9'
 
 $DownloadToolKit                 = New-Object system.Windows.Forms.Label
@@ -97,7 +100,7 @@ $DownloadToolKit.text            = "Download ToolKit"
 $DownloadToolKit.AutoSize        = $true
 $DownloadToolKit.width           = 150
 $DownloadToolKit.height          = 10
-$DownloadToolKit.location        = New-Object System.Drawing.Point(11,159)
+$DownloadToolKit.location        = New-Object System.Drawing.Point(295,55)
 $DownloadToolKit.Font            = 'Microsoft Sans Serif,9'
 
 $DownloadSQL                     = New-Object system.Windows.Forms.Label
@@ -105,7 +108,7 @@ $DownloadSQL.text                = "Download SQL Studio"
 $DownloadSQL.AutoSize            = $true
 $DownloadSQL.width               = 150
 $DownloadSQL.height              = 10
-$DownloadSQL.location            = New-Object System.Drawing.Point(11,179)
+$DownloadSQL.location            = New-Object System.Drawing.Point(295,75)
 $DownloadSQL.Font                = 'Microsoft Sans Serif,9'
 
 $FTPDownloads                    = New-Object system.Windows.Forms.Label
@@ -113,7 +116,7 @@ $FTPDownloads.text               = "FTP Downloads"
 $FTPDownloads.AutoSize           = $true
 $FTPDownloads.width              = 150
 $FTPDownloads.height             = 10
-$FTPDownloads.location           = New-Object System.Drawing.Point(11,199)
+$FTPDownloads.location           = New-Object System.Drawing.Point(295,95)
 $FTPDownloads.Font               = 'Microsoft Sans Serif,9'
 
 $GetSupport                      = New-Object system.Windows.Forms.Label
@@ -121,15 +124,15 @@ $GetSupport.text                 = "Get Support"
 $GetSupport.AutoSize             = $true
 $GetSupport.width                = 150
 $GetSupport.height               = 10
-$GetSupport.location             = New-Object System.Drawing.Point(295,114)
+$GetSupport.location             = New-Object System.Drawing.Point(295,125)
 $GetSupport.Font                 = 'Microsoft Sans Serif,12,style=Bold,Underline'
 
 $GetHelp                         = New-Object system.Windows.Forms.Label
-$GetHelp.text                    = "Need Help? Get Support!"
+$GetHelp.text                    = "Need Help? Open a Ticket!"
 $GetHelp.AutoSize                = $true
 $GetHelp.width                   = 150
 $GetHelp.height                  = 10
-$GetHelp.location                = New-Object System.Drawing.Point(295,134)
+$GetHelp.location                = New-Object System.Drawing.Point(295,150)
 $GetHelp.Font                    = 'Microsoft Sans Serif,9'
 
 $SearchDidItBetter               = New-Object system.Windows.Forms.Label
@@ -137,7 +140,7 @@ $SearchDidItBetter.text          = "Search DidItBetter"
 $SearchDidItBetter.AutoSize      = $true
 $SearchDidItBetter.width         = 150
 $SearchDidItBetter.height        = 10
-$SearchDidItBetter.location      = New-Object System.Drawing.Point(295,154)
+$SearchDidItBetter.location      = New-Object System.Drawing.Point(295,170)
 $SearchDidItBetter.Font          = 'Microsoft Sans Serif,9'
 
 $QuickStartGuide                 = New-Object system.Windows.Forms.Label
@@ -145,7 +148,7 @@ $QuickStartGuide.text            = "Quick Start Guide"
 $QuickStartGuide.AutoSize        = $true
 $QuickStartGuide.width           = 150
 $QuickStartGuide.height          = 10
-$QuickStartGuide.location        = New-Object System.Drawing.Point(295,174)
+$QuickStartGuide.location        = New-Object System.Drawing.Point(295,190)
 $QuickStartGuide.Font            = 'Microsoft Sans Serif,9'
 
 $Tools                           = New-Object system.Windows.Forms.Label
@@ -221,7 +224,7 @@ $ExportLicenseandProfile1.location  = New-Object System.Drawing.Point(11,395)
 $ExportLicenseandProfile1.Font   = 'Microsoft Sans Serif,9'
 
 $SyncScenarios                   = New-Object system.Windows.Forms.Label
-$SyncScenarios.text              = "Add2Exchange Sync Scenarios How To"
+$SyncScenarios.text              = "Add2Exchange Sync Scenarios"
 $SyncScenarios.AutoSize          = $true
 $SyncScenarios.width             = 150
 $SyncScenarios.height            = 10
@@ -229,7 +232,7 @@ $SyncScenarios.location          = New-Object System.Drawing.Point(295,230)
 $SyncScenarios.Font              = 'Microsoft Sans Serif,12,style=Bold,Underline'
 
 $GALSync                         = New-Object system.Windows.Forms.Label
-$GALSync.text                    = "GAL Syncronization"
+$GALSync.text                    = "GAL Synchronization"
 $GALSync.AutoSize                = $true
 $GALSync.width                   = 150
 $GALSync.height                  = 10
@@ -276,13 +279,13 @@ $TemplateCreation.height         = 10
 $TemplateCreation.location       = New-Object System.Drawing.Point(295,355)
 $TemplateCreation.Font           = 'Microsoft Sans Serif,9'
 
-$MigrateA2E                      = New-Object system.Windows.Forms.Label
-$MigrateA2E.text                 = "Migrate Add2Exchange to a New Box"
-$MigrateA2E.AutoSize             = $true
-$MigrateA2E.width                = 150
-$MigrateA2E.height               = 10
-$MigrateA2E.location             = New-Object System.Drawing.Point(295,375)
-$MigrateA2E.Font                 = 'Microsoft Sans Serif,9'
+$MIgrateA2E                      = New-Object system.Windows.Forms.Label
+$MIgrateA2E.text                 = "Migrate Add2Exchange to a New Box"
+$MIgrateA2E.AutoSize             = $true
+$MIgrateA2E.width                = 150
+$MIgrateA2E.height               = 10
+$MIgrateA2E.location             = New-Object System.Drawing.Point(295,375)
+$MIgrateA2E.Font                 = 'Microsoft Sans Serif,9'
 
 $ExhangeMigration                = New-Object system.Windows.Forms.Label
 $ExhangeMigration.text           = "Exchange Migration with Add2Exchange"
@@ -293,11 +296,12 @@ $ExhangeMigration.location       = New-Object System.Drawing.Point(295,395)
 $ExhangeMigration.Font           = 'Microsoft Sans Serif,9'
 
 $DidItBetterLogo                 = New-Object system.Windows.Forms.PictureBox
-$DidItBetterLogo.width           = 181
-$DidItBetterLogo.height          = 81
-$DidItBetterLogo.location        = New-Object System.Drawing.Point(16,455)
+$DidItBetterLogo.width           = 192
+$DidItBetterLogo.height          = 92
+$DidItBetterLogo.location        = New-Object System.Drawing.Point(15,424)
 $DidItBetterLogo.imageLocation   = ".\DidItBetter_logo.png"
 $DidItBetterLogo.SizeMode        = [System.Windows.Forms.PictureBoxSizeMode]::zoom
+
 $DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$UpgradeToolkit,$AddingPermissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$ExportLicenseandProfile1,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo))
 
 $Add2ExchangeUpgrade.Add_Click({Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1})
