@@ -1,8 +1,7 @@
-if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-  # Relaunch as an elevated process:
-  Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-  exit
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    # Relaunch as an elevated process:
+    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+    exit
 }
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
@@ -18,14 +17,14 @@ Write-Host "Done"
 #Create zLibrary\RMM Sub Directory
 
 Write-Host "Creating Landing Zone"
-$TestPath = "C:\zlibrary\RMM"
+$TestPath = "C:\zlibrary\RMM Upgrades"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
-Write-Host "RMM exists...Resuming"
- }
+    Write-Host "RMM Upgrades Directory Exists...Resuming"
+}
 Else {
-New-Item -ItemType directory -Path C:\zlibrary\RMM
- }
+    New-Item -ItemType directory -Path "C:\zlibrary\RMM Upgrades"
+}
 
 #Downloading Recovery and Migration Manager
 
@@ -33,7 +32,7 @@ Write-Host "Downloading Recovery and Migration Manager"
 Write-Host "Please Wait......"
 
 $URL = "ftp://ftp.diditbetter.com/RMM-Enterprise/Upgrades/rmm-enterprise.exe"
-$Output = "c:\zlibrary\RMM\rmm-enterprise.exe"
+$Output = "C:\zlibrary\RMM Upgrades\rmm-enterprise.exe"
 $Start_Time = Get-Date
 
 (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
@@ -46,8 +45,8 @@ Write-Host "Finished Downloading"
 
 Write-Host "Unpacking Recovery and Migration Manager"
 Write-Host "please Wait....."
-Push-Location c:\zlibrary\RMM
-Start-Process "c:\zlibrary\RMM\rmm-enterprise.exe" -wait
+Push-Location "C:\zlibrary\RMM Upgrades"
+Start-Process "c:\zlibrary\RMM Upgrades\rmm-enterprise.exe" -wait
 Write-Host "Done"
 
 #Installing Recovery and Migration Manager
@@ -57,7 +56,7 @@ $Location = Get-ChildItem -Path . -Recurse | Where-Object {$_.LastWriteTime -gt 
 Push-Location $Location
 Start-Process -FilePath "./rmm-enterprise.msi" -wait -ErrorAction Stop
 Write-Host "Finished...Upgrade Complete"
-Start-Sleep -Seconds 3
+Start-Sleep -Seconds 2
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession

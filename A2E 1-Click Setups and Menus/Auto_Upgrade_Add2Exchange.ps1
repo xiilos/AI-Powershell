@@ -28,7 +28,7 @@ Write-Host "Creating Landing Zone"
 $TestPath = "C:\zlibrary\Add2Exchange Upgrades"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
-    Write-Host "Add2Exchange Upgrades exists...Resuming"
+    Write-Host "Add2Exchange Upgrades Directory Exists...Resuming"
 }
 Else {
     New-Item -ItemType directory -Path "C:\zlibrary\Add2Exchange Upgrades"
@@ -64,7 +64,7 @@ $Location = Get-ChildItem -Path . -Recurse | Where-Object {$_.LastWriteTime -gt 
 Push-Location $Location
 Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Stop
 Write-Host "Finished...Upgrade Complete"
-Start-Sleep -Seconds 3
+Start-Sleep -Seconds 2
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession

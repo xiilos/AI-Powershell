@@ -36,6 +36,14 @@ $UpgradeRMM.height               = 10
 $UpgradeRMM.location             = New-Object System.Drawing.Point(11,55)
 $UpgradeRMM.Font                 = 'Microsoft Sans Serif,9'
 
+$UpgradeToolkit                  = New-Object system.Windows.Forms.Label
+$UpgradeToolkit.text             = "Upgrade Add2Outlook ToolKit"
+$UpgradeToolkit.AutoSize         = $true
+$UpgradeToolkit.width            = 150
+$UpgradeToolkit.height           = 10
+$UpgradeToolkit.location         = New-Object System.Drawing.Point(11,75)
+$UpgradeToolkit.Font             = 'Microsoft Sans Serif,9'
+
 $AddingPermissions               = New-Object system.Windows.Forms.Label
 $AddingPermissions.text          = "Adding Permissions"
 $AddingPermissions.AutoSize      = $true
@@ -290,15 +298,16 @@ $DidItBetterLogo.height          = 81
 $DidItBetterLogo.location        = New-Object System.Drawing.Point(16,455)
 $DidItBetterLogo.imageLocation   = ".\DidItBetter_logo.png"
 $DidItBetterLogo.SizeMode        = [System.Windows.Forms.PictureBoxSizeMode]::zoom
-$DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$AddingPermissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$ExportLicenseandProfile1,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo))
+$DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$UpgradeToolkit,$AddingPermissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$ExportLicenseandProfile1,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo))
 
 $Add2ExchangeUpgrade.Add_Click({Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1})
 $UpgradeRMM.Add_Click({Start-Process Powershell .\Auto_Upgrade_RMM.ps1})
+$UpgradeToolkit.Add_Click({Start-Process Powershell .\Auto_Upgrade_ToolKit.ps1})
 $O365ExchangePermissions.Add_Click({Start-Process Powershell .\PermissionsOnPremOrO365Combined.ps1})
 $A2OPermissions.Add_Click({Start-Process Powershell .\Add2Outlook_Set_Granular_permissions.ps1})
 $AutoPermissions.Add_Click({Start-Process PowerShell .\Permissions_Task_Creation.ps1})
 $DownloadAdd2Exchange.Add_Click({Start-Process http://support.DidItBetter.com/Secure/Login.aspx?returnurl=/downloads.aspx})
-$DownloadToolKit.Add_Click({  })
+$DownloadToolKit.Add_Click({Start-Process ftp://ftp.diditbetter.com/Add2Outlook%20Toolkit/Upgrades/Add2Outlook%20ToolKit%20Full%20Installation.exe})
 $DownloadSQL.Add_Click({Start-Process ftp://ftp.DidItBetter.com/SQL/SQL2012Management/2012SQLManagementStudio_x64_ENU.exe})
 $FTPDownloads.Add_Click({Start-Process ftp.DidItBetter.com})
 $GetHelp.Add_Click({Start-Process http://support.DidItBetter.com/support-request.aspx})
