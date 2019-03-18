@@ -41,6 +41,10 @@ if ($confirmation -eq 'Y') {
 
 LogWrite "..............Add2Exchange Details.............."
 
+#Time and Date
+$Start_Time = Get-Date
+LogWrite "Date/Time= $Start_Time"
+
 #Windows Version
 $WindowsVersion = (Get-WmiObject -class Win32_OperatingSystem).Caption
 
