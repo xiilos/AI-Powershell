@@ -302,6 +302,14 @@ $UpgradeToolkit.height           = 10
 $UpgradeToolkit.location         = New-Object System.Drawing.Point(11,75)
 $UpgradeToolkit.Font             = 'Microsoft Sans Serif,9'
 
+$UpgradeAdd2Outlook              = New-Object system.Windows.Forms.Label
+$UpgradeAdd2Outlook.text         = "Upgrade Add2Outlook"
+$UpgradeAdd2Outlook.AutoSize     = $true
+$UpgradeAdd2Outlook.width        = 25
+$UpgradeAdd2Outlook.height       = 10
+$UpgradeAdd2Outlook.location     = New-Object System.Drawing.Point(11,95)
+$UpgradeAdd2Outlook.Font         = 'Microsoft Sans Serif,9'
+
 $A2EDiags                        = New-Object system.Windows.Forms.Label
 $A2EDiags.text                   = "Get A2E Diags"
 $A2EDiags.AutoSize               = $true
@@ -328,11 +336,12 @@ $Revision.Font                   = 'Microsoft Sans Serif,8,style=Italic'
 
 $DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$UpgradeToolkit,$AddingPermissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,
 $GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$ExportLicenseandProfile1,
-$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$A2EDiags,$CreateSupporttext,$Revision))
+$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$A2EDiags,$CreateSupporttext,$UpgradeAdd2Outlook,$Revision))
 
 $Add2ExchangeUpgrade.Add_Click({Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1})
 $UpgradeRMM.Add_Click({Start-Process Powershell .\Auto_Upgrade_RMM.ps1})
 $UpgradeToolkit.Add_Click({Start-Process Powershell .\Auto_Upgrade_ToolKit.ps1})
+$UpgradeAdd2Outlook.Add_Click({Start-Process PowerShell .\Auto_Upgrade_Add2Outlook})
 $O365ExchangePermissions.Add_Click({Start-Process Powershell .\PermissionsOnPremOrO365Combined.ps1})
 $A2OPermissions.Add_Click({Start-Process Powershell .\Add2Outlook_Set_Granular_permissions.ps1})
 $AutoPermissions.Add_Click({Start-Process PowerShell .\Permissions_Task_Creation.ps1})
