@@ -41,15 +41,9 @@ Push-Location "C:\zlibrary\A2E Diags"
 Start-Process -FilePath "./A2EDiags-2.3.exe" -wait -ErrorAction Stop
 $WshShell = New-Object -comObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$Home\Desktop\A2EDiags.lnk")
-$Shortcut.TargetPath = "C:\zlibrary\A2E Diags\A2EDiags.cmd"
+$Shortcut.TargetPath = "C:\zlibrary\A2E Diags\A2EDiags-2.3\A2EDiags.cmd"
 $Shortcut.Save()
-Write-Host "Done"
-
-#Starting A2E Diags
-Write-Host "Starting Diags"
-Start-Process -FilePath "./A2EDiags.cmd" -wait -ErrorAction Stop
 Write-Host "Finished..."
-
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession

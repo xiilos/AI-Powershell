@@ -11,16 +11,16 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 # Script #
 
 #Logging
-$TestPath = "C:\zlibrary\Logs"
+$TestPath = "C:\zlibrary\Support"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Log Directory Exists...Resuming"
 }
 Else {
-    New-Item -ItemType directory -Path "C:\zlibrary\Logs"
+    New-Item -ItemType directory -Path "C:\zlibrary\Support"
 }
 
-$Logfile = "C:\zLibrary\Logs\A2E_Details.log"
+$Logfile = "C:\zLibrary\Support\A2E_Details.log"
 Function LogWrite {
     Param ([string]$logstring)
 
@@ -35,7 +35,7 @@ if ($confirmation -eq 'N') {
 }
 
 if ($confirmation -eq 'Y') {
-    Clear-Content "C:\zLibrary\Logs\A2E_Details.log"
+    Clear-Content "C:\zLibrary\Support\A2E_Details.log"
 }
 
 
