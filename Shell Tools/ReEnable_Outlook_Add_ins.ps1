@@ -5,6 +5,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
+#Execution Policy
+Set-ExecutionPolicy -ExecutionPolicy Bypass
+
 # Re-Enable Outlook Add-ins
 
 $TestPath = "C:\Program Files (x86)\Microsoft Office\root\Office16"

@@ -14,7 +14,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 $TestPath = "C:\zlibrary\Support"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
-    Write-Host "Log Directory Exists...Resuming"
+    Write-Host "Support Directory Exists...Resuming"
 }
 Else {
     New-Item -ItemType directory -Path "C:\zlibrary\Support"
@@ -29,13 +29,18 @@ Function LogWrite {
 
 
 #Clear The Log
-$confirmation = Read-Host "Would you like to clear the Log? [Y/N]"
+$TestPath = "C:\zlibrary\Support\A2E_Details.log"
+if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
+
+    Write-Host "Log File Exists..."
+    $confirmation = Read-Host "Would you like to clear the Log? [Y/N]"
 if ($confirmation -eq 'N') {
     Write-Host "Resuming"
 }
 
 if ($confirmation -eq 'Y') {
     Clear-Content "C:\zLibrary\Support\A2E_Details.log"
+}
 }
 
 
@@ -290,7 +295,11 @@ C:\Program Files\My Documents – wherever that lives for this sync user
 
 History
 "
-
+#Shortcut
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$Home\Desktop\Support.lnk")
+$Shortcut.TargetPath = "C:\zLibrary\Support\A2E_Details.log"
+$Shortcut.Save()
 
 Write-Host "Done"
 Write-Host "Quitting"

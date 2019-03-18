@@ -5,6 +5,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   exit
 }
 
+#Execution Policy
+
+Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Disable UAC
 
