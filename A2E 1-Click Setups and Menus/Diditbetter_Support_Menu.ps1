@@ -168,7 +168,7 @@ $DirSync.location                = New-Object System.Drawing.Point(11,296)
 $DirSync.Font                    = 'Microsoft Sans Serif,9'
 
 $DisableUAC                      = New-Object system.Windows.Forms.Label
-$DisableUAC.text                 = "Disable User Access Control"
+$DisableUAC.text                 = "Disable User Account Control"
 $DisableUAC.AutoSize             = $true
 $DisableUAC.width                = 150
 $DisableUAC.height               = 10
@@ -333,6 +333,35 @@ $Revision.width                  = 25
 $Revision.height                 = 10
 $Revision.location               = New-Object System.Drawing.Point(445,572)
 $Revision.Font                   = 'Microsoft Sans Serif,8,style=Italic'
+
+$ToolTip1                        = New-Object system.Windows.Forms.ToolTip
+$ToolTip1.ToolTipTitle           = "Help"
+$ToolTip1.isBalloon              = $true
+
+$ToolTip1.SetToolTip($Add2ExchangeUpgrade,'This will Upgrade your Current Version of Add2Exchange Enterprise to the Latest Version')
+$ToolTip1.SetToolTip($UpgradeRMM,'This will Upgrade your Current Version of Recovery and Migration Manager to the Latest Version')
+$ToolTip1.SetToolTip($O365ExchangePermissions,'Run this to Add Permissions to any users that will be syncing with Add2Exchange')
+$ToolTip1.SetToolTip($A2OPermissions,'Run this to Add Granular Folder Permissions to Users you will be syncing with Add2Outlook')
+$ToolTip1.SetToolTip($AutoPermissions,'Create a Windows Task to add Permissions to users on a Schedule')
+$ToolTip1.SetToolTip($AutoLogon,'Run the Microsoft Sys Internals AutoLogon GUI')
+$ToolTip1.SetToolTip($DirSync,'PowerShell Script to run an on Demand Directory Sync')
+$ToolTip1.SetToolTip($DisableUAC,'PowerShell Script to Disable User Account Control from within the Registry')
+$ToolTip1.SetToolTip($GroupPolicyResults,'PowerShell Script to check current Group Policy on this Appliance ')
+$ToolTip1.SetToolTip($CheckPowerShell,'PowerShell Script to check and Upgrade PowerShell if needed')
+$ToolTip1.SetToolTip($RemoveOutlookAddons,'PowerShell Script to Remove Outlook Add-Ins like Social Connector')
+$ToolTip1.SetToolTip($IncludeRegistryFavorites,'PowerShell Script to Add Add2Exchange Favorites in the Registry')
+$ToolTip1.SetToolTip($ExportLicenseandProfile1,'PowerShell Script to Export and Save your License and User Information for Add2Exchange')
+$ToolTip1.SetToolTip($GALSync,'Click for more information on How To Setup a Global Address Sync ')
+$ToolTip1.SetToolTip($PrivatetoPrivate,'Click for more information on How To Setup a Private to Private Relationship')
+$ToolTip1.SetToolTip($PublictoPublic,'Click for more information on How To Setup a Public to Public Relationship')
+$ToolTip1.SetToolTip($PrivatetoPublic,'Click for more information on How To Setup a Private to Public')
+$ToolTip1.SetToolTip($PublictoPrivate,'Click for more information on How To Setup a Public to Private')
+$ToolTip1.SetToolTip($TemplateCreation,'Click for more information on How To Setup Templates for Synchronization with Distribution Groups')
+$ToolTip1.SetToolTip($MIgrateA2E,'Click for more information on How To Migrate Add2Exchange onto a new Appliance')
+$ToolTip1.SetToolTip($ExhangeMigration,'Click for more information on How To Setup Add2Exchange before or After an Exchange or Office 365 Migration')
+$ToolTip1.SetToolTip($UpgradeToolkit,'This will Upgrade your Current Version of Add2Outlook Toolkit to the Latest Version')
+$ToolTip1.SetToolTip($CreateSupporttext,'PowerShell Script to Create a Support text detailing this Installation')
+$ToolTip1.SetToolTip($UpgradeAdd2Outlook,'This will Upgrade your Current Version of Add2Outlook to the Latest Version')
 
 $DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$UpgradeToolkit,$AddingPermissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,
 $GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$ExportLicenseandProfile1,

@@ -1,10 +1,9 @@
-<# This form was created using POSHGUI.com  a free online gui designer for PowerShell
+<# 
 .NAME
     Add2Exchange First Time Installer
 #>
 
 #Execution Policy
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 Add-Type -AssemblyName System.Windows.Forms

@@ -5,6 +5,10 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+
+#Execution Policy
+Set-ExecutionPolicy -ExecutionPolicy Bypass
+
 #Goal
 # Assign Permissions for Add2Exchange
 

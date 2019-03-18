@@ -4,6 +4,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+#Execution Policy
+Set-ExecutionPolicy -ExecutionPolicy Bypass
+
 #Goal
 # Create Initial Environment for Add2Exchange Install
 # 7 Steps
