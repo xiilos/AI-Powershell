@@ -6,13 +6,14 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
-#Remove Add2Outlook ToolKit
+<#Remove Add2Outlook ToolKit
 
 Write-Host "Removing A2O ToolKit"
 Write-Host "Please Wait...."
 $Program = Get-WmiObject -Class Win32_Product -Filter "Name = 'Add2Outlook ToolKit'"
 $Program.Uninstall()
 Write-Host "Done"
+#>
 
 #Create zLibrary\Add2Outlook ToolKit Directory
 

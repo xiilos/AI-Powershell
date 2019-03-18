@@ -33,19 +33,23 @@ Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
 
 Write-Host "Finished Downloading"
 
-#Unpacking Add2Outlook ToolKit
+#Unpacking A2E Diags
 
-Write-Host "Unpacking Add2Outlook ToolKit"
+Write-Host "Unpacking A2E Diags"
 Write-Host "please Wait....."
-Push-Location "C:\zlibrary\A2OToolKit"
+Push-Location "C:\zlibrary\A2E Diags"
+Start-Process -FilePath "./A2EDiags-2.3.exe" -wait -ErrorAction Stop
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$Home\Desktop\A2EDiags.lnk")
+$Shortcut.TargetPath = "C:\zlibrary\A2E Diags\A2EDiags.cmd"
+$Shortcut.Save()
 Write-Host "Done"
 
-#Installing Add2Outlook ToolKit
+#Starting A2E Diags
+Write-Host "Starting Diags"
+Start-Process -FilePath "./A2EDiags.cmd" -wait -ErrorAction Stop
+Write-Host "Finished..."
 
-Write-Host "Installing Add2Outlook ToolKit"
-Start-Process -FilePath "./Add2OutlookToolKitFullInstallation.exe" -wait -ErrorAction Stop
-Write-Host "Finished...Upgrade Complete"
-Start-Sleep -Seconds 2
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
