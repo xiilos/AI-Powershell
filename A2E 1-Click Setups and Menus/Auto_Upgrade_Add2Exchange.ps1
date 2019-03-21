@@ -56,12 +56,13 @@ Write-Host "Unpacking Add2exchange"
 Write-Host "please Wait....."
 Push-Location "c:\zlibrary\Add2Exchange Upgrades"
 Start-Process "c:\zlibrary\Add2Exchange Upgrades\a2e-enterprise_upgrade.exe" -wait
+Start-Sleep -Seconds 2
 Write-Host "Done"
 
 #Installing Add2Exchange
 
 Write-Host "Installing Add2Exchange"
-$Location = Get-ChildItem -Path . -Recurse | Where-Object {$_.LastWriteTime -gt (Get-Date).AddSeconds(-1)}
+Get-ChildItem -Path $root | Where-Object {$_.PSIsContainer} | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 Push-Location $Location
 Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Stop
 Write-Host "Finished...Upgrade Complete"

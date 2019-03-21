@@ -55,6 +55,11 @@ $WindowsVersion = (Get-WmiObject -class Win32_OperatingSystem).Caption
 
 LogWrite "Windows Version= $WindowsVersion"
 
+#Domain Name
+$Domain = Get-ItemPropertyValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name "Domain"
+
+LogWrite "Domain Name= $Domain"
+
 #PowerShell Version
 $PShellVersion = $PSVersionTable.PSVersion
 

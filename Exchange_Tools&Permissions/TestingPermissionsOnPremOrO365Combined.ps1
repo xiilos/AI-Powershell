@@ -375,12 +375,32 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
         if ($answer -eq 2) {Break}
             
         $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
-        $UserCredential = Get-Credential
-        $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
+    
+        
+            $error.clear()
+            $UserCredential = Get-Credential
+            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue
+        
+
+            If ($error) {
+                Write-Host "Wrong Username or Password"
+                Write-Host "Retrying in 3 Seconds"
+                Start-Sleep -s 3
+            } 
+        
+        
+        Else {Write-Host 'Credentials Validated..Resuming...'}
+
+        
         Import-PSSession $Session -DisableNameChecking
         Set-ADServerSettings -ViewEntireForest $true   
     }
   
+
+
+
+
+
     Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
     $User = read-host "Enter Sync Service Account";
   
@@ -759,7 +779,6 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
                 Write-Host "Adding Permissions to Public Folders"
                 Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
                 Write-Host "Done"
-   
             }
     
             # Option 1: Exchange 2010 on Premise-Remove Public Folder Permissions
@@ -771,7 +790,6 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
                 Write-Host "Removing Permissions to Public Folders"
                 Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
                 Write-Host "Done"
-       
             }
 
             # Option 2: Exchange 2010 on Premise- Quit

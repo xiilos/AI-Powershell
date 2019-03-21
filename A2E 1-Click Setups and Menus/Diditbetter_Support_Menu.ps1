@@ -327,7 +327,7 @@ $CreateSupporttext.location      = New-Object System.Drawing.Point(11,436)
 $CreateSupporttext.Font          = 'Microsoft Sans Serif,9'
 
 $Revision                        = New-Object system.Windows.Forms.Label
-$Revision.text                   = "Rev. 1.31819"
+$Revision.text                   = "Rev. 2.31919"
 $Revision.AutoSize               = $true
 $Revision.width                  = 25
 $Revision.height                 = 10
