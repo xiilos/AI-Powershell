@@ -242,6 +242,21 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
     Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
     $User = read-host "Enter Sync Service Account";
 
+    #Exchange 2013-2016 Thottling Policy Check
+    Write-Host "Checking Throttling Policy"
+    $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
+    If ($ThrottlePolicy = $ThrottlePolicy) {
+        Write-Host "Throttling Policy Exists... Adding $User"
+        Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy -WarningAction SilentlyContinue ; Write-Host "$User is Now a Member of the A2EPolicy"
+    }
+
+    Else {
+        Write-Host "Creating New Throttling Policy and Adding $User"
+        New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
+        Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
+        Write-Host "$User is Now a Member of the A2EPolicy"
+    }
+
     Do {
 
         $message = 'Do you Want to remove or Add Add2Exchange Permissions'
@@ -266,13 +281,7 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
         if ($decision -eq 0) {
             Write-Host "Adding Permissions to Users"
             Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-            Write-Host "Adding Throttling Policy"
-            New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
-            Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
-            Write-Host "Checking............"
-            Start-Sleep -s 2
             Write-Host "Done"
-
         } 
 
         # Option 1: Exchange on Premise-Remove old Add2Exchange permissions
@@ -285,7 +294,6 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             Write-Host "Checking.............................."
             Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
             Write-Host "Done"
-
         }
 
         # Option 2: Exchange on Premise-Remove/Add Permissions all
@@ -300,12 +308,7 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             Write-Host "Success....."
             Write-Host "Adding Permissions to Users"
             Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-            Write-Host "Checking............"
-            Write-Host "Adding Throttling Policy"
-            New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
-            Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
             Write-Host "Done"
-
         }
 
         # Option 3: Exchange on Premise-Adding Permissions to dist. list
@@ -317,16 +320,8 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
             ForEach ($Member in $DistributionGroupName) {
                 Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                Write-Host "Done"
             }
-            Write-Host "Done"
-            $confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
-            if ($confirmation -eq 'y') {
-                Write-Host "Adding Throttling Policy"
-                New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
-                Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
-            }
-            Write-Host "Done"
-
         }
 
         # Option 4: Exchange on Premise-Removing dist. list permissions
@@ -339,9 +334,8 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
             ForEach ($Member in $DistributionGroupName) {
                 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                Write-Host "Done"
             }
-            Write-Host "Done"
-
         }
 
         # Option 5: Exchange on Premise-Adding permissions to single user
@@ -353,14 +347,6 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             Write-Host "Adding Add2Exchange Permissions to Single User"
             Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
             Write-Host "Done"
-            $confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
-            if ($confirmation -eq 'y') {
-                Write-Host "Adding Throttling Policy"
-                New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
-                Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
-            }
-            Write-Host "Done"
-
         }
 
         # Option 6: Exchange on Premise-Removing permissions to single user
@@ -417,6 +403,21 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
     Write-Host "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Exchange or zAdd2Exchange@yourdomain.com"
     $User = read-host "Enter Sync Service Account";
   
+    #Exchange 2010 Thottling Policy Check
+    Write-Host "Checking Throttling Policy"
+    $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
+    If ($ThrottlePolicy = $ThrottlePolicy) {
+        Write-Host "Throttling Policy Exists... Adding $User"
+        Set-Mailbox $User -ThrottlingPolicy A2EPolicy -WarningAction SilentlyContinue ; Write-Host "$User is Now a Member of the A2EPolicy"
+    }
+
+    Else {
+        Write-Host "Creating New Throttling Policy and Adding $User"
+        New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
+        Set-Mailbox $User -ThrottlingPolicy A2EPolicy
+        Write-Host "$User is Now a Member of the A2EPolicy"
+    }
+
     do {
 
         $message = 'Do you Want to remove or Add Add2Exchange Permissions'
@@ -440,13 +441,7 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
         if ($decision -eq 0) {
             Write-Host "Adding Permissions to Users"
             Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-            Write-Host "Adding Throttling Policy"
-            New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
-            Set-Mailbox $User -ThrottlingPolicy A2EPolicy
-            Write-Host "Checking............"
-            Start-Sleep -s 2
             Write-Host "Done"
-  
         } 
   
         # Option 1: Exchange 2010 on Premise-Remove old Add2Exchange permissions
@@ -475,11 +470,7 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             Write-Host "Adding Permissions to Users"
             Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
             Write-Host "Checking............"
-            Write-Host "Adding Throttling Policy"
-            New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
-            Set-Mailbox $User -ThrottlingPolicy A2EPolicy
             Write-Host "Done"
-  
         }
   
         # Option 3: Exchange 2010 on Premise-Adding Permissions to dist. list
@@ -493,15 +484,8 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
             ForEach ($Member in $DistributionGroupName) {
                 Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                Write-Host "Done"
             }
-            Write-Host "Done"
-            $confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
-            if ($confirmation -eq 'y') {
-                Write-Host "Adding Throttling Policy"
-                New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
-                Set-Mailbox $User -ThrottlingPolicy A2EPolicy
-            }
-            Write-Host "Done"  
         }
   
         # Option 4: Exchange 2010 on Premise-Removing dist. list permissions
@@ -515,9 +499,8 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
             ForEach ($Member in $DistributionGroupName) {
                 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                Write-Host "Done"
             }
-            Write-Host "Done"
-  
         }
   
         # Option 5: Exchange 2010 on Premise-Adding permissions to single user
@@ -528,14 +511,7 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
   
             Write-Host "Adding Add2Exchange Permissions to Single User"
             Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-            Write-Host "Done"
-            $confirmation = Read-Host "Would you like me add the A2E Throttling Policy? [Y/N]"
-            if ($confirmation -eq 'y') {
-                Write-Host "Adding Throttling Policy"
-                New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
-                Set-Mailbox $User -ThrottlingPolicy A2EPolicy
-            }
-            Write-Host "Done"   
+            Write-Host "Done" 
         }
   
         # Option 6: Exchange 2010 on Premise-Removing permissions to single user
