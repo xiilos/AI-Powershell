@@ -129,9 +129,8 @@ if ($choice -eq 0) {
             $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
             ForEach ($Member in $DistributionGroupName) {
                 Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                Write-Host "Done"
             }
-            Write-Host "Done"
-
         }
 
         # Option 4: Office 365-Remove Permissions within a dist. list
@@ -146,8 +145,8 @@ if ($choice -eq 0) {
             $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
             ForEach ($Member in $DistributionGroupName) {
                 Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                Write-Host "Done"
             }
-            Write-Host "Done"
 
         }
 
@@ -161,7 +160,6 @@ if ($choice -eq 0) {
             Write-Host "Adding Add2Exchange Permissions to Single User"
             Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
             Write-Host "Done"
-
         }
 
         # Option 6: Office 365-Remove Single user permissions
@@ -174,7 +172,6 @@ if ($choice -eq 0) {
             Write-Host "Removing Add2Exchange Permissions to Single User"
             Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
             Write-Host "Done"
-
         }
 
         # Option 7: Office 365-Quit
