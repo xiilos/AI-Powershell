@@ -1,8 +1,7 @@
-if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-  # Relaunch as an elevated process:
-  Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-  exit
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    # Relaunch as an elevated process:
+    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+    exit
 }
 
 #Removing the MSExchDelegateListlink from an account
@@ -14,24 +13,24 @@ Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 Set-ADServerSettings -ViewEntireForest $true
 
 $domain = Read-Host "What is the name of your domain? i.e. <contonso> Do not put .com at end"
-Get-ADUser -Properties msExchDelegateListlink -SearchBase "dc=$domain,dc=local" -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n='UserName';e={$_.userprincipalname}},@{n= 'ListLink';e={$_.msExchDelegateListLink}} | Export-csv "c:\userlist.csv" ‚Äìnotypeinformation ‚Äìnoclobber
+Get-ADUser -Properties msExchDelegateListlink -SearchBase "dc=$domain,dc=local" -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n = 'UserName'; e = {$_.userprincipalname}}, @{n = 'ListLink'; e = {$_.msExchDelegateListLink}} | Export-csv "c:\userlist.csv" ñnotypeinformation ñnoclobber
 
 do {
-$UserToClean = Read-host "Type the name of the user who needs cleanup (Account name)"
-  $Delegates = Get-ADUser $UserToClean -Properties msExchDelegateListlink |  Select-Object -ExpandProperty msExchDelegateListlink
-  Write-Host ‚Äú**************************************************************‚Äù
-  Write-Host ‚ÄúList of Delegated accounts that are ListLinked:‚Äù $Delegates
-  Write-Host ‚Äú**************************************************************‚Äù
-  $UserDN = Read-Host "Paste in the CN address you see above that you want to remove from msExchDelegateListlink; i.e. CN=zadd2exchange,OU=Service,DC=yourDC,DC=local"
+    $UserToClean = Read-host "Type the name of the user who needs cleanup (Account name)"
+    $Delegates = Get-ADUser $UserToClean -Properties msExchDelegateListlink |  Select-Object -ExpandProperty msExchDelegateListlink
+    Write-Host ì**************************************************************î
+    Write-Host ìList of Delegated accounts that are ListLinked:î $Delegates
+    Write-Host ì**************************************************************î
+    $UserDN = Read-Host "Paste in the CN address you see above that you want to remove from msExchDelegateListlink; i.e. CN=zadd2exchange,OU=Service,DC=yourDC,DC=local"
   
-  Set-ADUser $UserToClean -Remove @{msExchDelegateListLink = ‚Äú$UserDN‚Äù}
+    Set-ADUser $UserToClean -Remove @{msExchDelegateListLink = ì$UserDNî}
   
-  Write-Host ‚Äú**************************************************************‚Äù
-  Write-Host ‚ÄúIf the following get-aduser cmdlet searching for ListLinks is empty, then all Delegated listlinks have been removed‚Äù
-  Get-ADUser $UserToClean -Properties msExchDelegateListlink |  Select-Object -ExpandProperty msExchDelegateListlink
-  Write-Host ‚Äú**************************************************************‚Äù
+    Write-Host ì**************************************************************î
+    Write-Host ìIf the following get-aduser cmdlet searching for ListLinks is empty, then all Delegated listlinks have been removedî
+    Get-ADUser $UserToClean -Properties msExchDelegateListlink |  Select-Object -ExpandProperty msExchDelegateListlink
+    Write-Host ì**************************************************************î
 
-$repeat = Read-Host 'Do you want to run it again? [Y/N]'
+    $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 } Until ($repeat -eq 'n')
 
 
