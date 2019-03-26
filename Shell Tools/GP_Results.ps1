@@ -8,21 +8,21 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Group Policy Results
-$TestPath = "C:\zlibrary\Support"
+$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Support Directory Exists...Resuming"
 }
 Else {
-    New-Item -ItemType directory -Path "C:\zlibrary\Support"
+    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
 }
 
 
 do {
     Write-Host "Getting Group Policy Results"
     gpupdate
-    gpresult /r >C:\zlibrary\Support\Group_policy_Report.txt
-    Invoke-Item "C:\zlibrary\Support\Group_policy_Report.txt"
+    gpresult /r >C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt
+    Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt"
 
     Write-Host "If you get an error stating (No User Data in RSOP) you may have to edit the GPO History in REGEDIT"
     $confirmation = Read-Host "Would you like me to remove and update the GPO History for you? [Y/N]"

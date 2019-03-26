@@ -9,16 +9,16 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Logging
-$TestPath = "C:\zlibrary\Support"
+$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Support Directory Exists...Resuming"
 }
 Else {
-    New-Item -ItemType directory -Path "C:\zlibrary\Support"
+    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
 }
 
-Start-Transcript -Path "C:\zlibrary\Support\A2E_Permissions.txt" -Append
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Permissions.txt" -Append
 
 # Script #
 
@@ -574,63 +574,5 @@ Get-PSSession | Remove-PSSession
 Start-Sleep -s 1
 Exit    
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
- 
-
-
 
 # End Scripting

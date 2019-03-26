@@ -11,16 +11,16 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 # Script #
 
 #Logging
-$TestPath = "C:\zlibrary\Support"
+$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Support Directory Exists...Resuming"
 }
 Else {
-    New-Item -ItemType directory -Path "C:\zlibrary\Support"
+    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
 }
 
-$Logfile = "C:\zLibrary\Support\A2E_Setup_Details.log"
+$Logfile = "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Setup_Details.log"
 Function LogWrite {
     Param ([string]$logstring)
 
@@ -29,7 +29,7 @@ Function LogWrite {
 
 
 #Clear The Log
-$TestPath = "C:\zlibrary\Support\A2E_Setup_Details.log"
+$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Setup_Details.log"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Log File Exists..."
@@ -39,7 +39,7 @@ if ($confirmation -eq 'N') {
 }
 
 if ($confirmation -eq 'Y') {
-    Clear-Content "C:\zLibrary\Support\A2E_Setup_Details.log"
+    Clear-Content "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Setup_Details.log"
 }
 }
 
@@ -303,7 +303,7 @@ History
 #Shortcut
 $WshShell = New-Object -comObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$Home\Desktop\Support.lnk")
-$Shortcut.TargetPath = "C:\zLibrary\Support\A2E_Details.log"
+$Shortcut.TargetPath = "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Details.log"
 $Shortcut.Save()
 
 Write-Host "Done"
