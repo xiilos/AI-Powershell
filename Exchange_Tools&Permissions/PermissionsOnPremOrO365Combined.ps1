@@ -55,12 +55,20 @@ switch ($input1) {
 
 
         Write-Host "Sign in to Office365 as Tenant Admin"
-        $Cred = Get-Credential
-        Connect-MsolService -Credential $Cred
-        $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
+        Do {
+            $Cred = Get-Credential
+            Connect-MsolService -Credential $Cred
+            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection -ErrorAction SilentlyContinue -ErrorVariable LoginError;
+            If ($LoginError) { 
+                Write-Warning -Message "Username or Password is Incorrect!"
+                Write-Host "Trying Again in 2 Seconds....."
+                Start-Sleep -S 2
+            }
+        } Until (-not($LoginError))
+        
         Import-PSSession $Session -DisableNameChecking
         Import-Module MSOnline
-
+    
         $User = read-host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com";
     
         Do {
@@ -80,7 +88,7 @@ switch ($input1) {
             Write-Host "Press '9' for Removing Permissions From Public Folders" 
             Write-Host "Press 'Q' to Quit" -ForegroundColor Red
     
-            Show-PermissionsO365List 
+            
             $input2 = Read-Host "Please Make A Selection" 
             switch ($input2) {
 
@@ -207,8 +215,17 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             if ($answer -eq 2) {Break}
             
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
-            $UserCredential = Get-Credential
-            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
+            Do {
+                $UserCredential = Get-Credential
+                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
+                If ($LoginError) { 
+                    Write-Warning -Message "Username or Password is Incorrect!"
+                    Write-Host "Trying Again in 2 Seconds....."
+                    Start-Sleep -S 2
+                }
+            } Until (-not($LoginError))
+            
+        
             Import-PSSession $Session -DisableNameChecking
             Set-ADServerSettings -ViewEntireForest $true   
         }
@@ -382,8 +399,16 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
             if ($answer -eq 2) {Break}
         
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
-            $UserCredential = Get-Credential
-            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction Inquire
+            Do {
+                $UserCredential = Get-Credential
+                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
+                If ($LoginError) { 
+                    Write-Warning -Message "Username or Password is Incorrect!"
+                    Write-Host "Trying Again in 2 Seconds....."
+                    Start-Sleep -S 2
+                }
+            } Until (-not($LoginError))
+        
             Import-PSSession $Session -DisableNameChecking
             Set-ADServerSettings -ViewEntireForest $true   
         }
