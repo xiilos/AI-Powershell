@@ -20,7 +20,7 @@ Else {
     New-Item -ItemType directory -Path "C:\zlibrary\Support"
 }
 
-$Logfile = "C:\zLibrary\Support\A2E_Details.log"
+$Logfile = "C:\zLibrary\Support\A2E_Setup_Details.log"
 Function LogWrite {
     Param ([string]$logstring)
 
@@ -29,7 +29,7 @@ Function LogWrite {
 
 
 #Clear The Log
-$TestPath = "C:\zlibrary\Support\A2E_Details.log"
+$TestPath = "C:\zlibrary\Support\A2E_Setup_Details.log"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Log File Exists..."
@@ -39,7 +39,7 @@ if ($confirmation -eq 'N') {
 }
 
 if ($confirmation -eq 'Y') {
-    Clear-Content "C:\zLibrary\Support\A2E_Details.log"
+    Clear-Content "C:\zLibrary\Support\A2E_Setup_Details.log"
 }
 }
 
