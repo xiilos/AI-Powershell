@@ -190,7 +190,7 @@ switch ($input1) {
                     Exit  
                 } 
             }
-            $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+            $repeat = Read-Host 'Return To The Main Menu? [Y/N]'
         } Until ($repeat -eq 'n')
     } 
             
@@ -206,13 +206,10 @@ switch ($input1) {
         }
     
         if ($confirmation -eq 'n') {
-            $wshell = New-Object -ComObject Wscript.Shell
-    
-            $answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
-Open Powershell as administrator
-Type: *Enable-PSRemoting* without the stars and hit enter.
-Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
-            if ($answer -eq 2) {Break}
+            Write-Warning -Message "Before Continuing, please remote into your Exchange server.
+            Open Powershell as administrator and Type: *Enable-PSRemoting* without the stars and hit enter.
+            Once Done, click Enter to Continue"
+            Pause
             
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
@@ -376,7 +373,7 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
                     Exit 
                 }
             }
-            $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+            $repeat = Read-Host 'Return to the Main Menu? [Y/N]'
         } Until ($repeat -eq 'n')
     }
     #Exchange2013-2016--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -390,13 +387,10 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
         }
 
         if ($confirmation -eq 'n') {
-            $wshell = New-Object -ComObject Wscript.Shell
-
-            $answer = $wshell.Popup("Before Continuing, please remote into your Exchange server.
-Open Powershell as administrator
-Type: *Enable-PSRemoting* without the stars and hit enter.
-Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
-            if ($answer -eq 2) {Break}
+            Write-Warning -Message "Before Continuing, please remote into your Exchange server.
+            Open Powershell as administrator and Type: *Enable-PSRemoting* without the stars and hit enter.
+            Once Done, click Enter to Continue"
+            Pause
         
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
@@ -561,7 +555,7 @@ Once Done, click OK to Continue", 0, "Enable PSRemoting", 0x1)
                     Exit 
                 }
             }
-            $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+            $repeat = Read-Host 'Return to the Main Menu? [Y/N]'
         } Until ($repeat -eq 'n')
     }       
 
