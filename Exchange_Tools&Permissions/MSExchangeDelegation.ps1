@@ -5,7 +5,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Removing the MSExchDelegateListlink from an account
+#Execution Policy
 
+Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
@@ -13,7 +15,7 @@ Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 Set-ADServerSettings -ViewEntireForest $true
 
 $domain = Read-Host "What is the name of your domain? i.e. <contonso> Do not put .com at end"
-Get-ADUser -Properties msExchDelegateListlink -SearchBase "dc=$domain,dc=local" -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n = 'UserName'; e = {$_.userprincipalname}}, @{n = 'ListLink'; e = {$_.msExchDelegateListLink}} | Export-csv "c:\userlist.csv" –notypeinformation –noclobber
+Get-ADUser -Properties msExchDelegateListlink -SearchBase "dc=$domain,dc=local" -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n = 'UserName'; e = {$_.userprincipalname}}, @{n = 'ListLink'; e = {$_.msExchDelegateListLink}} | Export-csv "c:\userlist.csv" –notypeinformation –AllowClobber
 
 do {
     $UserToClean = Read-host "Type the name of the user who needs cleanup (Account name)"

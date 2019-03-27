@@ -4,11 +4,11 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+#Execution Policy
 
+Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
-
-
 
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 Set-ADServerSettings -ViewEntireForest $true
