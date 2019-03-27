@@ -10,14 +10,37 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
+$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
+if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
-Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
-Set-ADServerSettings -ViewEntireForest $true
+    Write-Host "Support Directory Exists...Resuming"
+}
+Else {
+    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
+}
 
-$domain = Read-Host "What is the name of your domain? i.e. <contonso> Do not put .com at end"
-Get-ADUser -Properties msExchDelegateListlink -SearchBase "dc=$domain,dc=local" -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n = 'UserName'; e = {$_.userprincipalname}}, @{n = 'ListLink'; e = {$_.msExchDelegateListLink}} | Export-csv "c:\userlist.csv" –notypeinformation –AllowClobber
+$Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
+            Do {
+                $UserCredential = Get-Credential
+                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
+                If ($LoginError) { 
+                    Write-Warning -Message "Username or Password is Incorrect!"
+                    Write-Host "Trying Again in 2 Seconds....."
+                    Start-Sleep -S 2
+                }
+            } Until (-not($LoginError))
+        
+            Import-PSSession $Session -DisableNameChecking
+            Set-ADServerSettings -ViewEntireForest $true   
+            Import-Module ActiveDirectory
+        
 
-do {
+$Domain = Read-Host "What is the Name of your Domain? i.e. <DidItBetter> Do not put .com at end"
+Get-ADUser -Properties msExchDelegateListlink -SearchBase "dc=$domain,dc=local" -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n = 'UserName'; e = {$_.userprincipalname}}, @{n = 'ListLink'; e = {$_.msExchDelegateListLink}} | Export-csv "C:\Program Files (x86)\DidItBetterSoftware\Support\ExchangeDelegateLinkList.csv" –notypeinformation –NoClobber
+
+Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\ExchangeDelegateLinkList.csv"
+
+Do {
     $UserToClean = Read-host "Type the name of the user who needs cleanup (Account name)"
     $Delegates = Get-ADUser $UserToClean -Properties msExchDelegateListlink |  Select-Object -ExpandProperty msExchDelegateListlink
     Write-Host “**************************************************************”
