@@ -279,11 +279,7 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Remove Permissions to All Users'
                     Write-Host "Removing Old zAdd2Exchange Permissions"
-                    Remove-ADPermission -Identity "Exchange Administrative Group (FYDIBOHF23SPDLT)" -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
-                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess -verbose -Confirm:$false
-                    Write-Host "Checking.............................."
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
+                    Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                     Write-Host "Done"
                 }
                 # Option 3: Exchange 2010 on Premise-Remove/Add Permissions all
@@ -291,11 +287,7 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Remove and then Add Permissions to All Users'
                     Write-Host "Removing Old zAdd2Exchange Permissions"
-                    Remove-ADPermission -Identity "Exchange Administrative Group (FYDIBOHF23SPDLT)" -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
-                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess -Verbose -Confirm:$false
-                    Write-Host "Checking.............................."
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
+                    Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                     Write-Host "Success....."
                     Write-Host "Adding Permissions to Users"
                     Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
@@ -460,11 +452,7 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Remove Permissions to All Users'
                     Write-Host "Removing Old zAdd2Exchange Permissions"
-                    Remove-ADPermission -Identity "Exchange Administrative Group (FYDIBOHF23SPDLT)" -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
-                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess -verbose -Confirm:$false
-                    Write-Host "Checking.............................."
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
+                    Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                     Write-Host "Done"
                 }
                 # Option 3: Exchange 2013-2016 on Premise-Remove/Add Permissions all
@@ -472,11 +460,7 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Remove and then Add Permissions to All Users'
                     Write-Host "Removing Old zAdd2Exchange Permissions"
-                    Remove-ADPermission -Identity "Exchange Administrative Group (FYDIBOHF23SPDLT)" -User $User -AccessRights ExtendedRight -ExtendedRights "View information store status" -InheritanceType Descendents -Confirm:$false
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights GenericAll -Confirm:$false
-                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -user $User -accessrights FullAccess -Verbose -Confirm:$false
-                    Write-Host "Checking.............................."
-                    Get-MailboxDatabase | Remove-ADPermission -User $User -AccessRights ExtendedRight -ExtendedRights Send-As, Receive-As, ms-Exch-Store-Admin -Confirm:$false
+                    Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                     Write-Host "Success....."
                     Write-Host "Adding Permissions to Users"
                     Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false

@@ -43,17 +43,17 @@ Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\ExchangeDelegate
 Do {
     $UserToClean = Read-host "Type the name of the user who needs cleanup (Account name)"
     $Delegates = Get-ADUser $UserToClean -Properties msExchDelegateListlink |  Select-Object -ExpandProperty msExchDelegateListlink
-    Write-Host “**************************************************************”
+    Write-Host "**************************************************************"
     Write-Host “List of Delegated accounts that are ListLinked:” $Delegates
-    Write-Host “**************************************************************”
+    Write-Host "**************************************************************"
     $UserDN = Read-Host "Paste in the CN address you see above that you want to remove from msExchDelegateListlink; i.e. CN=zadd2exchange,OU=Service,DC=yourDC,DC=local"
   
     Set-ADUser $UserToClean -Remove @{msExchDelegateListLink = “$UserDN”}
   
-    Write-Host “**************************************************************”
+    Write-Host "**************************************************************"
     Write-Host “If the following get-aduser cmdlet searching for ListLinks is empty, then all Delegated listlinks have been removed”
     Get-ADUser $UserToClean -Properties msExchDelegateListlink |  Select-Object -ExpandProperty msExchDelegateListlink
-    Write-Host “**************************************************************”
+    Write-Host "**************************************************************"
 
     $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 } Until ($repeat -eq 'n')

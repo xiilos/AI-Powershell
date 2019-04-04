@@ -60,13 +60,19 @@ Start-Sleep -Seconds 2
 Write-Host "Done"
 
 #Installing Add2Exchange
-
+Do {
 Write-Host "Installing Add2Exchange"
-Get-ChildItem -Path $root | Where-Object {$_.PSIsContainer} | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+$Location = Get-ChildItem -Path $root | Where-Object {$_.PSIsContainer} | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 Push-Location $Location
-Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Stop
+Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Inquire -ErrorVariable InstallError;
 Write-Host "Finished...Upgrade Complete"
-Start-Sleep -Seconds 2
+
+If ($InstallError) { 
+    Write-Warning -Message "Something Went Wrong with the Install!"
+    Write-Host "Trying The Install Again in 2 Seconds"
+    Start-Sleep -S 2
+}
+} Until (-not($InstallError))
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession

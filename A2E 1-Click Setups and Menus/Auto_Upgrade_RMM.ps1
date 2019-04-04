@@ -52,13 +52,18 @@ Start-Sleep -Seconds 2
 Write-Host "Done"
 
 #Installing Recovery and Migration Manager
-
+Do {
 Write-Host "Installing Recovery and Migration Manager"
-Get-ChildItem -Path $root | Where-Object {$_.PSIsContainer} | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+$Location = Get-ChildItem -Path $root | Where-Object {$_.PSIsContainer} | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 Push-Location $Location
-Start-Process -FilePath "./rmm-enterprise.msi" -wait -ErrorAction Stop
+Start-Process -FilePath "./rmm-enterprise.msi" -wait -ErrorAction Inquire -ErrorVariable InstallError;
 Write-Host "Finished...Upgrade Complete"
-Start-Sleep -Seconds 2
+If ($InstallError) { 
+    Write-Warning -Message "Something Went Wrong with the Install!"
+    Write-Host "Trying The Install Again in 2 Seconds"
+    Start-Sleep -S 2
+}
+} Until (-not($InstallError))
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
