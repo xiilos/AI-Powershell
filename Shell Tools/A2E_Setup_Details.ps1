@@ -300,10 +300,11 @@ C:\Program Files\My Documents – wherever that lives for this sync user
 
 History
 "
+Start-Sleep -Seconds 2
 #Shortcut
 $WshShell = New-Object -comObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$Home\Desktop\Support.lnk")
-$Shortcut.TargetPath = "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Details.log"
+$Shortcut.TargetPath = "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Setup_Details.log"
 $Shortcut.Save()
 
 Write-Host "Done"
