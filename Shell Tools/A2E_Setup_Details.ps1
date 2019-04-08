@@ -24,7 +24,7 @@ $Logfile = "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Setup_Details
 Function LogWrite {
     Param ([string]$logstring)
 
-    Add-content $Logfile -value $logstring
+    Add-Content $Logfile -value $logstring
 }
 
 
@@ -34,13 +34,13 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Log File Exists..."
     $confirmation = Read-Host "Would you like to clear the Log? [Y/N]"
-if ($confirmation -eq 'N') {
-    Write-Host "Resuming"
-}
+    if ($confirmation -eq 'N') {
+        Write-Host "Resuming"
+    }
 
-if ($confirmation -eq 'Y') {
-    Clear-Content "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Setup_Details.log"
-}
+    if ($confirmation -eq 'Y') {
+        Clear-Content "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Setup_Details.log"
+    }
 }
 
 
