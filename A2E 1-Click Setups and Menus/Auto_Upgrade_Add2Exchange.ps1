@@ -12,7 +12,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 Write-Host "Stopping Add2Exchange Service"
 Stop-Service -Name "Add2Exchange Service"
-Start-sleep -s 5
+Start-Sleep -s 5
 Write-Host "Done"
 
 #Remove Add2Exchange
@@ -61,17 +61,17 @@ Write-Host "Done"
 
 #Installing Add2Exchange
 Do {
-Write-Host "Installing Add2Exchange"
-$Location = Get-ChildItem -Path $root | Where-Object {$_.PSIsContainer} | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-Push-Location $Location
-Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Inquire -ErrorVariable InstallError;
-Write-Host "Finished...Upgrade Complete"
+    Write-Host "Installing Add2Exchange"
+    $Location = Get-ChildItem -Path $root | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    Push-Location $Location
+    Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Inquire -ErrorVariable InstallError;
+    Write-Host "Finished...Upgrade Complete"
 
-If ($InstallError) { 
-    Write-Warning -Message "Something Went Wrong with the Install!"
-    Write-Host "Trying The Install Again in 2 Seconds"
-    Start-Sleep -S 2
-}
+    If ($InstallError) { 
+        Write-Warning -Message "Something Went Wrong with the Install!"
+        Write-Host "Trying The Install Again in 2 Seconds"
+        Start-Sleep -S 2
+    }
 } Until (-not($InstallError))
 
 Write-Host "Quitting"
