@@ -50,6 +50,9 @@ Do {
     $TestPath = ".\ServerUser.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Exchange/Tenent Admin Username File Exists..."
+        Write-Host "Current Content of File:" -ForegroundColor Green
+        Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
+        ""
         $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
         if ($confirmation -eq 'N') {
             Write-Host "Resuming"
@@ -70,6 +73,9 @@ Do {
     $TestPath = ".\ServerPass.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Exchange/Tenent Admin Password File Exists..."
+        Write-Host "Last Updated:" -ForegroundColor Green
+        Get-Item "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | ForEach-Object {$_.LastWriteTime}
+        ""
         $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
         if ($confirmation -eq 'N') {
             Write-Host "Resuming"
@@ -91,6 +97,9 @@ Do {
     $TestPath = ".\ExchangeName.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Exchange Server Name File Exists..."
+        Write-Host "Current Content of File:" -ForegroundColor Green
+        Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
+        ""
         $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
         if ($confirmation -eq 'N') {
             Write-Host "Resuming"
@@ -110,6 +119,9 @@ Do {
     $TestPath = ".\DistributionName.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Distribution List Name File Exists..."
+        Write-Host "Current Content of File:" -ForegroundColor Green
+        Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\DistributionName.txt"
+        ""
         $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
         if ($confirmation -eq 'N') {
             Write-Host "Resuming"
@@ -129,6 +141,9 @@ Do {
     $TestPath = ".\ServiceAccount.txt"
     if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
         Write-Host "Service Account Name File Exists..."
+        Write-Host "Current Content of File:" -ForegroundColor Green
+        Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServiceAccount.txt"
+        ""
         $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
         if ($confirmation -eq 'N') {
             Write-Host "Resuming"
@@ -201,7 +216,7 @@ Do {
             $Repeater = (New-TimeSpan -Minutes 120)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file .\Setup\Timed Permissions\Office365_All_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_All_Permissions.ps1"'
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to users mailboxes"
         }
 
