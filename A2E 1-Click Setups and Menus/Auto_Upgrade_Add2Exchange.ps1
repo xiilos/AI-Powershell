@@ -20,11 +20,11 @@ Write-Host "Stopping the Agent. Please Wait."
 Start-Sleep -s 5
 $Agent = Get-Process "Add2Exchange Agent" -ErrorAction SilentlyContinue
 if ($Agent) {
- Write-Host "Waiting for Agent to Exit"
-  Start-Sleep -s 5
-  if (!$Agent.HasExited) {
-    $Agent | Stop-Process -Force
-  }
+    Write-Host "Waiting for Agent to Exit"
+    Start-Sleep -s 5
+    if (!$Agent.HasExited) {
+        $Agent | Stop-Process -Force
+    }
 }
 
 
@@ -76,15 +76,15 @@ Write-Host "Done"
 Do {
     Write-Host "Installing Add2Exchange"
     $Location = Get-ChildItem -Path $root | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-Push-Location $Location
-Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Inquire -ErrorVariable InstallError;
-Write-Host "Finished...Upgrade Complete"
+    Push-Location $Location
+    Start-Process -FilePath ".\Add2Exchange_Upgrade.msi" -wait -ErrorAction Inquire -ErrorVariable InstallError;
+    Write-Host "Finished...Upgrade Complete"
 
-If ($InstallError) { 
-    Write-Warning -Message "Something Went Wrong with the Install!"
-    Write-Host "Trying The Install Again in 2 Seconds"
-    Start-Sleep -S 2
-}
+    If ($InstallError) { 
+        Write-Warning -Message "Something Went Wrong with the Install!"
+        Write-Host "Trying The Install Again in 2 Seconds"
+        Start-Sleep -S 2
+    }
 } Until (-not($InstallError))
 
 #Setting the Service to Delayed Start

@@ -46,7 +46,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
 LogWrite "..............Add2Exchange Details.............."
 
-#Time and Date
+#Date and Time
 $Start_Time = Get-Date
 LogWrite "Date/Time= $Start_Time"
 
@@ -55,10 +55,55 @@ $WindowsVersion = (Get-WmiObject -class Win32_OperatingSystem).Caption
 
 LogWrite "Windows Version= $WindowsVersion"
 
+#Install Location
+$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation"
+
+LogWrite "Install Location= $Install"
+
 #Domain Name
 $Domain = Get-ItemPropertyValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name "Domain"
 
 LogWrite "Domain Name= $Domain"
+
+#Service Account Name
+$ServiceAccount = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "ServiceAccount"
+
+LogWrite "Service Account Name= $ServiceAccount"
+
+#ServiceAccount Password
+#$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
+$Password = Read-Host "What is the Service Account password?"
+
+LogWrite "Service Account Password= $Password"
+
+#Logon Method
+$Logon = Read-Host "Type In your Logon Method. Ex. Exchange 2016, or Office 365"
+
+LogWrite "Logon Method= $Logon"
+
+#Connection Method
+if ($DBServer -like $ServerName) {
+    LogWrite "Connection Method= Outlook"
+}
+
+Else {
+    LogWrite "Connection Method= CDO or Remote SQL"
+}
+
+#License Address
+$LicenseAddress = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseAddress"
+
+LogWrite "License Address= $LicenseAddress"
+
+#Database Server
+$DBServer = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBServer"
+
+LogWrite "DB Server Name= $DBServer"
+
+#Server Name
+$ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "Server"
+
+LogWrite "Server Name= $ServerName"
 
 #PowerShell Version
 $PShellVersion = $PSVersionTable.PSVersion
@@ -75,39 +120,6 @@ $DBInstance = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor S
 
 LogWrite "DB Instance Name= $DBInstance"
 
-#Database Server
-$DBServer = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBServer"
-
-LogWrite "DB Server Name= $DBServer"
-
-#Install Location
-$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation"
-
-LogWrite "Install Location= $Install"
-
-#Server Name
-$ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "Server"
-
-LogWrite "Server Name= $ServerName"
-
-#Service Account Name
-$ServiceAccount = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "ServiceAccount"
-
-LogWrite "Service Account Name= $ServiceAccount"
-
-#ServiceAccount Password
-#$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-$Password = Read-Host "What is the Service Account password?"
-LogWrite "Service Account Password= $Password"
-
-#Connection Method
-if ($DBServer -like $ServerName) {
-    LogWrite "Connection Method= Outlook"
-}
-
-Else {
-    LogWrite "Connection Method= CDO or Remote SQL"
-}
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 LogWrite "..............End User Information.............."
 
@@ -124,14 +136,8 @@ $EndUserEmail = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor
 
 LogWrite "End User Email= $EndUserEmail"
 
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 LogWrite "..............License Keys.............."
-
-#License Address
-$LicenseAddress = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseAddress"
-
-LogWrite "License Address= $LicenseAddress"
 
 #License Key Dates
 $LicenseKeyASMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyASMDate"
@@ -200,44 +206,34 @@ $LicenseKeyT = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor 
 LogWrite "License Key T= $LicenseKeyT"
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-LogWrite "..............Tips.............."
+LogWrite "..............Information and History.............."
 
 LogWrite "
-Project
-On Premise
-O365
-Hybrid 365
-Migration - Both on Premise and 365
-
 Contact info
 DidITBetter Support
 813-977-5739 
 
-Credentials
-Sync Service Account
-
-Account used for Permissions
+--------Current Situation--------
 
 
-Current Situation
+
+--------Current Issues--------
 
 
-Current Issues
 
-
-Settings Sync Intervals
+--------Settings Sync Intervals--------
 
 Add2Exchange GAL Manager – 
 
 Add2Exchange Rel Manager – making and removing relationships - run at least once a day
 
-Sync for Calendars – specified sleep time, between syncs
+Sync for Calendars – specified sleep time between syncs
 
 Sync for Contacts – specified sleep time between syncs 
 
 Sync for Tasks – specified sleep time between syncs 
 
-Current Results
+--------Current Results--------
 
 GAL:
 RELMAN:
@@ -248,7 +244,8 @@ Add2Exchange Posts Synchronization (Add2Agent):
 Add2Exchange Notes Synchronization (Add2Agent): 
 
 
-Onboarding
+--------Onboarding--------
+
 Run Diditbetter_Support_Menu.ps1 as PowerShell file from desktop 
 
 FIRST: If using Relationship Group Manager, add the users to the distribution list and then immediately give permissions.
@@ -257,7 +254,7 @@ To give permissions to a single source or destination folder not in a distributi
 
 Select which Exchange environment you are in
 
-If you are on Premise, Select "not on Exchange server" for permissions to an On-premise Exchange server and enter name (unless you are on it) 
+If you are on Premise, Select *not on Exchange server* for permissions to an On-premise Exchange server and enter name (unless you are on it) 
  - Press continue for the remote PowerShell warning
 If on premise and not on Exchange Server, enter the netbios name of an Exchange server. [This may not run through your load balancer for Kerberos authentication or if PS Remote is not enabled]  If it fails, you can copy this file to the Exchange Server and run as your Organizational Administrator.
 File Default Location:  C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\PermissionsOnPremOrO365Combined.ps1
@@ -280,12 +277,13 @@ Do again until all are done
 
 Again, consider using the automatic scheduled permissions option from Diditbetter_Support_Menu
 
-Off boarding
+--------Off boarding--------
 
 To off board users, remove the users from the attached Distribution list and then don’t hide, delete or detach or litigate or remove the Outlook license if 365 until at least 24 hours later.  This gives the program enough time to detect the user has been removed from the distribution list (Relman runs successfully) and then removes the data and the relationship automatically.
 
  
-If done correctly, until at least 24 hours after, so the relationship can be marked and then auto dereplicate.  If the timing didn’t work, and the relationship for the “dead” account is in the trash and RED, you can select from Global Options to “Empty the Trash” and it close the Console and when prompted, you can select to “Not Continue where you left off” which will start at the beginning and remove all relationships in the trash, and force delete the relationships in the trash. Let it run a complete cycle. If you open the Add2Exchange Console before the full sync, you will have to reselect and specify to “Empty the Trash” again.
+If done correctly, until at least 24 hours after, so the relationship can be marked and then auto dereplicate.  If the timing didn’t work, and the relationship for the *dead* account is in the trash and RED, you can select from Global Options to *Empty the Trash* and it close the Console and when prompted, you can select to *Not Continue where you left off* which will start at the beginning and remove all relationships in the trash, and force delete the relationships in the trash.
+Let it run a complete cycle. If you open the Add2Exchange Console before the full sync, you will have to reselect and specify to *Empty the Trash* again.
 
 
 Tips – If Outlook is installed for the profile, you must leave machine logged in (and locked if desired) as the sync service account user
@@ -293,21 +291,21 @@ Should be set to auto login.  This allows patch management to work correctly and
 
 If using the automatic timed permissions option, use an account which password does not change, or give the service account proper permissions, since its password is set to never expire.
 
-If in Office 365, consider making the service account a global admin.  If On Premise Exchange, consider making the service account an Exchange Organizational Administrator and set up Automatic Timed Permissions from the PowerShell “DidITBetter Support Menu.ps1” 
+If in Office 365, consider making the service account a global admin.  If On Premise Exchange, consider making the service account an Exchange Organizational Administrator and set up Automatic Timed Permissions from the PowerShell *DidITBetter Support Menu.ps1* 
 
 
-YTD
+--------YTD--------
 
 
 Some required and recommended finishing touches: 
 
 If Contact Syncing (especially GAL) 
 
-There is a default add in in Outlook add called the “Outlook Social Connector” which can cause the items in the destination to be changed.  
+There is a default add in in Outlook add called the *Outlook Social Connector* which can cause the items in the destination to be changed.  
 The effect is it is updating many of these contacts in every destination as evidenced by long relationship sync times.  A Ping pong effect occurs, where we sync to destination, the destination items change and then we change them back.  This is especially true if we make GAL entries as SMTP email address for Mobile utility. 
-So for proper sync and put this continuing issue to rest, we immediately need to disable some or all parts of the Outlook Social Connector as group policy, and at least the option: “Blocking Global Address List synchronization with local contacts”. See MS link below 
+So for proper sync and put this continuing issue to rest, we immediately need to disable some or all parts of the Outlook Social Connector as group policy, and at least the option: *Blocking Global Address List synchronization with local contacts*. See MS link below 
 
-After this policy is applied, it will require user logouts or reboots and back on of the machine or a forced group policy update, and closing and opening of Outlook.  After this, and two full syncs, we will be able to tell if other outside “off the domain” Outlook machines on an account, due to the longer times for the problem user.
+After this policy is applied, it will require user logouts or reboots and back on of the machine or a forced group policy update, and closing and opening of Outlook.  After this, and two full syncs, we will be able to tell if other outside *off the domain* Outlook machines on an account, due to the longer times for the problem user.
 
 Tip – if there are any Outlook clients on machines not logging into the domain (at home, for example) this will not get set by group policy, so should be disabled manually.  
 
@@ -325,7 +323,7 @@ Manage the Outlook Social Connector with Group Policy
 https://support.microsoft.com/en-us/help/2020103/how-to-manage-the-outlook-social-connector-by-using-group-policy
 
 
-After this policy is applied it will require user logouts or reboots and back on of the machine, or a forced group policy update, and closing and opening of outlook.  After this, and two full syncs, we will be able to tell if other outside “off the domain” Outlook machines on an account, due to the longer times for that user.
+After this policy is applied it will require user logouts or reboots and back on of the machine, or a forced group policy update, and closing and opening of outlook.  After this, and two full syncs, we will be able to tell if other outside *off the domain* Outlook machines on an account, due to the longer times for that user.
 
 How to Disable Outlook Social Connector by PowerShell on that machine
 
@@ -342,15 +340,15 @@ This PowerShell disables and renames the outlook addins so they are not accident
 Antivirus Exclusions from active file scanning
 (These are default locations) 
 C:\Program Files\OpenDoor Software®\
--	note the “Circle r” in the directory name. Copy and paste to antivirus program
+-	note the *Circle r* in the directory name. Copy and paste to antivirus program
 C:\Program Files\Microsoft SQL Server\
 C:\Zlibrary 
 
 
 
-History
-
+--------History--------
 "
+
 Start-Sleep -Seconds 2
 #Shortcut
 $WshShell = New-Object -comObject WScript.Shell
