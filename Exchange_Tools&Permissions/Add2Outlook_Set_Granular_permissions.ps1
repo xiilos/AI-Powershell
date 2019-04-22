@@ -1,12 +1,11 @@
-if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-  # Relaunch as an elevated process:
-  Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-  exit
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    # Relaunch as an elevated process:
+    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+    exit
 }
 
 
-$message  = 'Please Pick how you want to connect'
+$message = 'Please Pick how you want to connect'
 $question = 'Pick one of the following from below'
 
 $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
@@ -17,7 +16,7 @@ $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentL
 $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
 if ($decision -eq 2) {
-Exit
+    Exit
 }
 
 
@@ -26,84 +25,84 @@ Exit
 
 if ($decision -eq 0) {
 
-Write-Host "Adding Azure MSonline module"
-Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
+    Write-Host "Adding Azure MSonline module"
+    Set-PSRepository -Name psgallery -InstallationPolicy Trusted
+    Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
 
-Import-Module MSOnline
+    Import-Module MSOnline
 
-Write-Host "Sign in to Office365 as Tenant Admin"
-$Cred = Get-Credential
-Connect-MsolService -Credential $Cred
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
-Import-PSSession $Session -DisableNameChecking
-Import-Module MSOnline
-
-
-$message  = 'Please Pick what you want to do'
-$question = 'Pick one of the following from below'
-
-$choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&0 Add Granular Perm to Single User'))
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1 Remove Granular Perm to Single User'))
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
-
-$decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
+    Write-Host "Sign in to Office365 as Tenant Admin"
+    $Cred = Get-Credential
+    Connect-MsolService -Credential $Cred
+    $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
+    Import-PSSession $Session -DisableNameChecking
+    Import-Module MSOnline
 
 
-# Option 0: Office 365-Add Granular Perm to Single User
+    $message = 'Please Pick what you want to do'
+    $question = 'Pick one of the following from below'
 
-if ($decision -eq 0) {
+    $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&0 Add Granular Perm to Single User'))
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1 Remove Granular Perm to Single User'))
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
 
-
-do {
-$User = read-host "Enter Sync Service Account";
-$Mailbox = read-host "(Enter user Email Address)"
-$Identity = read-host "Enter user Email Address followed by :\Calendar or :\Contact (Example: Tom@diditbetter.com:\Contacts)"
-$AccessRights = read-host "Enter Permissions level (Owner, Editor, none)"
-
-Write-Output "Adding Add2Outlook Granular Permissions to Single User"
-
-Add-MailboxPermission -Identity $Mailbox -User $User -AccessRights 'readpermission'
-Add-MailboxFolderPermission -Identity $Identity -User $User -AccessRights $AccessRights
-
-  $repeat = Read-Host 'Do you want to run it again? [Y/N]'
-
-} Until ($repeat -eq 'n')
+    $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
 
-Write-Output "Quitting"
-Get-PSSession | Remove-PSSession
-Exit
-}
+    # Option 0: Office 365-Add Granular Perm to Single User
 
-# Option 1: Office 365-Removing Add2Outlook Granular Permissions to Single User
+    if ($decision -eq 0) {
 
-if ($decision -eq 1) {
 
-do {
-$User = read-host "Enter Sync Service Account (Display Name)";
-$Identity = read-host "Enter user Email Address"
+        do {
+            $User = read-host "Enter Sync Service Account";
+            $Mailbox = read-host "(Enter user Email Address)"
+            $Identity = read-host "Enter user Email Address followed by :\Calendar or :\Contact (Example: Tom@diditbetter.com:\Contacts)"
+            $AccessRights = read-host "Enter Permissions level (Owner, Editor, none)"
 
-Write-Output "Removing Add2Outlook Granular Permissions to Single User"
-Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+            Write-Output "Adding Add2Outlook Granular Permissions to Single User"
 
-  $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+            Add-MailboxPermission -Identity $Mailbox -User $User -AccessRights 'readpermission'
+            Add-MailboxFolderPermission -Identity $Identity -User $User -AccessRights $AccessRights
 
-} Until ($repeat -eq 'n')
+            $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
-Write-Output "Quitting"
-Get-PSSession | Remove-PSSession
-Exit
-}
+        } Until ($repeat -eq 'n')
 
-# Option 2: Office 365-Quit
 
-if ($decision -eq 2) {
-Write-Output "Quitting"
-Get-PSSession | Remove-PSSession
-Exit
-}
+        Write-Output "Quitting"
+        Get-PSSession | Remove-PSSession
+        Exit
+    }
+
+    # Option 1: Office 365-Removing Add2Outlook Granular Permissions to Single User
+
+    if ($decision -eq 1) {
+
+        do {
+            $User = read-host "Enter Sync Service Account (Display Name)";
+            $Identity = read-host "Enter user Email Address"
+
+            Write-Output "Removing Add2Outlook Granular Permissions to Single User"
+            Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+
+            $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+
+        } Until ($repeat -eq 'n')
+
+        Write-Output "Quitting"
+        Get-PSSession | Remove-PSSession
+        Exit
+    }
+
+    # Option 2: Office 365-Quit
+
+    if ($decision -eq 2) {
+        Write-Output "Quitting"
+        Get-PSSession | Remove-PSSession
+        Exit
+    }
 
 }
 
@@ -113,72 +112,72 @@ Exit
 if ($decision -eq 1) {
 
 
-Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
-Set-ADServerSettings -ViewEntireForest $true
+    Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
+    Set-ADServerSettings -ViewEntireForest $true
 
-$message  = 'Do you Want to remove or Add Add2Exchange Permissions'
-$question = 'Pick one of the following from below'
+    $message = 'Do you Want to remove or Add Add2Exchange Permissions'
+    $question = 'Pick one of the following from below'
 
-$choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&0 Add Granular Perm to Single User'))
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1 Remove Granular Perm to Single User'))
-$choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
+    $choices = New-Object Collections.ObjectModel.Collection[Management.Automation.Host.ChoiceDescription]
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&0 Add Granular Perm to Single User'))
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&1 Remove Granular Perm to Single User'))
+    $choices.Add((New-Object Management.Automation.Host.ChoiceDescription -ArgumentList '&2 Quit'))
 
-$decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
+    $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
-# Option 0: Exchange on Premise-Add Granular Perm to Single User
-if ($decision -eq 0) {
-do {
-Write-Output "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Outlook or zAdd2Outlook@yourdomain.com"
+    # Option 0: Exchange on Premise-Add Granular Perm to Single User
+    if ($decision -eq 0) {
+        do {
+            Write-Output "The next prompt will ask for the Sync Service Account name in the format Example: zAdd2Outlook or zAdd2Outlook@yourdomain.com"
 
-$User = read-host "Enter Sync Service Account";
-$Mailbox = read-host "(Enter user Email Address)"
-$Identity = read-host "Enter user Email Address followed by :\Calendar or :\Contact (Example: Tom@diditbetter.com:\Contacts)"
-$AccessRights = read-host "Enter Permissions level (Owner, Editor, none)"
+            $User = read-host "Enter Sync Service Account";
+            $Mailbox = read-host "(Enter user Email Address)"
+            $Identity = read-host "Enter user Email Address followed by :\Calendar or :\Contact (Example: Tom@diditbetter.com:\Contacts)"
+            $AccessRights = read-host "Enter Permissions level (Owner, Editor, none)"
 
-Write-Output "Adding Add2Outlook Granular Permissions to Single User"
+            Write-Output "Adding Add2Outlook Granular Permissions to Single User"
 
-Add-MailboxPermission -Identity $Mailbox -User $User  -AccessRights 'readpermission'
-Add-MailboxFolderPermission -Identity $Identity -User $User -AccessRights $AccessRights
+            Add-MailboxPermission -Identity $Mailbox -User $User  -AccessRights 'readpermission'
+            Add-MailboxFolderPermission -Identity $Identity -User $User -AccessRights $AccessRights
 
-Write-Output "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2O_permissions.txt
-Invoke-Item "C:\A2O_permissions.txt"
-  $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+            Write-Output "Writing Data......"
+            Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object { ($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF") } | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = { [string]::join(', ', $_.AccessRights) } } | out-file C:\A2O_permissions.txt
+            Invoke-Item "C:\A2O_permissions.txt"
+            $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
-} Until ($repeat -eq 'n')
+        } Until ($repeat -eq 'n')
 
-Write-Output "Quitting"
-Get-PSSession | Remove-PSSession
-Exit
-}
+        Write-Output "Quitting"
+        Get-PSSession | Remove-PSSession
+        Exit
+    }
 
-# Option 1: Exchange on Premise-Removing Add2Outlook Granular Permissions to Single User
+    # Option 1: Exchange on Premise-Removing Add2Outlook Granular Permissions to Single User
 
-if ($decision -eq 1) {
-do {
-$User = read-host "Enter Sync Service Account (Display Name)";
-$Identity = read-host "Enter user Email Address"
+    if ($decision -eq 1) {
+        do {
+            $User = read-host "Enter Sync Service Account (Display Name)";
+            $Identity = read-host "Enter user Email Address"
 
-Write-Output "Removing Add2Outlook Granular Permissions to Single User"
-Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-Write-Output "Writing Data......"
-Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object {($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF")} | Select-Object Identity,User, @{Name='AccessRights';Expression={[string]::join(', ', $_.AccessRights)}} | out-file C:\A2O_permissions.txt
-Invoke-Item "C:\A2O_permissions.txt"
-  $repeat = Read-Host 'Do you want to run it again? [Y/N]'
+            Write-Output "Removing Add2Outlook Granular Permissions to Single User"
+            Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+            Write-Output "Writing Data......"
+            Get-Mailbox -ResultSize Unlimited | Get-MailboxPermission | Where-Object { ($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY\SELF") } | Select-Object Identity, User, @{Name = 'AccessRights'; Expression = { [string]::join(', ', $_.AccessRights) } } | out-file C:\A2O_permissions.txt
+            Invoke-Item "C:\A2O_permissions.txt"
+            $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
-} Until ($repeat -eq 'n')
+        } Until ($repeat -eq 'n')
 
-Write-Output "Quitting"
-Get-PSSession | Remove-PSSession
-Exit
-}
+        Write-Output "Quitting"
+        Get-PSSession | Remove-PSSession
+        Exit
+    }
 
-# Option 2: Exchange On Premise: Quit
+    # Option 2: Exchange On Premise: Quit
 
-if ($decision -eq 2) {
-Write-Output "Quitting"
-Get-PSSession | Remove-PSSession
-Exit
-}
+    if ($decision -eq 2) {
+        Write-Output "Quitting"
+        Get-PSSession | Remove-PSSession
+        Exit
+    }
 }

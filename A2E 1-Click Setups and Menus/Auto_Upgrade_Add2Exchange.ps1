@@ -12,8 +12,21 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 Write-Host "Stopping Add2Exchange Service"
 Stop-Service -Name "Add2Exchange Service"
-Start-Sleep -s 5
+Start-Sleep -s 2
 Write-Host "Done"
+
+#Stop The Add2Exchange Agent
+Write-Host "Stopping the Agent. Please Wait."
+Start-Sleep -s 5
+$Agent = Get-Process "Add2Exchange Agent" -ErrorAction SilentlyContinue
+if ($Agent) {
+ Write-Host "Waiting for Agent to Exit"
+  Start-Sleep -s 5
+  if (!$Agent.HasExited) {
+    $Agent | Stop-Process -Force
+  }
+}
+
 
 #Remove Add2Exchange
 
@@ -73,6 +86,11 @@ If ($InstallError) {
     Start-Sleep -S 2
 }
 } Until (-not($InstallError))
+
+#Setting the Service to Delayed Start
+Write-Host "Setting up Add2Exchange Service to Delayed Start"
+sc.exe config "Add2Exchange Service" start= delayed-auto
+Write-Host "Done"
 
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
