@@ -15,7 +15,6 @@ Write-Host "Setting the Time Zone"
 Set-TimeZone -Name "Central Standard Time"
     
 # Rename Computer
-
 Write-Host "Renaming Computer"
 $Compname = Read-Host "Enter the new name of this Computer"
 Rename-Computer -NewName "$CompName"
@@ -148,8 +147,6 @@ Write-Host "Explorer view from Quick Access to This PC"
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "LaunchTo" -Type DWord -Value 1
 
 
-
-
 # Windows Apps Cleanup
 
 Write-Host "Make Sure to Disable Cloud Content GPO"
@@ -227,6 +224,14 @@ Get-AppxPackage "SpotifyAB.SpotifyMusic" | Remove-AppxPackage
 Get-AppxPackage "WinZipComputing.WinZipUniversal" | Remove-AppxPackage
 Get-AppxPackage "XINGAG.XING" | Remove-AppxPackage
 
+#Removing Windows Apps
+Write-Host "Removing Windows Apps"
+Get-AppxPackage -AllUsers | where-object { $_.name -notlike "*windows.photos" } | where-object { $_.name -notlike "*store*" } | where-object { $_.name -notlike "*calculator*" } | where-object { $_.name -notlike "*sticky*" } | where-object { $_.name -notlike "*soundrecorder*" } | where-object { $_.name -notlike "*mspaint*" } | where-object { $_.name -notlike "*screensketch*" } | Remove-AppxPackage -Confirm:$False -ErrorAction SilentlyContinue -ErrorVariable ProcessError;
+
+If ($ProcessError) {
+
+    write-warning -message "Cannot Remove some Apps. Maybe not a windows App?";
+}
 
 # Kill Cortana
 
@@ -345,8 +350,6 @@ reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\
 reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{2297E4E2-5DBE-466D-A12B-0F8286F0D9CA}" /T REG_SZ /V "Value" /D Deny /F
 
 
-
-
 # Start Menu Tweaks
 
 Write-Host "Disabling Start menu web search"
@@ -368,58 +371,9 @@ If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanc
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWord -Value 0
 
 
-Write-Host " Unpin All Start Menu Icons"
-If ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environment]::OSVersion.Version.Build -le 16299) {
-    Get-ChildItem -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount" -Include "*.group" -Recurse | ForEach-Object {
-        $data = (Get-ItemProperty -Path "$($_.PsPath)\Current" -Name "Data").Data -Join ","
-        $data = $data.Substring(0, $data.IndexOf(",0,202,30") + 9) + ",0,202,80,0,0"
-        Set-ItemProperty -Path "$($_.PsPath)\Current" -Name "Data" -Type Binary -Value $data.Split(",")
-    }
-}
-ElseIf ([System.Environment]::OSVersion.Version.Build -eq 17133) {
-    $key = Get-ChildItem -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount" -Recurse | Where-Object { $_ -like "*start.tilegrid`$windows.data.curatedtilecollection.tilecollection\Current" }
-    $data = (Get-ItemProperty -Path $key.PSPath -Name "Data").Data[0..25] + ([byte[]](202, 50, 0, 226, 44, 1, 1, 0, 0))
-    Set-ItemProperty -Path $key.PSPath -Name "Data" -Type Binary -Value $data
-}
-
 Write-Host " Unpin All Taskbar Items"
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](255))
 Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
-
-# Setting Up the Start Menu
-
-# Start Menu XML (Edit Below)
-$StartLayourStr = @"
-<**YOUR START LAYOUT XML**>
-"@
-
-$StartLayoutStr = @" 
-<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
-<LayoutOptions StartTileGroupCellWidth="6" />
-<DefaultLayoutOverride>
-<StartLayoutCollection>
-  <defaultlayout:StartLayout GroupCellWidth="6">
-	<start:Group Name="">
-	  <start:DesktopApplicationTile Size="2x2" Column="2" Row="0" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Accessories\Notepad.lnk" />
-	  <start:DesktopApplicationTile Size="2x2" Column="0" Row="0" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Windows PowerShell\Windows PowerShell.lnk" />
-	  <start:DesktopApplicationTile Size="2x2" Column="2" Row="2" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\System Tools\Command Prompt.lnk" />
-	  <start:DesktopApplicationTile Size="2x2" Column="4" Row="0" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Windows PowerShell\Windows PowerShell ISE.lnk" />
-	</start:Group>
-	<start:Group Name="">
-	  <start:Tile Size="2x2" Column="3" Row="0" AppUserModelID="Microsoft.WindowsCalculator_8wekyb3d8bbwe!App" />
-	  <start:DesktopApplicationTile Size="2x2" Column="0" Row="0" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\System Tools\Control Panel.lnk" />
-	</start:Group>
-	<start:Group Name="">
-	  <start:DesktopApplicationTile Size="2x2" Column="0" Row="0" DesktopApplicationLinkPath="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Accessories\Internet Explorer.lnk" />
-	  <start:Tile Size="2x2" Column="3" Row="0" AppUserModelID="Microsoft.WindowsStore_8wekyb3d8bbwe!App" />
-	</start:Group>
-  </defaultlayout:StartLayout>
-</StartLayoutCollection>
-</DefaultLayoutOverride>
-</LayoutModificationTemplate>
-"@
-
-#------End XML Editing------
 
 Write-Output "Quitting"
 Get-PSSession | Remove-PSSession
