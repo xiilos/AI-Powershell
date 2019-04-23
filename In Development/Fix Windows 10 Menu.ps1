@@ -12,7 +12,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
-Get-AppXPackage -AllUsers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"}
+Get-AppXPackage -AllUsers | ForEach-Object {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"}
 
 
 Write-Host "Done"
