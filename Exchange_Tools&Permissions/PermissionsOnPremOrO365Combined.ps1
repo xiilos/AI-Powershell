@@ -98,450 +98,450 @@ switch ($input1) {
                     'You chose to Add Permissions to All Users'
                     Write-Host "Adding Add2Exchange Permissions"
                     Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                Write-Host "Done"
-            } 
-            # Option 2: Office 365-Removing Add2Exchange Permissions
-            '2' { 
-                Clear-Host 
-                'You chose to Remove Permissions from All Users'
-                Write-Host "Removing Add2Exchange Permissions"
-                Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess -verbose -confirm:$false
-            Write-Host "Done" 
-        } 
-        # Option 3: Office 365-Remove&Add Permissions
-        '3' { 
-            Clear-Host 
-            'You chose to Remove and then Add Permissions to All Users'
-            Write-Host "Removing Add2Exchange Permissions"
-            Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess -Verbose -confirm:$false
-        Write-Host "Adding Add2Exchange Permissions"
-        Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-    Write-Host "Done"
-} 
-# Option 4: Office 365-Adding to Dist. List
-'4' { 
-    Clear-Host 
-    'You chose to Add Permissions to a Distribution List'
-    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
-    Write-Host "Adding Add2Exchange Permissions"
-    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-    ForEach ($Member in $DistributionGroupName) {
-        Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-        Write-Host "Done"
-    }
-}
-# Option 5: Office 365-Remove Permissions within a dist. list
-'5' { 
-    Clear-Host 
-    'You chose to Remove Permissions From a Distribution List'
-    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
-    Write-Host "Removing Add2Exchange Permissions"
-    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-    ForEach ($Member in $DistributionGroupName) {
-        Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-        Write-Host "Done"
-    }
-}
-# Option 6: Office 365-Add Permissions to single user
-'6' { 
-    Clear-Host 
-    'You chose to Add Permissions to a Single User'
-    $Identity = Read-Host "Enter user Email Address"
-    Write-Host "Adding Add2Exchange Permissions to Single User"
-    Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-    Write-Host "Done"
-} 
-# Option 7: Office 365-Remove Single user permissions
-'7' { 
-    Clear-Host 
-    'You chose to Remove Permissions From a Single User'
-    $Identity = Read-Host "Enter user Email Address"
-    Write-Host "Removing Add2Exchange Permissions to Single User"
-    Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-    Write-Host "Done"
-}
-# Option 8: Office 365-Adding Permissions to Public Folders
-'8' { 
-    Clear-Host 
-    'You chose to Add Permissions to Public Folders'
-    Write-Host "Getting a list of Public Folders"
-    Get-PublicFolder -Identity "\" -Recurse
-    $Identity = Read-Host "Public Folder Name (Alias)"
-    Write-Host "Adding Permissions to Public Folders"
-    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
-    Write-Host "Done"
-}
-# Option 9: Office 365-Removing Permissions From Public Folders
-'9' { 
-    Clear-Host 
-    'You chose to Remove Permissions From Public Folders'
-    Write-Host "Getting a list of Public Folders"
-    Get-PublicFolder -Identity "\" -Recurse
-    $Identity = Read-Host "Public Folder Name (Alias)"
-    Write-Host "Removing Permissions to Public Folders"
-    Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
-    Write-Host "Done"
-}
+                    Write-Host "Done"
+                } 
+                # Option 2: Office 365-Removing Add2Exchange Permissions
+                '2' { 
+                    Clear-Host 
+                    'You chose to Remove Permissions from All Users'
+                    Write-Host "Removing Add2Exchange Permissions"
+                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess -verbose -confirm:$false
+                    Write-Host "Done" 
+                } 
+                # Option 3: Office 365-Remove&Add Permissions
+                '3' { 
+                    Clear-Host 
+                    'You chose to Remove and then Add Permissions to All Users'
+                    Write-Host "Removing Add2Exchange Permissions"
+                    Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User $User -accessrights FullAccess -Verbose -confirm:$false
+                    Write-Host "Adding Add2Exchange Permissions"
+                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                    Write-Host "Done"
+                } 
+                # Option 4: Office 365-Adding to Dist. List
+                '4' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to a Distribution List'
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
+                    Write-Host "Adding Add2Exchange Permissions"
+                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                        Write-Host "Done"
+                    }
+                }
+                # Option 5: Office 365-Remove Permissions within a dist. list
+                '5' { 
+                    Clear-Host 
+                    'You chose to Remove Permissions From a Distribution List'
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
+                    Write-Host "Removing Add2Exchange Permissions"
+                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                        Write-Host "Done"
+                    }
+                }
+                # Option 6: Office 365-Add Permissions to single user
+                '6' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to a Single User'
+                    $Identity = Read-Host "Enter user Email Address"
+                    Write-Host "Adding Add2Exchange Permissions to Single User"
+                    Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                    Write-Host "Done"
+                } 
+                # Option 7: Office 365-Remove Single user permissions
+                '7' { 
+                    Clear-Host 
+                    'You chose to Remove Permissions From a Single User'
+                    $Identity = Read-Host "Enter user Email Address"
+                    Write-Host "Removing Add2Exchange Permissions to Single User"
+                    Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 8: Office 365-Adding Permissions to Public Folders
+                '8' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to Public Folders'
+                    Write-Host "Getting a list of Public Folders"
+                    Get-PublicFolder -Identity "\" -Recurse
+                    $Identity = Read-Host "Public Folder Name (Alias)"
+                    Write-Host "Adding Permissions to Public Folders"
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 9: Office 365-Removing Permissions From Public Folders
+                '9' { 
+                    Clear-Host 
+                    'You chose to Remove Permissions From Public Folders'
+                    Write-Host "Getting a list of Public Folders"
+                    Get-PublicFolder -Identity "\" -Recurse
+                    $Identity = Read-Host "Public Folder Name (Alias)"
+                    Write-Host "Removing Permissions to Public Folders"
+                    Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                    Write-Host "Done"
+                }
 
-# Option Q: Office 365-Quit
-'q' { 
-    Write-Host "Quitting"
-    Get-PSSession | Remove-PSSession
-Exit  
-} 
-}
-$repeat = Read-Host 'Return To The Main Menu? [Y/N]'
-} Until ($repeat -eq 'n')
-} 
-            
-        
-#Exchange2010--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-'2' {
-    Clear-Host 
-    'You chose Exchange 2010'
-    $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
-    if ($confirmation -eq 'y') {
-        Add-PSSnapin Microsoft.Exchange.Management.PowerShell.E2010;
-        Set-ADServerSettings -ViewEntireForest $true
-    }
-    
-    if ($confirmation -eq 'n') {
-        Write-Warning -Message "Before Continuing, please remote into your Exchange server.
-            Open Powershell as administrator and Type: *Enable-PSRemoting* without the stars and hit enter.
-            Once Done, click Enter to Continue"
-        Pause
-            
-        $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
-        Do {
-            $UserCredential = Get-Credential
-            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
-            If ($LoginError) { 
-                Write-Warning -Message "Username or Password is Incorrect!"
-                Write-Host "Trying Again in 2 Seconds....."
-                Start-Sleep -S 2
+                # Option Q: Office 365-Quit
+                'q' { 
+                    Write-Host "Quitting"
+                    Get-PSSession | Remove-PSSession
+                    Exit  
+                } 
             }
-        } Until (-not($LoginError))
-            
-        
-        Import-PSSession $Session -DisableNameChecking
-        Set-ADServerSettings -ViewEntireForest $true   
-    }
-  
-    Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
-    $User = Read-Host "Enter Sync Service Account";
-  
-    #Exchange 2010 Thottling Policy Check
-    Write-Host "Checking Throttling Policy"
-    $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
-    If ($ThrottlePolicy = $ThrottlePolicy) {
-        Write-Host "Throttling Policy Exists... Adding $User"
-        Set-Mailbox $User -ThrottlingPolicy A2EPolicy -WarningAction SilentlyContinue ; Write-Host "$User is Now a Member of the A2EPolicy"
-    }
-
-    Else {
-        Write-Host "Creating New Throttling Policy and Adding $User"
-        New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
-        Set-Mailbox $User -ThrottlingPolicy A2EPolicy
-        Write-Host "$User is Now a Member of the A2EPolicy"
+            $repeat = Read-Host 'Return To The Main Menu? [Y/N]'
+        } Until ($repeat -eq 'n')
     } 
-    
-    Do {
-
-        $Title3 = 'Exchange 2010 Permissions Menu' 
-        ""
+            
+        
+    #Exchange2010--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    '2' {
         Clear-Host 
-        Write-Host "================ $Title3 ================" 
-        ""     
-        Write-Host "Press '1' for Adding Permissions to All Users" 
-        Write-Host "Press '2' for Removing Permissions from All Users" 
-        Write-Host "Press '3' for Removing and then Adding Permissions to All Users"
-        Write-Host "Press '4' for Adding Permissions to a Distribution List"
-        Write-Host "Press '5' for Removing Permissions from a Distribution List"
-        Write-Host "Press '6' for Adding Permissions to a Single User"
-        Write-Host "Press '7' for Removing Permissions from a Single User"
-        Write-Host "Press '8' for Adding Permissions to Public Folders"
-        Write-Host "Press '9' for Removing Permissions From Public Folders" 
-        Write-Host "Press 'Q' to Quit" -ForegroundColor Red
-
-        $input3 = Read-Host "Please Make A Selection" 
-        switch ($input3) {
-
-            # Option 1: Exchange 2010 on Premise-Adding new permissions all
-            '1' { 
-                Clear-Host 
-                'You chose to Add Permissions to All Users'
-                Write-Host "Adding Permissions to Users"
-                Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-            Write-Host "Done"
+        'You chose Exchange 2010'
+        $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+        if ($confirmation -eq 'y') {
+            Add-PSSnapin Microsoft.Exchange.Management.PowerShell.E2010;
+            Set-ADServerSettings -ViewEntireForest $true
         }
-        # Option 2: Exchange 2010 on Premise-Remove old Add2Exchange permissions
-        '2' {
-            Clear-Host 
-            'You chose to Remove Permissions to All Users'
-            Write-Host "Removing Old zAdd2Exchange Permissions"
-            Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-        Write-Host "Done"
-    }
-    # Option 3: Exchange 2010 on Premise-Remove/Add Permissions all
-    '3' {
-        Clear-Host 
-        'You chose to Remove and then Add Permissions to All Users'
-        Write-Host "Removing Old zAdd2Exchange Permissions"
-        Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-    Write-Host "Success....."
-    Write-Host "Adding Permissions to Users"
-    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-Write-Host "Checking............"
-Write-Host "Done"
-}
-# Option 4: Exchange 2010 on Premise-Adding Permissions to dist. list
-'4' {
-    Clear-Host 
-    'You chose to Add Permissions To A Distribution List'
-    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
-    Write-Host "Adding Add2Exchange Permissions"
-    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-    ForEach ($Member in $DistributionGroupName) {
-        Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-        Write-Host "Done"
-    }
-}
-# Option 5: Exchange 2010 on Premise-Removing dist. list permissions
-'5' {
-    Clear-Host 
-    'You chose to Remove Permissions From A Distribution List'
-    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
-    Write-Host "Removing Add2Exchange Permissions"
-    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-    ForEach ($Member in $DistributionGroupName) {
-        Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-        Write-Host "Done"
-    }
-}
-# Option 6: Exchange 2010 on Premise-Adding permissions to single user
-'6' {
-    Clear-Host 
-    'You chose to Add Permissions To A Single User'
-    $Identity = Read-Host "Enter user Email Address";
-    Write-Host "Adding Add2Exchange Permissions to Single User"
-    Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-    Write-Host "Done" 
-}
-# Option 7: Exchange 2010 on Premise-Removing permissions to single user
-'7' {
-    Clear-Host 
-    'You chose to Remove Permissions To A Single User'
-    $Identity = Read-Host "Enter user Email Address"
-    Write-Host "Removing Add2Exchange Permissions to Single User"
-    Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-    Write-Host "Done"
-}
-# Option 8: Exchange 2010-Adding Permissions to Public Folders
-'8' { 
-    Clear-Host 
-    'You chose to Add Permissions to Public Folders'
-    Write-Host "Getting a list of Public Folders"
-    Get-PublicFolder -Identity "\" -Recurse
-    $Identity = Read-Host "Public Folder Name (Alias)"
-    Write-Host "Adding Permissions to Public Folders"
-    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
-    Write-Host "Done"
-}
-# Option 9: Exchange 2010-Removing Permissions From Public Folders
-'9' { 
-    Clear-Host
-    'You chose to Remove Permissions From Public Folders' 
-    Write-Host "Getting a list of Public Folders"
-    Get-PublicFolder -Identity "\" -Recurse
-    $Identity = Read-Host "Public Folder Name (Alias)"
-    Write-Host "Removing Permissions to Public Folders"
-    Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
-    Write-Host "Done"
-}
-# Option Q: Exchange 2010-Quit
-'q' { 
-    Write-Host "Quitting"
-    Get-PSSession | Remove-PSSession
-Exit 
-}
-}
-$repeat = Read-Host 'Return to the Main Menu? [Y/N]'
-} Until ($repeat -eq 'n')
-}
-#Exchange2013-2016--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-'3' { 
-    Clear-Host 
-    'You chose Exchange 2013-2016'
-    $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
-    if ($confirmation -eq 'y') {
-        Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
-        Set-ADServerSettings -ViewEntireForest $true
-    }
-
-    if ($confirmation -eq 'n') {
-        Write-Warning -Message "Before Continuing, please remote into your Exchange server.
+    
+        if ($confirmation -eq 'n') {
+            Write-Warning -Message "Before Continuing, please remote into your Exchange server.
             Open Powershell as administrator and Type: *Enable-PSRemoting* without the stars and hit enter.
             Once Done, click Enter to Continue"
-        Pause
+            Pause
+            
+            $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
+            Do {
+                $UserCredential = Get-Credential
+                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
+                If ($LoginError) { 
+                    Write-Warning -Message "Username or Password is Incorrect!"
+                    Write-Host "Trying Again in 2 Seconds....."
+                    Start-Sleep -S 2
+                }
+            } Until (-not($LoginError))
+            
         
-        $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
+            Import-PSSession $Session -DisableNameChecking
+            Set-ADServerSettings -ViewEntireForest $true   
+        }
+  
+        Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
+        $User = Read-Host "Enter Sync Service Account";
+  
+        #Exchange 2010 Thottling Policy Check
+        Write-Host "Checking Throttling Policy"
+        $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
+        If ($ThrottlePolicy = $ThrottlePolicy) {
+            Write-Host "Throttling Policy Exists... Adding $User"
+            Set-Mailbox $User -ThrottlingPolicy A2EPolicy -WarningAction SilentlyContinue ; Write-Host "$User is Now a Member of the A2EPolicy"
+        }
+
+        Else {
+            Write-Host "Creating New Throttling Policy and Adding $User"
+            New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
+            Set-Mailbox $User -ThrottlingPolicy A2EPolicy
+            Write-Host "$User is Now a Member of the A2EPolicy"
+        } 
+    
         Do {
-            $UserCredential = Get-Credential
-            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
-            If ($LoginError) { 
-                Write-Warning -Message "Username or Password is Incorrect!"
-                Write-Host "Trying Again in 2 Seconds....."
-                Start-Sleep -S 2
+
+            $Title3 = 'Exchange 2010 Permissions Menu' 
+            ""
+            Clear-Host 
+            Write-Host "================ $Title3 ================" 
+            ""     
+            Write-Host "Press '1' for Adding Permissions to All Users" 
+            Write-Host "Press '2' for Removing Permissions from All Users" 
+            Write-Host "Press '3' for Removing and then Adding Permissions to All Users"
+            Write-Host "Press '4' for Adding Permissions to a Distribution List"
+            Write-Host "Press '5' for Removing Permissions from a Distribution List"
+            Write-Host "Press '6' for Adding Permissions to a Single User"
+            Write-Host "Press '7' for Removing Permissions from a Single User"
+            Write-Host "Press '8' for Adding Permissions to Public Folders"
+            Write-Host "Press '9' for Removing Permissions From Public Folders" 
+            Write-Host "Press 'Q' to Quit" -ForegroundColor Red
+
+            $input3 = Read-Host "Please Make A Selection" 
+            switch ($input3) {
+
+                # Option 1: Exchange 2010 on Premise-Adding new permissions all
+                '1' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to All Users'
+                    Write-Host "Adding Permissions to Users"
+                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 2: Exchange 2010 on Premise-Remove old Add2Exchange permissions
+                '2' {
+                    Clear-Host 
+                    'You chose to Remove Permissions to All Users'
+                    Write-Host "Removing Old zAdd2Exchange Permissions"
+                    Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 3: Exchange 2010 on Premise-Remove/Add Permissions all
+                '3' {
+                    Clear-Host 
+                    'You chose to Remove and then Add Permissions to All Users'
+                    Write-Host "Removing Old zAdd2Exchange Permissions"
+                    Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    Write-Host "Success....."
+                    Write-Host "Adding Permissions to Users"
+                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+                    Write-Host "Checking............"
+                    Write-Host "Done"
+                }
+                # Option 4: Exchange 2010 on Premise-Adding Permissions to dist. list
+                '4' {
+                    Clear-Host 
+                    'You chose to Add Permissions To A Distribution List'
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
+                    Write-Host "Adding Add2Exchange Permissions"
+                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                        Write-Host "Done"
+                    }
+                }
+                # Option 5: Exchange 2010 on Premise-Removing dist. list permissions
+                '5' {
+                    Clear-Host 
+                    'You chose to Remove Permissions From A Distribution List'
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
+                    Write-Host "Removing Add2Exchange Permissions"
+                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                        Write-Host "Done"
+                    }
+                }
+                # Option 6: Exchange 2010 on Premise-Adding permissions to single user
+                '6' {
+                    Clear-Host 
+                    'You chose to Add Permissions To A Single User'
+                    $Identity = Read-Host "Enter user Email Address";
+                    Write-Host "Adding Add2Exchange Permissions to Single User"
+                    Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                    Write-Host "Done" 
+                }
+                # Option 7: Exchange 2010 on Premise-Removing permissions to single user
+                '7' {
+                    Clear-Host 
+                    'You chose to Remove Permissions To A Single User'
+                    $Identity = Read-Host "Enter user Email Address"
+                    Write-Host "Removing Add2Exchange Permissions to Single User"
+                    Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 8: Exchange 2010-Adding Permissions to Public Folders
+                '8' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to Public Folders'
+                    Write-Host "Getting a list of Public Folders"
+                    Get-PublicFolder -Identity "\" -Recurse
+                    $Identity = Read-Host "Public Folder Name (Alias)"
+                    Write-Host "Adding Permissions to Public Folders"
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 9: Exchange 2010-Removing Permissions From Public Folders
+                '9' { 
+                    Clear-Host
+                    'You chose to Remove Permissions From Public Folders' 
+                    Write-Host "Getting a list of Public Folders"
+                    Get-PublicFolder -Identity "\" -Recurse
+                    $Identity = Read-Host "Public Folder Name (Alias)"
+                    Write-Host "Removing Permissions to Public Folders"
+                    Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                    Write-Host "Done"
+                }
+                # Option Q: Exchange 2010-Quit
+                'q' { 
+                    Write-Host "Quitting"
+                    Get-PSSession | Remove-PSSession
+                    Exit 
+                }
             }
-        } Until (-not($LoginError))
-        
-        Import-PSSession $Session -DisableNameChecking
-        Set-ADServerSettings -ViewEntireForest $true   
+            $repeat = Read-Host 'Return to the Main Menu? [Y/N]'
+        } Until ($repeat -eq 'n')
     }
-
-
-    Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
-    $User = Read-Host "Enter Sync Service Account";
-
-    #Exchange 2013-2016 Thottling Policy Check
-    Write-Host "Checking Throttling Policy"
-    $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
-    If ($ThrottlePolicy = $ThrottlePolicy) {
-        Write-Host "Throttling Policy Exists... Adding $User"
-        Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy -WarningAction SilentlyContinue ; Write-Host "$User is Now a Member of the A2EPolicy"
-    }
-
-    Else {
-        Write-Host "Creating New Throttling Policy and Adding $User"
-        New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
-        Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
-        Write-Host "$User is Now a Member of the A2EPolicy"
-    }              
-     
-    Do {
-
-        $Title4 = 'Exchange 2013-2016 Permissions Menu' 
-        ""
+    #Exchange2013-2016--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    '3' { 
         Clear-Host 
-        Write-Host "================ $Title4 ================" 
-        ""     
-        Write-Host "Press '1' for Adding Permissions to All Users" 
-        Write-Host "Press '2' for Removing Permissions from All Users" 
-        Write-Host "Press '3' for Removing and then Adding Permissions to All Users"
-        Write-Host "Press '4' for Adding Permissions to a Distribution List"
-        Write-Host "Press '5' for Removing Permissions from a Distribution List"
-        Write-Host "Press '6' for Adding Permissions to a Single User"
-        Write-Host "Press '7' for Removing Permissions from a Single User"
-        Write-Host "Press '8' for Adding Permissions to Public Folders"
-        Write-Host "Press '9' for Removing Permissions From Public Folders" 
-        Write-Host "Press 'Q' to Quit" -ForegroundColor Red
+        'You chose Exchange 2013-2016'
+        $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
+        if ($confirmation -eq 'y') {
+            Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
+            Set-ADServerSettings -ViewEntireForest $true
+        }
+
+        if ($confirmation -eq 'n') {
+            Write-Warning -Message "Before Continuing, please remote into your Exchange server.
+            Open Powershell as administrator and Type: *Enable-PSRemoting* without the stars and hit enter.
+            Once Done, click Enter to Continue"
+            Pause
+        
+            $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
+            Do {
+                $UserCredential = Get-Credential
+                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
+                If ($LoginError) { 
+                    Write-Warning -Message "Username or Password is Incorrect!"
+                    Write-Host "Trying Again in 2 Seconds....."
+                    Start-Sleep -S 2
+                }
+            } Until (-not($LoginError))
+        
+            Import-PSSession $Session -DisableNameChecking
+            Set-ADServerSettings -ViewEntireForest $true   
+        }
+
+
+        Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
+        $User = Read-Host "Enter Sync Service Account";
+
+        #Exchange 2013-2016 Thottling Policy Check
+        Write-Host "Checking Throttling Policy"
+        $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
+        If ($ThrottlePolicy = $ThrottlePolicy) {
+            Write-Host "Throttling Policy Exists... Adding $User"
+            Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy -WarningAction SilentlyContinue ; Write-Host "$User is Now a Member of the A2EPolicy"
+        }
+
+        Else {
+            Write-Host "Creating New Throttling Policy and Adding $User"
+            New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
+            Set-ThrottlingPolicyAssociation $User -ThrottlingPolicy A2EPolicy
+            Write-Host "$User is Now a Member of the A2EPolicy"
+        }              
+     
+        Do {
+
+            $Title4 = 'Exchange 2013-2016 Permissions Menu' 
+            ""
+            Clear-Host 
+            Write-Host "================ $Title4 ================" 
+            ""     
+            Write-Host "Press '1' for Adding Permissions to All Users" 
+            Write-Host "Press '2' for Removing Permissions from All Users" 
+            Write-Host "Press '3' for Removing and then Adding Permissions to All Users"
+            Write-Host "Press '4' for Adding Permissions to a Distribution List"
+            Write-Host "Press '5' for Removing Permissions from a Distribution List"
+            Write-Host "Press '6' for Adding Permissions to a Single User"
+            Write-Host "Press '7' for Removing Permissions from a Single User"
+            Write-Host "Press '8' for Adding Permissions to Public Folders"
+            Write-Host "Press '9' for Removing Permissions From Public Folders" 
+            Write-Host "Press 'Q' to Quit" -ForegroundColor Red
 
             
-        $input4 = Read-Host "Please Make A Selection" 
-        switch ($input4) {
-            # Option 1: Exchange 2013-2016 on Premise-Adding new permissions all
-            '1' { 
-                Clear-Host 
-                'You chose to Add Permissions to All Users'
-                Write-Host "Adding Permissions to Users"
-                Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-            Write-Host "Done"
-        }
-        # Option 2: Exchange 2013-2016 on Premise-Remove old Add2Exchange permissions
-        '2' {
-            Clear-Host 
-            'You chose to Remove Permissions to All Users'
-            Write-Host "Removing Old zAdd2Exchange Permissions"
-            Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-        Write-Host "Done"
-    }
-    # Option 3: Exchange 2013-2016 on Premise-Remove/Add Permissions all
-    '3' {
-        Clear-Host 
-        'You chose to Remove and then Add Permissions to All Users'
-        Write-Host "Removing Old zAdd2Exchange Permissions"
-        Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-    Write-Host "Success....."
-    Write-Host "Adding Permissions to Users"
-    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
-Write-Host "Checking............"
-Write-Host "Done"
-}
-# Option 4: Exchange 2013-2016 on Premise-Adding Permissions to dist. list
-'4' {
-    Clear-Host 
-    'You chose to Add Permissions To A Distribution List'
-    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
-    Write-Host "Adding Add2Exchange Permissions"
-    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-    ForEach ($Member in $DistributionGroupName) {
-        Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-        Write-Host "Done"
-    }
-}
-# Option 5: Exchange 2013-2016 on Premise-Removing dist. list permissions
-'5' {
-    Clear-Host 
-    'You chose to Remove Permissions From A Distribution List'
-    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
-    Write-Host "Removing Add2Exchange Permissions"
-    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-    ForEach ($Member in $DistributionGroupName) {
-        Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-        Write-Host "Done"
-    }
-}
-# Option 6: Exchange 2013-2016 on Premise-Adding permissions to single user
-'6' {
-    Clear-Host 
-    'You chose to Add Permissions To A Single User'
-    $Identity = Read-Host "Enter user Email Address";
-    Write-Host "Adding Add2Exchange Permissions to Single User"
-    Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
-    Write-Host "Done" 
-}
-# Option 7: Exchange 2013-2016 on Premise-Removing permissions to single user
-'7' {
-    Clear-Host 
-    'You chose to Remove Permissions To A Single User'
-    $Identity = Read-Host "Enter user Email Address"
-    Write-Host "Removing Add2Exchange Permissions to Single User"
-    Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
-    Write-Host "Done"
-}
+            $input4 = Read-Host "Please Make A Selection" 
+            switch ($input4) {
+                # Option 1: Exchange 2013-2016 on Premise-Adding new permissions all
+                '1' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to All Users'
+                    Write-Host "Adding Permissions to Users"
+                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 2: Exchange 2013-2016 on Premise-Remove old Add2Exchange permissions
+                '2' {
+                    Clear-Host 
+                    'You chose to Remove Permissions to All Users'
+                    Write-Host "Removing Old zAdd2Exchange Permissions"
+                    Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 3: Exchange 2013-2016 on Premise-Remove/Add Permissions all
+                '3' {
+                    Clear-Host 
+                    'You chose to Remove and then Add Permissions to All Users'
+                    Write-Host "Removing Old zAdd2Exchange Permissions"
+                    Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    Write-Host "Success....."
+                    Write-Host "Adding Permissions to Users"
+                    Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+                    Write-Host "Checking............"
+                    Write-Host "Done"
+                }
+                # Option 4: Exchange 2013-2016 on Premise-Adding Permissions to dist. list
+                '4' {
+                    Clear-Host 
+                    'You chose to Add Permissions To A Distribution List'
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
+                    Write-Host "Adding Add2Exchange Permissions"
+                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                        Write-Host "Done"
+                    }
+                }
+                # Option 5: Exchange 2013-2016 on Premise-Removing dist. list permissions
+                '5' {
+                    Clear-Host 
+                    'You chose to Remove Permissions From A Distribution List'
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
+                    Write-Host "Removing Add2Exchange Permissions"
+                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                        Write-Host "Done"
+                    }
+                }
+                # Option 6: Exchange 2013-2016 on Premise-Adding permissions to single user
+                '6' {
+                    Clear-Host 
+                    'You chose to Add Permissions To A Single User'
+                    $Identity = Read-Host "Enter user Email Address";
+                    Write-Host "Adding Add2Exchange Permissions to Single User"
+                    Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                    Write-Host "Done" 
+                }
+                # Option 7: Exchange 2013-2016 on Premise-Removing permissions to single user
+                '7' {
+                    Clear-Host 
+                    'You chose to Remove Permissions To A Single User'
+                    $Identity = Read-Host "Enter user Email Address"
+                    Write-Host "Removing Add2Exchange Permissions to Single User"
+                    Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    Write-Host "Done"
+                }
 
-# Option 8: Exchange 2013-2016-Adding Permissions to Public Folders
-'8' { 
-    Clear-Host 
-    'You chose to Add Permissions to Public Folders'
-    Write-Host "Getting a list of Public Folders"
-    Get-PublicFolder -Identity "\" -Recurse
-    $Identity = Read-Host "Public Folder Name (Alias)"
-    Write-Host "Adding Permissions to Public Folders"
-    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
-    Write-Host "Done"
-}
-# Option 9: Exchange 2013-2016-Removing Permissions From Public Folders
-'9' { 
-    Clear-Host
-    'You chose to Remove Permissions From Public Folders' 
-    Write-Host "Getting a list of Public Folders"
-    Get-PublicFolder -Identity "\" -Recurse
-    $Identity = Read-Host "Public Folder Name (Alias)"
-    Write-Host "Removing Permissions to Public Folders"
-    Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
-    Write-Host "Done"
-}
-# Option Q: Exchange 2013-2016-Quit
-'q' { 
-    Write-Host "Quitting"
-    Get-PSSession | Remove-PSSession
-Exit 
-}
-}
-$repeat = Read-Host 'Return to the Main Menu? [Y/N]'
-} Until ($repeat -eq 'n')
-}       
+                # Option 8: Exchange 2013-2016-Adding Permissions to Public Folders
+                '8' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to Public Folders'
+                    Write-Host "Getting a list of Public Folders"
+                    Get-PublicFolder -Identity "\" -Recurse
+                    $Identity = Read-Host "Public Folder Name (Alias)"
+                    Write-Host "Adding Permissions to Public Folders"
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Write-Host "Done"
+                }
+                # Option 9: Exchange 2013-2016-Removing Permissions From Public Folders
+                '9' { 
+                    Clear-Host
+                    'You chose to Remove Permissions From Public Folders' 
+                    Write-Host "Getting a list of Public Folders"
+                    Get-PublicFolder -Identity "\" -Recurse
+                    $Identity = Read-Host "Public Folder Name (Alias)"
+                    Write-Host "Removing Permissions to Public Folders"
+                    Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                    Write-Host "Done"
+                }
+                # Option Q: Exchange 2013-2016-Quit
+                'q' { 
+                    Write-Host "Quitting"
+                    Get-PSSession | Remove-PSSession
+                    Exit 
+                }
+            }
+            $repeat = Read-Host 'Return to the Main Menu? [Y/N]'
+        } Until ($repeat -eq 'n')
+    }       
 
 }#Origin LogonMethod End
 
