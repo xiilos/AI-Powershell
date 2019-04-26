@@ -18,19 +18,21 @@ Else {
 }
 
 
-do {
+Do {
     Write-Host "Getting Group Policy Results"
     gpupdate
-    gpresult /r >C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt
-    Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt"
-
-    Write-Host "If you get an error stating (No User Data in RSOP) you may have to edit the GPO History in REGEDIT"
-    $confirmation = Read-Host "Would you like me to remove and update the GPO History for you? [Y/N]"
-    if ($confirmation -eq 'y') {
+    Start-Sleep -s 3
+    gpresult /Scope Computer /v | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt" -ErrorAction SilentlyContinue -ErrorVariable GPError;
+    If ($GPError) { 
+        Write-Warning -Message "(No User Data in RSOP) Updating GPO History...."
+        Start-Sleep -s 3
         Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Group Policy\History' -Name DCName | out-null
         Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Group Policy\History' -Name PolicyOverdue | out-null
+        gpresult /Scope Computer /v | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt" -ErrorAction SilentlyContinue
     }
 
+    Start-Sleep -s 3
+    Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt"
 
     $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 

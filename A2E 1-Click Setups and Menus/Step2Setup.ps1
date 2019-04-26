@@ -32,7 +32,7 @@ $wshell = New-Object -ComObject Wscript.Shell
 $answer = $wshell.Popup("In this step, we will assign the service account full mailbox access to the users that will be syncing with Add2Exchange. 
 Instead of adding permissions to everyone, create a Distribution list with all users that will be syncing with Add2Exchange. 
 Reminder*** You cannot hide this Distribution list, so it helps to put a Z in front of it to drop it to the bottom of the GAL", 0, "Assigning Mailbox Permissions", 0x1)
-if ($answer -eq 2) {Break}
+if ($answer -eq 2) { Break }
 
 $TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
@@ -76,7 +76,7 @@ switch ($input1) {
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
             Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
         } 
-        Else {Write-Host 'Module is installed'}
+        Else { Write-Host 'Module is installed' }
 
 
         Write-Host "Sign in to Office365 as Tenant Admin"
@@ -579,7 +579,7 @@ $wshell = New-Object -ComObject Wscript.Shell
 $answer = $wshell.Popup("Excellent!! Permissions are done and now we can set the AutoLogon feature for this account.
 Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
 Click OK to Continue", 0, "AutoLogin", 0x1)
-if ($answer -eq 2) {Break}
+if ($answer -eq 2) { Break }
 
 Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
 
@@ -590,9 +590,16 @@ Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
 $wshell = New-Object -ComObject Wscript.Shell
 
 $answer = $wshell.Popup("System Setup Complete. Lets Install the Software", 0, "Complete", 0x1)
-if ($answer -eq 2) {Break}
+if ($answer -eq 2) { Break }
+Do {
+    Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction Inquire -ErrorVariable InstallError;
 
-Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction Stop
+    If ($InstallError) { 
+        Write-Warning -Message "Something Went Wrong with the Install!"
+        Write-Host "Trying The Install Again in 2 Seconds"
+        Start-Sleep -S 2
+    }
+} Until (-not($InstallError))
 
 
 
@@ -601,15 +608,15 @@ Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction Stop
 
 $wshell = New-Object -ComObject Wscript.Shell
 
-$answer = $wshell.Popup("Once the Install is complete, Clcik OK to finish the setup", 0, "Finishing Installation", 0x1)
-if ($answer -eq 2) {Break}
+$answer = $wshell.Popup("Once the Install is complete, Click OK to finish the setup", 0, "Finishing Installation", 0x1)
+if ($answer -eq 2) { Break }
 
 Write-Host "Creating Registry Favorites"
 New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Session Manager" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControl\Control\Session Manager" -Force
 New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "EnableLUA" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force
 New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name ".Net Framework" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\.NETFramework" -Force
-New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "OpenDoor Software" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ" -Force
-New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Add2Exchange"  -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ\Add2Exchange" -Force
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "OpenDoor Software" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Softwareù" -Force
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Add2Exchange"  -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Softwareù\Add2Exchange" -Force
 New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Pendingfilerename" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager" -Force
 New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "AutoDiscover" -Type string -Value "Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office" -Force
 New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Office" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office" -Force
@@ -624,7 +631,7 @@ New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\
 $wshell = New-Object -ComObject Wscript.Shell
 
 $answer = $wshell.Popup("Setup is Complete. You can now start the Add2Echange Console", 0, "Done", 0x1)
-if ($answer -eq 2) {Break}
+if ($answer -eq 2) { Break }
 Get-PSSession | Remove-PSSession
 Exit
 # End Scripting

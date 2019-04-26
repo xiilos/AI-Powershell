@@ -59,7 +59,7 @@ Note* The account only needs Domain User and Public Folder management permission
 Note* You cannot hide this account.
 Once Done, add the new user account as a local Administrator of this box.
 Log off and back on as the new Sync Service account and run this again before you Proceed.", 0, "Account Creation", 0x1)
-        if ($answer -eq 2) {Break}
+        if ($answer -eq 2) { Break }
 
         $confirmation = Read-host "Do you want to continue [Y/N]"
         if ($confirmation -eq 'y') {
@@ -99,7 +99,7 @@ if ($decision -eq 1) {
         $wshell = New-Object -ComObject Wscript.Shell
         $answer = $wshell.Popup("Add the new user account as a local Administrator of this box.
 Log off and back on as the new Sync Service account and run this again before proceeding.", 0, "Account Creation", 0x1)
-        if ($answer -eq 2) {Break}
+        if ($answer -eq 2) { Break }
 
         $confirmation = Read-host "Do you want to continue [Y/N]"
         if ($confirmation -eq 'y') {
@@ -139,7 +139,7 @@ if (($installed -ne 1) -or ($release -lt 378389)) {
     Write-Host "Download Complete"
     $wshell = New-Object -ComObject Wscript.Shell
     $answer = $wshell.Popup("Please Reboot after Installing and run this again", 0, "Done", 0x1)
-    if ($answer -eq 2) {Break}
+    if ($answer -eq 2) { Break }
     Write-Host "Quitting"
     Get-PSSession | Remove-PSSession
     Exit
@@ -172,7 +172,7 @@ if ($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '1') {
     Write-Host "Download Complete"
     $wshell = New-Object -ComObject Wscript.Shell
     $answer = $wshell.Popup("Please Reboot after Installing and run this again", 0, "Done", 0x1)
-    if ($answer -eq 2) {Break}
+    if ($answer -eq 2) { Break }
     Write-Host "Quitting"
     Get-PSSession | Remove-PSSession
     Exit
@@ -194,7 +194,7 @@ elseif ($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '3') {
     Write-Host "Download Complete"
     $wshell = New-Object -ComObject Wscript.Shell
     $answer = $wshell.Popup("Please Reboot after Installing and run this again", 0, "Done", 0x1)
-    if ($answer -eq 2) {Break}
+    if ($answer -eq 2) { Break }
     Write-Host "Quitting"
     Get-PSSession | Remove-PSSession
     Exit
@@ -236,9 +236,6 @@ $Shortcut = $WshShell.CreateShortcut("$Home\Desktop\zLibrary.lnk")
 $Shortcut.TargetPath = "C:\zlibrary"
 $Shortcut.Save()
 
-#Download the latest Full Installation
-
-##IN-PRODUCTION##
 
 # Step 4-----------------------------------------------------------------------------------------------------------------------------------------------------Step 4
 
@@ -262,7 +259,7 @@ Else {
         $wshell = New-Object -ComObject Wscript.Shell
         $answer = $wshell.Popup("If you choose to install your own Outlook; ensure that it is Outlook 2016 and above, and 32bit Only.
 When Done, click OK", 0, "Outlook Install", 0x1)
-        if ($answer -eq 2) {Break}
+        if ($answer -eq 2) { Break }
 
     }
 }
@@ -278,7 +275,7 @@ if ($confirmation -eq 'O') {
     $wshell = New-Object -ComObject Wscript.Shell
 
     $answer = $wshell.Popup("When this is Done, click OK to Continue", 0, "Create a Mailbox", 0x1)
-    if ($answer -eq 2) {Break}
+    if ($answer -eq 2) { Break }
 }
 
 if ($confirmation -eq 'E') {
@@ -286,7 +283,7 @@ if ($confirmation -eq 'E') {
     $wshell = New-Object -ComObject Wscript.Shell
 
     $answer = $wshell.Popup("When this is Done, Click OK to Continue", 0, "Create a Mailbox", 0x1)
-    if ($answer -eq 2) {Break}
+    if ($answer -eq 2) { Break }
 }
 
 # Step 6-----------------------------------------------------------------------------------------------------------------------------------------------------Step 6
@@ -297,7 +294,7 @@ $wshell = New-Object -ComObject Wscript.Shell
 
 $answer = $wshell.Popup("The next step is to Create a Profile for your new account. Open Control panel and go to Mail. Create a new profile and follow through the steps that pertain to your Organization. 
 Note* Make sure you do not have Cache checked. When this is finished click OK to Continue", 0, "Creating an Outlook Profile", 0x1)
-if ($answer -eq 2) {Break}
+if ($answer -eq 2) { Break }
 
 # Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
 
@@ -313,7 +310,7 @@ if ($val.EnableLUA -ne 0) {
     $wshell = New-Object -ComObject Wscript.Shell
     
     $answer = $wshell.Popup("Initinal Setup is Complete. Please Reboot and run 1-click install", 0, "Done", 0x1)
-    if ($answer -eq 2) {Break}
+    if ($answer -eq 2) { Break }
   
 }
 
@@ -325,7 +322,7 @@ Else {
     $wshell = New-Object -ComObject Wscript.Shell
     
     $answer = $wshell.Popup("Initinal Setup is Complete. Please run 1-click install", 0, "Done", 0x1)
-    if ($answer -eq 2) {Break}
+    if ($answer -eq 2) { Break }
     
 }
 
