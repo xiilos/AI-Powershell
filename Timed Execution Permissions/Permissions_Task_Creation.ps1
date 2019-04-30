@@ -213,7 +213,7 @@ Do {
 
         #Office 365 All Permissions
         if ($Decision -eq 0) {
-            $Repeater = (New-TimeSpan -Minutes 120)
+            $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
             $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_All_Permissions.ps1"'
@@ -223,7 +223,7 @@ Do {
 
         #Office 365 Dist. List
         if ($Decision -eq 1) {
-            $Repeater = (New-TimeSpan -Minutes 120)
+            $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
             $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_Dist_List_Permissions.ps1"'
@@ -256,7 +256,7 @@ Do {
 
         #Exchange 2010 All Permissions
         if ($Decision -eq 0) {
-            $Repeater = (New-TimeSpan -Minutes 120)
+            $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
             $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010_All_Permissions.ps1"'
@@ -265,7 +265,7 @@ Do {
 
         #Exchange 2010 Dist. List
         if ($Decision -eq 1) {
-            $Repeater = (New-TimeSpan -Minutes 120)
+            $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
             $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010_Dist_List_Permissions.ps1"'
@@ -299,7 +299,7 @@ Do {
 
         #Exchange 2013-2016 All Permissions
         if ($Decision -eq 0) {
-            $Repeater = (New-TimeSpan -Minutes 120)
+            $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
             $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2013-2016_All_Permissions.ps1"'
@@ -308,7 +308,7 @@ Do {
 
         #Exchange 2013-2016 Dist. List
         if ($Decision -eq 1) {
-            $Repeater = (New-TimeSpan -Minutes 120)
+            $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
             $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2013-2016_Dist_List_Permissions.ps1"'
