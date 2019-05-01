@@ -14,7 +14,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 
 
-Write-Host "Done"
+Write-Host "ttyl"
 Write-Host "Quitting"
 Get-PSSession | Remove-PSSession
 Exit
