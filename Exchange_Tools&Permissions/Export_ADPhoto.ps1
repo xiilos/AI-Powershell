@@ -24,8 +24,15 @@ Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
 
 $wshell = New-Object -ComObject Wscript.Shell
     
-$answer = $wshell.Popup("Caution... You Must Run this on a box with Active Directory. If the box you are running this on does not have Active Directory; Cancel this Window and copy the file to an appropriate box", 0, "WARNING!!", 0x1)
-if ($answer -eq 2) { Break }
+$answer = $wshell.Popup("Caution... You Must Run this on a box with Active Directory. If the box you are running this on does not have Active Directory; Click Cancel and the File will be Automatically copied to your Clipboard. Otherwise, Click OK to Continue.", 0, "WARNING!!", 0x1)
+if ($answer -eq 2) {
+    Set-Clipboard -Path "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\Export_ADPhoto.ps1"
+    Write-Host "File Copied"
+    Write-Host "ttyl"
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+
 
 Import-Module ActiveDirectory
 
