@@ -327,12 +327,20 @@ $CreateSupporttext.location      = New-Object System.Drawing.Point(11,436)
 $CreateSupporttext.Font          = 'Microsoft Sans Serif,9'
 
 $Revision                        = New-Object system.Windows.Forms.Label
-$Revision.text                   = "Rev. 2.31919"
+$Revision.text                   = "Rev. 2.5119"
 $Revision.AutoSize               = $true
 $Revision.width                  = 25
 $Revision.height                 = 10
 $Revision.location               = New-Object System.Drawing.Point(445,572)
 $Revision.Font                   = 'Microsoft Sans Serif,8,style=Italic'
+
+$AD_Photos                       = New-Object system.Windows.Forms.Label
+$AD_Photos.text                  = "Export Active Directory Photos"
+$AD_Photos.AutoSize              = $true
+$AD_Photos.width                 = 150
+$AD_Photos.height                = 10
+$AD_Photos.location              = New-Object System.Drawing.Point(11,456)
+$AD_Photos.Font                  = 'Microsoft Sans Serif,9'
 
 $ToolTip1                        = New-Object system.Windows.Forms.ToolTip
 $ToolTip1.ToolTipTitle           = "Help"
@@ -362,10 +370,11 @@ $ToolTip1.SetToolTip($ExhangeMigration,'Click for more information on How To Set
 $ToolTip1.SetToolTip($UpgradeToolkit,'This will Upgrade your Current Version of Add2Outlook Toolkit to the Latest Version')
 $ToolTip1.SetToolTip($CreateSupporttext,'PowerShell Script to Create a Support text detailing this Installation')
 $ToolTip1.SetToolTip($UpgradeAdd2Outlook,'This will Upgrade your Current Version of Add2Outlook to the Latest Version')
+$ToolTip1.SetToolTip($AD_Photos,'This tool will Export User Active Directory Photos')
 
 $DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$UpgradeToolkit,$AddingPermissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,
 $GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$ExportLicenseandProfile1,
-$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$A2EDiags,$CreateSupporttext,$UpgradeAdd2Outlook,$Revision))
+$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$A2EDiags,$CreateSupporttext,$UpgradeAdd2Outlook,$Revision,$AD_Photos))
 
 $Add2ExchangeUpgrade.Add_Click({Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1})
 $UpgradeRMM.Add_Click({Start-Process Powershell .\Auto_Upgrade_RMM.ps1})
@@ -399,7 +408,7 @@ $PublictoPrivate.Add_Click({Start-Process http://guides.diditbetter.com/Public_t
 $TemplateCreation.Add_Click({Start-Process http://guides.diditbetter.com/Template_Creation_RGM_Sync_Scenarios.pdf})
 $MigrateA2E.Add_Click({Start-Process http://guides.diditbetter.com/Migrating_A2E_Sync_Scenarios.pdf})
 $ExhangeMigration.Add_Click({Start-Process http://guides.diditbetter.com/Migrating_Environments_A2E_Sync_Scenarios.pdf})
-
+$AD_Photos.Add_Click({Start-Process Powershell .\Export_ADPhoto.ps1})
 
 
 #Write your logic code here
