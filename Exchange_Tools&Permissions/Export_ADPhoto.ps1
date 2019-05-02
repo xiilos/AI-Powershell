@@ -28,6 +28,7 @@ $answer = $wshell.Popup("Caution... You Must Run this on a box with Active Direc
 if ($answer -eq 2) {
     Set-Clipboard -Path "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\Export_ADPhoto.ps1"
     Write-Host "File Copied"
+    Pause
     Write-Host "ttyl"
     Get-PSSession | Remove-PSSession
     Exit
@@ -74,7 +75,7 @@ switch ($input1) {
         Do {
             Write-Host "The Following Questions will Ask for the Path in which you want to search for AD Photos Example: CN=Users,DC=Diditbetter,DC=Local"
             $CN = Read-Host "Please Type in OU or CN Name"
-            $DC = Read-Host "Domain Name? DC=diditbetter"
+            $DC = Read-Host "Domain Name? Ex. DC=diditbetter"
             $DC2 = Read-Host "Type in COM or Local"
     
             $users = Get-ADUser -Filter { EmailAddress -like "*@*" } -SearchBase "CN=$CN,DC=$DC,DC=$DC2" -Properties thumbnailPhoto

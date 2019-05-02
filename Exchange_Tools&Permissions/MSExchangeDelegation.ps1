@@ -4,14 +4,12 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
-#Removing the MSExchDelegateListlink from an account
+
 #Execution Policy
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
-# Script #
-
-#Log Path
+#Support Directory
 $TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
@@ -21,18 +19,23 @@ Else {
     New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
 }
 
-<#Login to AD
-$Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
-Do {
-    $UserCredential = Get-Credential
-    Enter-PSSession -ComputerName $Exchangename –Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
-    If ($LoginError) { 
-        Write-Warning -Message "Username or Password is Incorrect!"
-        Write-Host "Trying Again in 2 Seconds....."
-        Start-Sleep -S 2
-    }
-} Until (-not($LoginError))
-#>
+Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Support"
+
+# Script #
+
+$wshell = New-Object -ComObject Wscript.Shell
+    
+$answer = $wshell.Popup("Caution... You Must Run this on a box with Active Directory. If the box you are running this on does not have Active Directory; Click Cancel and the File will be Automatically copied to your Clipboard. Otherwise, Click OK to Continue.", 0, "WARNING!!", 0x1)
+if ($answer -eq 2) {
+    Set-Clipboard -Path "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\MSExchangeDelegation.ps1"
+    Write-Host "File Copied"
+    Pause
+    Write-Host "ttyl"
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+
+#Removing the MSExchDelegateListlink from an account
 
 Import-Module ActiveDirectory
 

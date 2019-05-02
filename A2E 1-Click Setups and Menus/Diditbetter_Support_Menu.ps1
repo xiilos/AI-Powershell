@@ -39,20 +39,20 @@ $UpgradeRMM.height               = 10
 $UpgradeRMM.location             = New-Object System.Drawing.Point(11,55)
 $UpgradeRMM.Font                 = 'Microsoft Sans Serif,9'
 
-$AddingPermissions               = New-Object system.Windows.Forms.Label
-$AddingPermissions.text          = "Adding Permissions"
-$AddingPermissions.AutoSize      = $true
-$AddingPermissions.width         = 25
-$AddingPermissions.height        = 10
-$AddingPermissions.location      = New-Object System.Drawing.Point(11,146)
-$AddingPermissions.Font          = 'Microsoft Sans Serif,12,style=Bold,Underline'
+$Permissions                     = New-Object system.Windows.Forms.Label
+$Permissions.text                = "Permissions"
+$Permissions.AutoSize            = $true
+$Permissions.width               = 25
+$Permissions.height              = 10
+$Permissions.location            = New-Object System.Drawing.Point(11,145)
+$Permissions.Font                = 'Microsoft Sans Serif,12,style=Bold,Underline'
 
 $O365ExchangePermissions         = New-Object system.Windows.Forms.Label
 $O365ExchangePermissions.text    = "Office 365 and On-Premise Exchange Permissions"
 $O365ExchangePermissions.AutoSize  = $true
 $O365ExchangePermissions.width   = 150
 $O365ExchangePermissions.height  = 10
-$O365ExchangePermissions.location  = New-Object System.Drawing.Point(11,171)
+$O365ExchangePermissions.location  = New-Object System.Drawing.Point(11,170)
 $O365ExchangePermissions.Font    = 'Microsoft Sans Serif,9'
 
 $A2OPermissions                  = New-Object system.Windows.Forms.Label
@@ -60,7 +60,7 @@ $A2OPermissions.text             = "Add2Outlook Granular Permissions"
 $A2OPermissions.AutoSize         = $true
 $A2OPermissions.width            = 150
 $A2OPermissions.height           = 10
-$A2OPermissions.location         = New-Object System.Drawing.Point(11,191)
+$A2OPermissions.location         = New-Object System.Drawing.Point(11,190)
 $A2OPermissions.Font             = 'Microsoft Sans Serif,9'
 
 $AutoPermissions                 = New-Object system.Windows.Forms.Label
@@ -68,8 +68,16 @@ $AutoPermissions.text            = "Automate Permissions on a Schedule"
 $AutoPermissions.AutoSize        = $true
 $AutoPermissions.width           = 150
 $AutoPermissions.height          = 10
-$AutoPermissions.location        = New-Object System.Drawing.Point(11,211)
+$AutoPermissions.location        = New-Object System.Drawing.Point(11,210)
 $AutoPermissions.Font            = 'Microsoft Sans Serif,9'
+
+$MSExchangeDelegate              = New-Object system.Windows.Forms.Label
+$MSExchangeDelegate.text         = "MSExchange Delegate"
+$MSExchangeDelegate.AutoSize     = $true
+$MSExchangeDelegate.width        = 25
+$MSExchangeDelegate.height       = 10
+$MSExchangeDelegate.location     = New-Object System.Drawing.Point(11,230)
+$MSExchangeDelegate.Font         = 'Microsoft Sans Serif,9'
 
 $Downloads                       = New-Object system.Windows.Forms.Label
 $Downloads.text                  = "Downloads"
@@ -116,7 +124,7 @@ $GetSupport.text                 = "Get Support"
 $GetSupport.AutoSize             = $true
 $GetSupport.width                = 150
 $GetSupport.height               = 10
-$GetSupport.location             = New-Object System.Drawing.Point(295,146)
+$GetSupport.location             = New-Object System.Drawing.Point(295,145)
 $GetSupport.Font                 = 'Microsoft Sans Serif,12,style=Bold,Underline'
 
 $GetHelp                         = New-Object system.Windows.Forms.Label
@@ -124,7 +132,7 @@ $GetHelp.text                    = "Need Help? Open a Ticket!"
 $GetHelp.AutoSize                = $true
 $GetHelp.width                   = 150
 $GetHelp.height                  = 10
-$GetHelp.location                = New-Object System.Drawing.Point(295,171)
+$GetHelp.location                = New-Object System.Drawing.Point(295,170)
 $GetHelp.Font                    = 'Microsoft Sans Serif,9'
 
 $SearchDidItBetter               = New-Object system.Windows.Forms.Label
@@ -132,7 +140,7 @@ $SearchDidItBetter.text          = "Search DidItBetter"
 $SearchDidItBetter.AutoSize      = $true
 $SearchDidItBetter.width         = 150
 $SearchDidItBetter.height        = 10
-$SearchDidItBetter.location      = New-Object System.Drawing.Point(295,191)
+$SearchDidItBetter.location      = New-Object System.Drawing.Point(295,190)
 $SearchDidItBetter.Font          = 'Microsoft Sans Serif,9'
 
 $QuickStartGuide                 = New-Object system.Windows.Forms.Label
@@ -140,7 +148,7 @@ $QuickStartGuide.text            = "Quick Start Guide"
 $QuickStartGuide.AutoSize        = $true
 $QuickStartGuide.width           = 150
 $QuickStartGuide.height          = 10
-$QuickStartGuide.location        = New-Object System.Drawing.Point(295,211)
+$QuickStartGuide.location        = New-Object System.Drawing.Point(295,210)
 $QuickStartGuide.Font            = 'Microsoft Sans Serif,9'
 
 $Tools                           = New-Object system.Windows.Forms.Label
@@ -327,7 +335,7 @@ $CreateSupporttext.location      = New-Object System.Drawing.Point(11,436)
 $CreateSupporttext.Font          = 'Microsoft Sans Serif,9'
 
 $Revision                        = New-Object system.Windows.Forms.Label
-$Revision.text                   = "Rev. 2.5119"
+$Revision.text                   = "Rev. 2.5219"
 $Revision.AutoSize               = $true
 $Revision.width                  = 25
 $Revision.height                 = 10
@@ -371,10 +379,11 @@ $ToolTip1.SetToolTip($UpgradeToolkit,'This will Upgrade your Current Version of 
 $ToolTip1.SetToolTip($CreateSupporttext,'PowerShell Script to Create a Support text detailing this Installation')
 $ToolTip1.SetToolTip($UpgradeAdd2Outlook,'This will Upgrade your Current Version of Add2Outlook to the Latest Version')
 $ToolTip1.SetToolTip($AD_Photos,'This tool will Export User Active Directory Photos')
+$ToolTip1.SetToolTip($MSExchangeDelegate,'Removes the List Link in AD for Users that are getting Auto Mapped in Outlook')
 
-$DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$UpgradeToolkit,$AddingPermissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,
+$DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$UpgradeToolkit,$Permissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,
 $GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$ExportLicenseandProfile1,
-$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$A2EDiags,$CreateSupporttext,$UpgradeAdd2Outlook,$Revision,$AD_Photos))
+$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$A2EDiags,$CreateSupporttext,$UpgradeAdd2Outlook,$Revision,$AD_Photos,$MSExchangeDelegate))
 
 $Add2ExchangeUpgrade.Add_Click({Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1})
 $UpgradeRMM.Add_Click({Start-Process Powershell .\Auto_Upgrade_RMM.ps1})
@@ -409,7 +418,7 @@ $TemplateCreation.Add_Click({Start-Process http://guides.diditbetter.com/Templat
 $MigrateA2E.Add_Click({Start-Process http://guides.diditbetter.com/Migrating_A2E_Sync_Scenarios.pdf})
 $ExhangeMigration.Add_Click({Start-Process http://guides.diditbetter.com/Migrating_Environments_A2E_Sync_Scenarios.pdf})
 $AD_Photos.Add_Click({Start-Process Powershell .\Export_ADPhoto.ps1})
-
+$MSExchangeDelegate.Add_Click({Start-Process Powershell .\MSExchangeDelegation.ps1})
 
 #Write your logic code here
 
