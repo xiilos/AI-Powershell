@@ -279,13 +279,13 @@ $TemplateCreation.height         = 10
 $TemplateCreation.location       = New-Object System.Drawing.Point(295,376)
 $TemplateCreation.Font           = 'Microsoft Sans Serif,9'
 
-$MIgrateA2E                      = New-Object system.Windows.Forms.Label
-$MIgrateA2E.text                 = "Migrate Add2Exchange to a New Box"
-$MIgrateA2E.AutoSize             = $true
-$MIgrateA2E.width                = 150
-$MIgrateA2E.height               = 10
-$MIgrateA2E.location             = New-Object System.Drawing.Point(295,396)
-$MIgrateA2E.Font                 = 'Microsoft Sans Serif,9'
+$MigrateA2E                      = New-Object system.Windows.Forms.Label
+$MigrateA2E.text                 = "Migrate Add2Exchange to a New Box"
+$MigrateA2E.AutoSize             = $true
+$MigrateA2E.width                = 150
+$MigrateA2E.height               = 10
+$MigrateA2E.location             = New-Object System.Drawing.Point(295,396)
+$MigrateA2E.Font                 = 'Microsoft Sans Serif,9'
 
 $ExhangeMigration                = New-Object system.Windows.Forms.Label
 $ExhangeMigration.text           = "Exchange Migration with Add2Exchange"
@@ -373,7 +373,7 @@ $ToolTip1.SetToolTip($PublictoPublic,'Click for more information on How To Setup
 $ToolTip1.SetToolTip($PrivatetoPublic,'Click for more information on How To Setup a Private to Public')
 $ToolTip1.SetToolTip($PublictoPrivate,'Click for more information on How To Setup a Public to Private')
 $ToolTip1.SetToolTip($TemplateCreation,'Click for more information on How To Setup Templates for Synchronization with Distribution Groups')
-$ToolTip1.SetToolTip($MIgrateA2E,'Click for more information on How To Migrate Add2Exchange onto a new Appliance')
+$ToolTip1.SetToolTip($MigrateA2E,'Click for more information on How To Migrate Add2Exchange onto a new Appliance')
 $ToolTip1.SetToolTip($ExhangeMigration,'Click for more information on How To Setup Add2Exchange before or After an Exchange or Office 365 Migration')
 $ToolTip1.SetToolTip($UpgradeToolkit,'This will Upgrade your Current Version of Add2Outlook Toolkit to the Latest Version')
 $ToolTip1.SetToolTip($CreateSupporttext,'PowerShell Script to Create a Support text detailing this Installation')

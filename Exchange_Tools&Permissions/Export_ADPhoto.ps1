@@ -92,12 +92,14 @@ switch ($input1) {
 
     }
 
-    'q' { 
+    'q' {
         Write-Host "Quitting"
         Get-PSSession | Remove-PSSession
         Exit  
     } 
 }
+Start-Sleep -s 2
+Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession

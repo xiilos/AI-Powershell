@@ -371,11 +371,14 @@ If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanc
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWord -Value 0
 
 
-Write-Host " Unpin All Taskbar Items"
+Write-Host "Unpin All Taskbar Items"
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](255))
 Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
 
-Write-Output "Quitting"
+Write-Host "Unpin All Start Menu Items"
+(New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items()| ForEach-Object { ($_).Verbs() | Where-Object{$_.Name.Replace('&', '') -match 'From "Start" UnPin|Unpin from Start'} | ForEach-Object{$_.DoIt()}  }
+
+Write-Output "ttyl"
 Get-PSSession | Remove-PSSession
 Exit
 
