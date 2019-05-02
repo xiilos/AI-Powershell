@@ -26,7 +26,6 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Office 365 and on premise Exchange Permissions
 
-
 $wshell = New-Object -ComObject Wscript.Shell
 
 $answer = $wshell.Popup("In this step, we will assign the service account full mailbox access to the users that will be syncing with Add2Exchange. 
