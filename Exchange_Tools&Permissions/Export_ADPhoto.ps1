@@ -26,7 +26,9 @@ $wshell = New-Object -ComObject Wscript.Shell
     
 $answer = $wshell.Popup("Caution... You Must Run this on a box with Active Directory. If the box you are running this on does not have Active Directory; Click Cancel and the File will be Automatically copied to your Clipboard. Otherwise, Click OK to Continue.", 0, "WARNING!!", 0x1)
 if ($answer -eq 2) {
-    Set-Clipboard -Path "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\Export_ADPhoto.ps1"
+    $Location = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
+    Push-Location $Location
+    Set-Clipboard -Path ".\Setup\Export_ADPhoto.ps1"
     Write-Host "File Copied"
     Pause
     Write-Host "ttyl"
