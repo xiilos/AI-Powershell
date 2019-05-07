@@ -47,39 +47,39 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 LogWrite "..............Add2Exchange Details.............."
 
 #Date and Time
-$Start_Time = Get-Date
-LogWrite "Date/Time= $Start_Time"
+$Start_Time = Get-Date -ErrorAction SilentlyContinue
+LogWrite "Date/Time= $Start_Time" -ErrorAction SilentlyContinue
 
 #Windows Version
 $WindowsVersion = (Get-WmiObject -class Win32_OperatingSystem).Caption
 
-LogWrite "Windows Version= $WindowsVersion"
+LogWrite "Windows Version= $WindowsVersion" -ErrorAction SilentlyContinue
 
 #Install Location
-$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation"
+$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
 
-LogWrite "Install Location= $Install"
+LogWrite "Install Location= $Install" -ErrorAction SilentlyContinue
 
 #Domain Name
-$Domain = Get-ItemPropertyValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name "Domain"
+$Domain = Get-ItemPropertyValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name "Domain" -ErrorAction SilentlyContinue
 
-LogWrite "Domain Name= $Domain"
+LogWrite "Domain Name= $Domain" -ErrorAction SilentlyContinue
 
 #Service Account Name
-$ServiceAccount = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "ServiceAccount"
+$ServiceAccount = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "ServiceAccount" -ErrorAction SilentlyContinue
 
-LogWrite "Service Account Name= $ServiceAccount"
+LogWrite "Service Account Name= $ServiceAccount" -ErrorAction SilentlyContinue
 
 #ServiceAccount Password
 #$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-$Password = Read-Host "What is the Service Account password?"
+$Password = Read-Host "What is the Service Account password?" -ErrorAction SilentlyContinue
 
-LogWrite "Service Account Password= $Password"
+LogWrite "Service Account Password= $Password" -ErrorAction SilentlyContinue
 
 #Logon Method
-$Logon = Read-Host "Type In your Logon Method. Ex. Exchange 2016, or Office 365"
+$Logon = Read-Host "Type In your Logon Method. Ex. Exchange 2016, or Office 365" -ErrorAction SilentlyContinue
 
-LogWrite "Logon Method= $Logon"
+LogWrite "Logon Method= $Logon" -ErrorAction SilentlyContinue
 
 #Connection Method
 if ($DBServer -like $ServerName) {
@@ -91,125 +91,125 @@ Else {
 }
 
 #License Address
-$LicenseAddress = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseAddress"
+$LicenseAddress = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseAddress" -ErrorAction SilentlyContinue
 
-LogWrite "License Address= $LicenseAddress"
+LogWrite "License Address= $LicenseAddress" -ErrorAction SilentlyContinue
 
 #Database Server
-$DBServer = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBServer"
+$DBServer = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBServer" -ErrorAction SilentlyContinue
 
-LogWrite "DB Server Name= $DBServer"
+LogWrite "DB Server Name= $DBServer" -ErrorAction SilentlyContinue
 
 #Server Name
-$ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "Server"
+$ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "Server" -ErrorAction SilentlyContinue
 
-LogWrite "Server Name= $ServerName"
+LogWrite "Server Name= $ServerName" -ErrorAction SilentlyContinue
 
 #PowerShell Version
 $PShellVersion = $PSVersionTable.PSVersion
 
-LogWrite "PowerShell Version= $PShellVersion"
+LogWrite "PowerShell Version= $PShellVersion" -ErrorAction SilentlyContinue
 
 #Database Version
-$CurrentVersion = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "CurrentVersionDB"
+$CurrentVersion = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "CurrentVersionDB" -ErrorAction SilentlyContinue
 
-LogWrite "Current Version DB= $CurrentVersion"
+LogWrite "Current Version DB= $CurrentVersion" -ErrorAction SilentlyContinue
 
 #Database Instance
-$DBInstance = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBInstance"
+$DBInstance = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBInstance" -ErrorAction SilentlyContinue
 
-LogWrite "DB Instance Name= $DBInstance"
+LogWrite "DB Instance Name= $DBInstance" -ErrorAction SilentlyContinue
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 LogWrite "..............End User Information.............."
 
 #EndUser Information
-$EndUserName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" -Name "EndUserName"
+$EndUserName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" -Name "EndUserName" -ErrorAction SilentlyContinue
 
-LogWrite "End User Name= $EndUserName"
+LogWrite "End User Name= $EndUserName" -ErrorAction SilentlyContinue
 
-$EndUserPhone = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" -Name "EndUserPhone"
+$EndUserPhone = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" -Name "EndUserPhone" -ErrorAction SilentlyContinue
 
-LogWrite "End User Phone= $EndUserPhone"
+LogWrite "End User Phone= $EndUserPhone" -ErrorAction SilentlyContinue
 
-$EndUserEmail = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" -Name "EndUserEmail"
+$EndUserEmail = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" -Name "EndUserEmail" -ErrorAction SilentlyContinue
 
-LogWrite "End User Email= $EndUserEmail"
+LogWrite "End User Email= $EndUserEmail" -ErrorAction SilentlyContinue
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 LogWrite "..............License Keys.............."
 
 #License Key Dates
-$LicenseKeyASMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyASMDate"
+$LicenseKeyASMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyASMDate" -ErrorAction SilentlyContinue
 
-LogWrite "License Key A Date= $LicenseKeyASMDate"
+LogWrite "License Key A Date= $LicenseKeyASMDate" -ErrorAction SilentlyContinue
 
-$LicenseKeyCSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyCSMDate"
+$LicenseKeyCSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyCSMDate" -ErrorAction SilentlyContinue
 
-LogWrite "License Key C Date= $LicenseKeyCSMDate"
+LogWrite "License Key C Date= $LicenseKeyCSMDate" -ErrorAction SilentlyContinue
 
-$LicenseKeyNSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyNSMDate"
+$LicenseKeyNSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyNSMDate" -ErrorAction SilentlyContinue
 
-LogWrite "License Key N Date= $LicenseKeyNSMDate"
+LogWrite "License Key N Date= $LicenseKeyNSMDate" -ErrorAction SilentlyContinue
 
-$LicenseKeyOSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyOSMDate"
+$LicenseKeyOSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyOSMDate" -ErrorAction SilentlyContinue
 
-LogWrite "License Key O Date= $LicenseKeyOSMDate"
+LogWrite "License Key O Date= $LicenseKeyOSMDate" -ErrorAction SilentlyContinue
 
-$LicenseKeyPSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyPSMDate"
+$LicenseKeyPSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyPSMDate" -ErrorAction SilentlyContinue
 
-LogWrite "License Key P Date= $LicenseKeyPSMDate"
+LogWrite "License Key P Date= $LicenseKeyPSMDate" -ErrorAction SilentlyContinue
 
-$LicenseKeyTSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyTSMDate"
+$LicenseKeyTSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyTSMDate" -ErrorAction SilentlyContinue
 
-LogWrite "License Key T Date= $LicenseKeyTSMDate"
+LogWrite "License Key T Date= $LicenseKeyTSMDate" -ErrorAction SilentlyContinue
 
 #License Keys
-$LicenseKeyA = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyA"
+$LicenseKeyA = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyA" -ErrorAction SilentlyContinue
 
-LogWrite "License Key A= $LicenseKeyA"
+LogWrite "License Key A= $LicenseKeyA" -ErrorAction SilentlyContinue
 
-$LicenseKeyC = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyC"
+$LicenseKeyC = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyC" -ErrorAction SilentlyContinue
 
-LogWrite "License Key C= $LicenseKeyC"
+LogWrite "License Key C= $LicenseKeyC" -ErrorAction SilentlyContinue
 
-$LicenseKeyD = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyD"
+$LicenseKeyD = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyD" -ErrorAction SilentlyContinue
 
-LogWrite "License Key D= $LicenseKeyD"
+LogWrite "License Key D= $LicenseKeyD" -ErrorAction SilentlyContinue
 
-$LicenseKeyE = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyE"
+$LicenseKeyE = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyE" -ErrorAction SilentlyContinue
 
-LogWrite "License Key E= $LicenseKeyE"
+LogWrite "License Key E= $LicenseKeyE" -ErrorAction SilentlyContinue
 
-$LicenseKeyG = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyG"
+$LicenseKeyG = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyG" -ErrorAction SilentlyContinue
 
-LogWrite "License Key G= $LicenseKeyG"
+LogWrite "License Key G= $LicenseKeyG" -ErrorAction SilentlyContinue
 
-$LicenseKeyM = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyM"
+$LicenseKeyM = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyM" -ErrorAction SilentlyContinue
 
-LogWrite "License Key M= $LicenseKeyM"
+LogWrite "License Key M= $LicenseKeyM" -ErrorAction SilentlyContinue
 
-$LicenseKeyN = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyN"
+$LicenseKeyN = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyN" -ErrorAction SilentlyContinue
 
-LogWrite "License Key N= $LicenseKeyN"
+LogWrite "License Key N= $LicenseKeyN" -ErrorAction SilentlyContinue
 
-$LicenseKeyO = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyO"
+$LicenseKeyO = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyO" -ErrorAction SilentlyContinue
 
-LogWrite "License Key O= $LicenseKeyO"
+LogWrite "License Key O= $LicenseKeyO" -ErrorAction SilentlyContinue
 
-$LicenseKeyP = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyP"
+$LicenseKeyP = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyP" -ErrorAction SilentlyContinue
 
-LogWrite "License Key P= $LicenseKeyP"
+LogWrite "License Key P= $LicenseKeyP" -ErrorAction SilentlyContinue
 
-$LicenseKeyT = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyT"
+$LicenseKeyT = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyT" -ErrorAction SilentlyContinue
 
-LogWrite "License Key T= $LicenseKeyT"
+LogWrite "License Key T= $LicenseKeyT" -ErrorAction SilentlyContinue
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-LogWrite "..............Information and History.............."
+LogWrite "..............Information and Notes.............."
 
 LogWrite "
-Contact info
+Contact Info:
 DidITBetter Support
 813-977-5739 
 
@@ -343,11 +343,20 @@ C:\Program Files\OpenDoor Software®\
 -	note the *Circle r* in the directory name. Copy and paste to antivirus program
 C:\Program Files\Microsoft SQL Server\
 C:\Zlibrary 
-
-
-
---------History--------
 "
+
+#History
+LogWrite "--------History--------"
+$History1 = Get-Content -Path "$Home\Desktop\Support.txt" -ErrorAction SilentlyContinue
+LogWrite $History1 -ErrorAction SilentlyContinue
+
+$History2 = Get-Content -Path "C:\zLibrary\Support.txt" -ErrorAction SilentlyContinue
+LogWrite $History2 -ErrorAction SilentlyContinue
+
+Start-Sleep -Seconds 2
+
+Rename-Item -Path "$Home\Desktop\Support.txt" -NewName "Old_Support.txt" -ErrorAction SilentlyContinue
+Rename-Item -Path "C:\zLibrary\Support.txt" -NewName "Old_Support.txt" -ErrorAction SilentlyContinue
 
 Start-Sleep -Seconds 2
 #Shortcut
@@ -357,7 +366,7 @@ $Shortcut.TargetPath = "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_S
 $Shortcut.Save()
 
 Write-Host "Done"
-Write-Host "Quitting"
+Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
 Exit
 
