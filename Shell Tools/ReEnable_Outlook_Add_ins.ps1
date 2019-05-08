@@ -14,15 +14,15 @@ $TestPath = "C:\Program Files (x86)\Microsoft Office\root\Office16"
 
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 Write-Host "32bit Outlook"
-Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SOCIALCONNECTORbckup.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALCONNECTORbckup.dll','SOCIALCONNECTOR.dll' }
-Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SOCIALPROVIDERbckup.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALPROVIDERbckup.dll','SOCIALPROVIDER.dll' }
-Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16\ADDINS" "*ColleagueImportbckup.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'ColleagueImportbckup.dll','ColleagueImport.dll' }
+Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SOCIALCONNECTOR.Backup*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALCONNECTOR.Backup','SOCIALCONNECTOR.dll' }
+Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16" "*SOCIALPROVIDER.Backup*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALPROVIDER.Backup','SOCIALPROVIDER.dll' }
+Get-ChildItem -path "C:\Program Files (x86)\Microsoft Office\root\Office16\ADDINS" "*ColleagueImport.Backup*" -Recurse | Rename-Item -NewName {$_.name -replace 'ColleagueImport.Backup','ColleagueImport.dll' }
  }
 Else {
 Write-Host "64bit Outlook"
-Get-ChildItem -path "C:\Program Files\Microsoft Office\root\Office16" "*SOCIALCONNECTORbckup.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALCONNECTORbckup.dll','SOCIALCONNECTOR.dll' }
-Get-ChildItem -path "C:\Program Files\Microsoft Office\root\Office16" "*SOCIALPROVIDERbckup.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALPROVIDERbckup.dll','SOCIALPROVIDER.dll' }
-Get-ChildItem -path "C:\Program Files\Microsoft Office\root\Office16\ADDINS" "*ColleagueImportbckup.dll*" -Recurse | Rename-Item -NewName {$_.name -replace 'ColleagueImportbckup.dll','ColleagueImport.dll' }
+Get-ChildItem -path "C:\Program Files\Microsoft Office\root\Office16" "*SOCIALCONNECTOR.Backup*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALCONNECTOR.Backup','SOCIALCONNECTOR.dll' }
+Get-ChildItem -path "C:\Program Files\Microsoft Office\root\Office16" "*SOCIALPROVIDER.Backup*" -Recurse | Rename-Item -NewName {$_.name -replace 'SOCIALPROVIDER.Backup','SOCIALPROVIDER.dll' }
+Get-ChildItem -path "C:\Program Files\Microsoft Office\root\Office16\ADDINS" "*ColleagueImport.Backup*" -Recurse | Rename-Item -NewName {$_.name -replace 'ColleagueImport.Backup','ColleagueImport.dll' }
  }
 
 Write-Host "Done"
