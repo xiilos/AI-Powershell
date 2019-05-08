@@ -8,32 +8,22 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Bypass
   
 #Variables
-$DateStamp = =Get-Date -uformat "%Y-%m-%d@%H-%M-%S" 
-# Remove Outlook Add-ins
+
+# Remove Outlook Social Connector
   
 $TestPath = "C:\Program Files (x86)\Microsoft Office\root\Office16"
   
 If ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
     Write-Host "32bit Outlook"
-    Remove-Item -Path "C:\Program Files (x86)\Microsoft Office\root\Office16\SOCIALCONNECTORbckup.dll" -ErrorAction SilentlyContinue
-    Remove-Item -Path "C:\Program Files (x86)\Microsoft Office\root\Office16\SOCIALPROVIDERbckup.dll" -ErrorAction SilentlyContinue
-    Remove-Item -Path "C:\Program Files (x86)\Microsoft Office\root\Office16\ADDINS\ColleagueImportbckup.dll" -ErrorAction SilentlyContinue
-  
-  
-    Rename-Item -Path "C:\Program Files (x86)\Microsoft Office\root\Office16\SOCIALCONNECTOR.dll" -NewName "SOCIALCONNECTOR.Backup$DateStamp" -ErrorAction SilentlyContinue
-    Rename-Item -Path "C:\Program Files (x86)\Microsoft Office\root\Office16\SOCIALPROVIDER.dll" -NewName "SOCIALPROVIDER.Backup$DateStamp" -ErrorAction SilentlyContinue
-    Rename-Item -Path "C:\Program Files (x86)\Microsoft Office\root\Office16\ADDINS\ColleagueImport.dll" -NewName "ColleagueImport.Backup$DateStamp" -ErrorAction SilentlyContinue
+    Write-Host "Setting Load Behavior to 0"
+    Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\REGISTRY\MACHINE\Software\Wow6432Node\Microsoft\Office\Outlook\AddIns\OscAddin.Connect' -Name LoadBehavior -Value 0 | Out-Null
+
 }
 Else {
     Write-Host "64bit Outlook"
-    Remove-Item -Path "C:\Program Files\Microsoft Office\root\Office16\SOCIALCONNECTORbckup.dll" -ErrorAction SilentlyContinue
-    Remove-Item -Path "C:\Program Files\Microsoft Office\root\Office16\SOCIALPROVIDERbckup.dll" -ErrorAction SilentlyContinue
-    Remove-Item -Path "C:\Program Files\Microsoft Office\root\Office16\ADDINS\ColleagueImportbckup.dll" -ErrorAction SilentlyContinue
-  
-  
-    Rename-Item -Path "C:\Program Files\Microsoft Office\root\Office16\SOCIALCONNECTOR.dll" -NewName "SOCIALCONNECTOR.Backup$DateStamp" -ErrorAction SilentlyContinue
-    Rename-Item -Path "C:\Program Files\Microsoft Office\root\Office16\SOCIALPROVIDER.dll" -NewName "SOCIALPROVIDER.Backup$DateStamp" -ErrorAction SilentlyContinue
-    Rename-Item -Path "C:\Program Files\Microsoft Office\root\Office16\ADDINS\ColleagueImport.dll" -NewName "ColleagueImport.Backup$DateStamp" -ErrorAction SilentlyContinue
+    Write-Host "Setting Load Behavior to 0"
+    Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\REGISTRY\MACHINE\Software\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 | Out-Null
+
 }
   
 Write-Host "Done"
