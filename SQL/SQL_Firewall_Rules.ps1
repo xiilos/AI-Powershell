@@ -61,21 +61,25 @@ Do {
             Clear-Host 
             'You chose A Remote SQL Server'
             $SQLServ = Read-Host "What is the name of your SQL Server?"
-            Write-Host "Creating Inbound Rule for Add2Exchange SQL"
-            Invoke-Command -ComputerName $SQLServ {
-                New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow -ErrorAction SilentlyContinue
-            } -Credential (Get-Credential)
-            Write-Host "Done"
-
-            $confirmation = Read-Host "Would you like to Set the Inbound Rule for SQL Brower? [Y/N]"
+        
+            $confirmation = Read-Host "Would you also like to Set the Inbound Rule for SQL Brower? [Y/N]"
             if ($confirmation -eq 'y') {
-                New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL Browser" -Direction Inbound -LocalPort 1434 -Protocol UDP -Action Allow -ErrorAction SilentlyContinue
+                Write-Host "Creating Inbound Rules for Add2Exchange SQL"
+                Invoke-Command -ComputerName $SQLServ {
+                    New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow -ErrorAction SilentlyContinue
+                    New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL Browser" -Direction Inbound -LocalPort 1434 -Protocol UDP -Action Allow -ErrorAction SilentlyContinue
+                } -Credential (Get-Credential)
                 Write-Host "Done"
             }
 
             if ($confirmation -eq 'n') {
-                Write-Host "Resuming"
+                Write-Host "Creating Inbound Rules for Add2Exchange SQL"
+                Invoke-Command -ComputerName $SQLServ {
+                    New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow -ErrorAction SilentlyContinue
+                } -Credential (Get-Credential)
+                Write-Host "Done"
             }
+
         }
 
         #Another Remote Server--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -83,20 +87,22 @@ Do {
             Clear-Host 
             'You chose A Remote SQL Server'
             $A1Serv = Read-Host "What is the name of your Server?"
-            Write-Host "Creating Inbound Rule for Add2Exchange SQL"
-            Invoke-Command -ComputerName $A1Serv {
-                New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow -ErrorAction SilentlyContinue
-            } -Credential (Get-Credential)
-            Write-Host "Done"
-
-            $confirmation = Read-Host "Would you like to Set the Inbound Rule for SQL Brower? [Y/N]"
+            $confirmation = Read-Host "Would you also like to Set the Inbound Rule for SQL Brower? [Y/N]"
             if ($confirmation -eq 'y') {
-                New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL Browser" -Direction Inbound -LocalPort 1434 -Protocol UDP -Action Allow -ErrorAction SilentlyContinue
+                Write-Host "Creating Inbound Rules for Add2Exchange SQL"
+                Invoke-Command -ComputerName $A1Serv {
+                    New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow -ErrorAction SilentlyContinue
+                    New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL Browser" -Direction Inbound -LocalPort 1434 -Protocol UDP -Action Allow -ErrorAction SilentlyContinue
+                } -Credential (Get-Credential)
                 Write-Host "Done"
             }
 
             if ($confirmation -eq 'n') {
-                Write-Host "Resuming"
+                Write-Host "Creating Inbound Rules for Add2Exchange SQL"
+                Invoke-Command -ComputerName $A1Serv {
+                    New-NetFirewallRule -DisplayName "Add2Exchange Allow SQL" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow -ErrorAction SilentlyContinue
+                } -Credential (Get-Credential)
+                Write-Host "Done"
             }
         }
 
