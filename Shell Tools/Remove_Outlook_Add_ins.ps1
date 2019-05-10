@@ -6,7 +6,26 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
-  
+
+#UAC Check
+Write-Host "Checking UAC"
+$Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
+
+If ($val.EnableLUA -ne 0) {
+    Write-Host "UAC is Enabled. Change the Execution Policy to Unrestricted"
+    Write-Host "Script copied to Clipboard. Please Open PowerShell as an Admin and paste the script copied. Click Yes for All, then run this script again."
+    Start-Sleep -Seconds 1
+    Set-Clipboard -Value "Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy Unrestricted"
+    Pause
+}
+
+Else {
+
+    $wshell = New-Object -ComObject Wscript.Shell
+    $wshell.Popup("UAC Is already Disabled", 0, "Done", 0x1)
+
+}
+
 #Menu
 $Title1 = 'Disabling Outlook Social Connector'
 
@@ -35,13 +54,13 @@ switch ($input1) {
         If ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
             Write-Host "32bit Outlook"
             Write-Host "Setting Load Behavior to 0"
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 | Out-Null
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 -ErrorAction SilentlyContinue
 
         }
         Else {
             Write-Host "64bit Outlook"
             Write-Host "Setting Load Behavior to 0"
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 | Out-Null
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 -ErrorAction SilentlyContinue
 
         }
     }
@@ -56,13 +75,15 @@ switch ($input1) {
         If ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
             Write-Host "32bit Outlook"
             Write-Host "Setting Load Behavior to 0"
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 | Out-Null
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 -ErrorAction SilentlyContinue
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\15.0\ClickToRun\REGISTRY\MACHINE\Software\Wow6432Node\Microsoft\Office\Outlook\AddIns\OscAddin.Connect' -Name LoadBehavior -Value 0 -ErrorAction SilentlyContinue
 
         }
         Else {
             Write-Host "64bit Outlook"
             Write-Host "Setting Load Behavior to 0"
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 | Out-Null
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 -ErrorAction SilentlyContinue
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\15.0\ClickToRun\REGISTRY\MACHINE\Software\Microsoft\Office\Outlook\AddIns\OscAddin.Connect' -Name LoadBehavior -Value 0 -ErrorAction SilentlyContinue
 
         }
         
@@ -76,13 +97,13 @@ switch ($input1) {
         If ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
             Write-Host "32bit Outlook"
             Write-Host "Setting Load Behavior to 0"
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\REGISTRY\MACHINE\Software\Wow6432Node\Microsoft\Office\Outlook\AddIns\OscAddin.Connect' -Name LoadBehavior -Value 0 | Out-Null
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\REGISTRY\MACHINE\Software\Wow6432Node\Microsoft\Office\Outlook\AddIns\OscAddin.Connect' -Name LoadBehavior -Value 0 -ErrorAction SilentlyContinue
     
         }
         Else {
             Write-Host "64bit Outlook"
             Write-Host "Setting Load Behavior to 0"
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\REGISTRY\MACHINE\Software\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 | Out-Null
+            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\REGISTRY\MACHINE\Software\Microsoft\Office\Outlook\Addins\OscAddin.Connect' -Name LoadBehavior -Value 0 -ErrorAction SilentlyContinue
     
         }
 
