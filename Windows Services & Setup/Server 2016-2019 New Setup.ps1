@@ -75,10 +75,6 @@ function Disable-Indexing {
 Disable-Indexing "C:"
 Disable-Indexing "D:"
 
-#Unpin All Start Menu Apps
-Write-Host "Unpin All Start Menu Items"
-(New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items()| ForEach-Object { ($_).Verbs() | Where-Object{$_.Name.Replace('&', '') -match 'From "Start" UnPin|Unpin from Start'} | ForEach-Object{$_.DoIt()}  }
-
 # Disabled Services
 
 Write-Host "Disabling Services"
@@ -157,10 +153,6 @@ reg.exe Add	"HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD
 reg.exe Add	"HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD /V "DisableThirdPartySuggestions" /D 1 /F
 reg.exe Add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /T REG_DWORD /V "DisableWindowsSpotlightFeatures" /D 1 /F
 
-If ($ProcessError) {
-
-    Write-Warning -message "Cannot Remove some Apps. Maybe not a windows App?";
-}
 
 Write-Host "Disable Background Apps"
 Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Exclude "Microsoft.Windows.Cortana*" | ForEach-Object {
@@ -232,8 +224,6 @@ If ($ProcessError) {
 }
 
 # Kill Cortana
-
-
 Write-Host "Disabling Cortana..."
 If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings")) {
     New-Item -Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings" -Force | Out-Null
@@ -261,7 +251,6 @@ Set-NetConnectionProfile -NetworkCategory Private
 
 
 # Disable Windows Defender Cloud Submission
-
 
 Write-Host "Disabling Windows Defender Cloud..."
 If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet")) {
@@ -346,32 +335,6 @@ reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\
 reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{A8804298-2D5F-42E3-9531-9C8C39EB29CE}" /T REG_SZ /V "Value" /D Deny /F
 reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" /T REG_SZ /V "Value" /D Deny /F
 reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{2297E4E2-5DBE-466D-A12B-0F8286F0D9CA}" /T REG_SZ /V "Value" /D Deny /F
-
-
-# Start Menu Tweaks
-
-Write-Host "Disabling Start menu web search"
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "BingSearchEnabled" -Type DWord -Value 0
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "CortanaConsent" -Type DWord -Value 0
-If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search")) {
-    New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Force | Out-Null
-}
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Name "DisableWebSearch" -Type DWord -Value 1
-    
-
-Write-Host "Hide Searchbox"
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
-
-Write-Host "Hide People Button"
-If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People")) {
-    New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" | Out-Null
-}
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWord -Value 0
-
-
-Write-Host "Unpin All Taskbar Items"
-Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](255))
-Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
 
 Write-Output "ttyl"
 Get-PSSession | Remove-PSSession
