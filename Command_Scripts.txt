@@ -1,0 +1,91 @@
+## Office 365 Scripts ##
+
+Add Permissions to Everyone:
+Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User zAdd2Exchange -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+
+Remove Permissions from Everyone:
+Get-Mailbox -Resultsize Unlimited | Remove-mailboxpermission -User zAdd2Exchange -accessrights FullAccess -verbose -confirm:$false
+
+Add Permissions to Distribution List:
+$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Add-MailboxPermission -Identity $Member.name -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                    }
+
+Remove Permissions from a Distribution List:
+$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Remove-mailboxpermission -Identity $Member.name -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    }
+
+Add Permissions to a Single User:
+Add-MailboxPermission -Identity $identity -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+
+Remove Permissions from a Single User:
+Remove-MailboxPermission -Identity $identity -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Exchange 2010 Scripts ##
+
+Add Permissions to Everyone:
+Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+
+Remove Permissions from Everyone:
+Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+
+Add Permissions to Distribution List:
+$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Add-MailboxPermission -Identity $Member.name -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                    }
+
+Remove Permissions from a Distribution List:
+$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Remove-mailboxpermission -Identity $Member.name -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    }
+
+Add Permissions to a Single User:
+Add-MailboxPermission -Identity $identity -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+
+Remove Permissions from a Single User:
+Remove-MailboxPermission -Identity $identity -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+
+
+Throttling:
+New-ThrottlingPolicy A2EPolicy -RCAMaxConcurrency $null -RCAPercentTimeInAD $null -RCAPercentTimeInCAS $null -RCAPercentTimeInMailboxRPC $null -EWSMaxConcurrency $null -EWSPercentTimeInAD $null -EWSPercentTimeInCAS $null -EWSPercentTimeInMailboxRPC $null -EWSMaxSubscriptions $null -EWSFastSearchTimeoutInSeconds $null -EWSFindCountLimit $null
+            Set-Mailbox zAdd2Exchange -ThrottlingPolicy A2EPolicy
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Exchange 2013-2016 Scripts ##
+
+Add Permissions to Everyone:
+Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+
+Remove Permissions from Everyone:
+Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+
+Add Permissions to Distribution List:
+$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Add-MailboxPermission -Identity $Member.name -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+                    }
+
+Remove Permissions from a Distribution List:
+$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    ForEach ($Member in $DistributionGroupName) {
+                        Remove-mailboxpermission -Identity $Member.name -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+                    }
+
+Add Permissions to a Single User:
+Add-MailboxPermission -Identity $identity -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+
+Remove Permissions from a Single User:
+Remove-MailboxPermission -Identity $identity -User zAdd2Exchange -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
+
+
+Throttling:
+New-ThrottlingPolicy -Name A2EPolicy -RCAMaxConcurrency Unlimited -EWSMaxConcurrency Unlimited
+            Set-ThrottlingPolicyAssociation zAdd2Exchange -ThrottlingPolicy A2EPolicy
