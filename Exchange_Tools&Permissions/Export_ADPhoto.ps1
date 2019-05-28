@@ -57,10 +57,10 @@ switch ($input1) {
         Clear-Host 
         'You Chose to Export All Photos from all Users in AD'
         Do {
-            $users = Get-ADUser -Filter { EmailAddress -like "*@*" } -Properties thumbnailPhoto
+            $users = Get-ADUser -Filter { EmailAddress -like "*@*" } -Properties thumbnailPhoto, mail
     
             foreach ($user in $users) {
-                $name = $user.UserPrincipalName + ".jpg"
+                $name = $user.mail + ".jpg"
                 $user.thumbnailPhoto | Set-Content $name -Encoding byte
             }
     
@@ -80,10 +80,10 @@ switch ($input1) {
             $DC = Read-Host "Domain Name? Ex. DC=diditbetter"
             $DC2 = Read-Host "Type in COM or Local"
     
-            $users = Get-ADUser -Filter { EmailAddress -like "*@*" } -SearchBase "CN=$CN,DC=$DC,DC=$DC2" -Properties thumbnailPhoto
+            $users = Get-ADUser -Filter { EmailAddress -like "*@*" } -SearchBase "CN=$CN,DC=$DC,DC=$DC2" -Properties thumbnailPhoto, mail
     
             foreach ($user in $users) {
-                $name = $user.UserPrincipalName + ".jpg"
+                $name = $user.mail + ".jpg"
                 $user.thumbnailPhoto | Set-Content $name -Encoding byte
             }
     
