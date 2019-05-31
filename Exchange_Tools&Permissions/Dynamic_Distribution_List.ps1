@@ -1,8 +1,7 @@
-if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-  # Relaunch as an elevated process:
-  Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-  exit
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    # Relaunch as an elevated process:
+    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+    exit
 }
 
 #Execution Policy
@@ -11,12 +10,14 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 
 # Script #
-
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
+Set-ADServerSettings -ViewEntireForest $true
+            
 #Variables
-$DynamicDG = @("_zDynAllCanadianUsers","_All CES Employees","_All PureChem Employees")
-$StaticDG = @("zGalCanada","zGalCESOnly","zGalPureChem")
+$DynamicDG = @("_zDynAllCanadianUsers", "_All CES Employees", "_All PureChem Employees")
+$StaticDG = @("zGalCanada", "zGalCESOnly", "zGalPureChem")
 
-for ($i=0; $i -lt $DynamicDG.Length; $i++) {
+for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
     ### Get Dynamic Group members
     $members = Get-DynamicDistributionGroup $DynamicDG[$i]
     $recipients = Get-Recipient -RecipientPreviewFilter $members.RecipientFilter
@@ -30,7 +31,7 @@ for ($i=0; $i -lt $DynamicDG.Length; $i++) {
 
     ### Remove the Distribution Group
     ##Changes SID for the group if done this way -> Remove-DistributionGroup -Identity $StaticDG -Confirm:$false
-    $removeMembers=Get-DistributionGroupMember -Identity $StaticDG[$i]
+    $removeMembers = Get-DistributionGroupMember -Identity $StaticDG[$i]
     foreach ($remMember in $removeMembers) {
         Remove-DistributionGroupMember -Identity $StaticDG[$i] -Member $remMember -Confirm:$false
     }
