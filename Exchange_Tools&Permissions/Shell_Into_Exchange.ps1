@@ -31,7 +31,7 @@ Write-Host "How Are We Logging In?"
 ""
 Write-Host "Press '1' for Office 365"
 Write-Host "Press '2' for Exchange 2010" 
-Write-Host "Press '3' for Exchange 2013-2016" 
+Write-Host "Press '3' for Exchange 2013-2019" 
 Write-Host "Press 'Q' to Quit." -ForegroundColor Red
 
 
@@ -92,7 +92,7 @@ switch ($input1) {
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
                 $UserCredential = Get-Credential
-                If (!$Cred) { Exit }
+                If (!$UserCredential) { Exit }
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
                 If ($LoginError) { 
                     Write-Warning -Message "Username or Password is Incorrect!"
@@ -108,10 +108,10 @@ switch ($input1) {
   
        
     }
-    #Exchange2013-2016--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #Exchange2013-2019--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     '3' { 
         Clear-Host 
-        'You chose Exchange 2013-2016'
+        'You chose Exchange 2013-2019'
         $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
         if ($confirmation -eq 'y') {
             Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
@@ -127,7 +127,7 @@ switch ($input1) {
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
                 $UserCredential = Get-Credential
-                If (!$Cred) { Exit }
+                If (!$UserCredential) { Exit }
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
                 If ($LoginError) { 
                     Write-Warning -Message "Username or Password is Incorrect!"

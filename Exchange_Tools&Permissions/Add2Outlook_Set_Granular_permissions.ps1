@@ -31,7 +31,7 @@ Write-Host "How Are We Logging In?"
 ""
 Write-Host "Press '1' for Office 365"
 Write-Host "Press '2' for Exchange 2010" 
-Write-Host "Press '3' for Exchange 2013-2016" 
+Write-Host "Press '3' for Exchange 2013-2019" 
 Write-Host "Press 'Q' to Quit." -ForegroundColor Red
 
 
@@ -216,10 +216,10 @@ switch ($input1) {
             $repeat = Read-Host 'Return to the Main Menu? [Y/N]'
         } Until ($repeat -eq 'n')
     }
-    #Exchange2013-2016--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #Exchange2013-2019--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     '3' { 
         Clear-Host 
-        'You chose Exchange 2013-2016'
+        'You chose Exchange 2013-2019'
         $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
         if ($confirmation -eq 'y') {
             Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
@@ -251,7 +251,7 @@ switch ($input1) {
         Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
         $User = Read-Host "Enter Sync Service Account";
 
-        #Exchange 2013-2016 Thottling Policy Check
+        #Exchange 2013-2019 Thottling Policy Check
         Write-Host "Checking Throttling Policy"
         $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
         If ($ThrottlePolicy = $ThrottlePolicy) {
@@ -268,7 +268,7 @@ switch ($input1) {
      
         Do {
 
-            $Title4 = 'Exchange 2013-2016 Permissions Menu' 
+            $Title4 = 'Exchange 2013-2019 Permissions Menu' 
             ""
             Clear-Host 
             Write-Host "================ $Title4 ================" 
@@ -280,7 +280,7 @@ switch ($input1) {
             $input3 = Read-Host "Please Make A Selection" 
             switch ($input3) {
 
-                # Option 1: Exchange 2013-2016 on Premise-Adding Granular Permissions to a Single User
+                # Option 1: Exchange 2013-2019 on Premise-Adding Granular Permissions to a Single User
                 '1' { 
                     Clear-Host 
                     'You chose to Add Granular Permissions to a Single User'
@@ -292,7 +292,7 @@ switch ($input1) {
                     Add-MailboxFolderPermission -Identity $Identity -User $User -AccessRights $AccessRights
                     Write-Host "Done"
                 }
-                # Option 2: Exchange 2013-2016 on Premise-Removing Granular Permissions From a Single User
+                # Option 2: Exchange 2013-2019 on Premise-Removing Granular Permissions From a Single User
                 '2' {
                     Clear-Host 
                     'You chose to Remove Granular Permissions From a Single User'
@@ -302,7 +302,7 @@ switch ($input1) {
                     Write-Host "Done"
                 }
 
-                # Option Q: Exchange 2013-2016-Quit
+                # Option Q: Exchange 2013-2019-Quit
                 'q' { 
                     Write-Host "Quitting"
                     Get-PSSession | Remove-PSSession

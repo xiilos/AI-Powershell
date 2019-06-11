@@ -31,7 +31,7 @@ Write-Host "How Are We Logging In?"
 ""
 Write-Host "Press '1' for Office 365"
 Write-Host "Press '2' for Exchange 2010" 
-Write-Host "Press '3' for Exchange 2013-2016" 
+Write-Host "Press '3' for Exchange 2013-2019" 
 Write-Host "Press 'Q' to Quit." -ForegroundColor Red
 
 
@@ -243,7 +243,7 @@ switch ($input1) {
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
                 $UserCredential = Get-Credential
-                If (!$Cred) { Exit }
+                If (!$UserCredential) { Exit }
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
                 If ($LoginError) { 
                     Write-Warning -Message "Username or Password is Incorrect!"
@@ -428,10 +428,10 @@ switch ($input1) {
             $repeat = Read-Host 'Return to the Main Menu? [Y/N]'
         } Until ($repeat -eq 'n')
     }
-    #Exchange2013-2016--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #Exchange2013-2019--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     '3' { 
         Clear-Host 
-        'You chose Exchange 2013-2016'
+        'You chose Exchange 2013-2019'
         $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
         if ($confirmation -eq 'y') {
             Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
@@ -447,7 +447,7 @@ switch ($input1) {
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
                 $UserCredential = Get-Credential
-                If (!$Cred) { Exit }
+                If (!$UserCredential) { Exit }
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
                 If ($LoginError) { 
                     Write-Warning -Message "Username or Password is Incorrect!"
@@ -464,7 +464,7 @@ switch ($input1) {
         Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
         $User = Read-Host "Enter Sync Service Account";
 
-        #Exchange 2013-2016 Thottling Policy Check
+        #Exchange 2013-2019 Thottling Policy Check
         Write-Host "Checking Throttling Policy"
         $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
         If ($ThrottlePolicy = $ThrottlePolicy) {
@@ -481,7 +481,7 @@ switch ($input1) {
      
         Do {
 
-            $Title4 = 'Exchange 2013-2016 Permissions Menu' 
+            $Title4 = 'Exchange 2013-2019 Permissions Menu' 
             ""
             Clear-Host 
             Write-Host "================ $Title4 ================" 
@@ -502,7 +502,7 @@ switch ($input1) {
             
             $input4 = Read-Host "Please Make A Selection" 
             switch ($input4) {
-                # Option 1: Exchange 2013-2016 on Premise-Adding new permissions all
+                # Option 1: Exchange 2013-2019 on Premise-Adding new permissions all
                 '1' { 
                     Clear-Host 
                     'You chose to Add Permissions to All Users'
@@ -510,7 +510,7 @@ switch ($input1) {
                     Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
                     Write-Host "Done"
                 }
-                # Option 2: Exchange 2013-2016 on Premise-Remove old Add2Exchange permissions
+                # Option 2: Exchange 2013-2019 on Premise-Remove old Add2Exchange permissions
                 '2' {
                     Clear-Host 
                     'You chose to Remove Permissions to All Users'
@@ -518,7 +518,7 @@ switch ($input1) {
                     Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                     Write-Host "Done"
                 }
-                # Option 3: Exchange 2013-2016 on Premise-Remove/Add Permissions all
+                # Option 3: Exchange 2013-2019 on Premise-Remove/Add Permissions all
                 '3' {
                     Clear-Host 
                     'You chose to Remove and then Add Permissions to All Users'
@@ -530,7 +530,7 @@ switch ($input1) {
                     Write-Host "Checking............"
                     Write-Host "Done"
                 }
-                # Option 4: Exchange 2013-2016 on Premise-Adding Permissions to dist. list
+                # Option 4: Exchange 2013-2019 on Premise-Adding Permissions to dist. list
                 '4' {
                     Clear-Host 
                     'You chose to Add Permissions To A Distribution List'
@@ -542,7 +542,7 @@ switch ($input1) {
                         Write-Host "Done"
                     }
                 }
-                # Option 5: Exchange 2013-2016 on Premise-Removing dist. list permissions
+                # Option 5: Exchange 2013-2019 on Premise-Removing dist. list permissions
                 '5' {
                     Clear-Host 
                     'You chose to Remove Permissions From A Distribution List'
@@ -554,7 +554,7 @@ switch ($input1) {
                         Write-Host "Done"
                     }
                 }
-                # Option 6: Exchange 2013-2016 on Premise-Adding permissions to single user
+                # Option 6: Exchange 2013-2019 on Premise-Adding permissions to single user
                 '6' {
                     Clear-Host 
                     'You chose to Add Permissions To A Single User'
@@ -563,7 +563,7 @@ switch ($input1) {
                     Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
                     Write-Host "Done" 
                 }
-                # Option 7: Exchange 2013-2016 on Premise-Removing permissions to single user
+                # Option 7: Exchange 2013-2019 on Premise-Removing permissions to single user
                 '7' {
                     Clear-Host 
                     'You chose to Remove Permissions To A Single User'
@@ -573,7 +573,7 @@ switch ($input1) {
                     Write-Host "Done"
                 }
 
-                # Option 8: Exchange 2013-2016-Adding Permissions to Public Folders
+                # Option 8: Exchange 2013-2019-Adding Permissions to Public Folders
                 '8' { 
                     Clear-Host 
                     'You chose to Add Permissions to Public Folders'
@@ -588,7 +588,7 @@ switch ($input1) {
                     }
                     Write-Host "Done"
                 }
-                # Option 9: Exchange 2013-2016-Removing Permissions From Public Folders
+                # Option 9: Exchange 2013-2019-Removing Permissions From Public Folders
                 '9' { 
                     Clear-Host
                     'You chose to Remove Permissions From Public Folders' 
@@ -600,7 +600,7 @@ switch ($input1) {
                     Write-Host "Done"
                 }
                 
-                # Option 10: Exchange 2013-2016-Add Permissions to All Public Folders
+                # Option 10: Exchange 2013-2019-Add Permissions to All Public Folders
                 '10' { 
                     Clear-Host 
                     'You chose to Add Permissions to All Public Folders'
@@ -613,7 +613,7 @@ switch ($input1) {
                     Write-Host "Done"
                 }
 
-                # Option 11: Exchange 2013-2016-Removing Permissions From All Public Folders
+                # Option 11: Exchange 2013-2019-Removing Permissions From All Public Folders
                 '11' { 
                     Clear-Host 
                     'You chose to Remove Add2Exchange Permissions from All Public Folders'
@@ -622,7 +622,7 @@ switch ($input1) {
                     Write-Host "Done"
                 }
 
-                # Option Q: Exchange 2013-2016-Quit
+                # Option Q: Exchange 2013-2019-Quit
                 'q' { 
                     Write-Host "Quitting"
                     Get-PSSession | Remove-PSSession
