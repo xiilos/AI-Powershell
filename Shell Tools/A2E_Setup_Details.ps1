@@ -24,7 +24,7 @@ $Logfile = "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Setup_Details
 Function LogWrite {
     Param ([string]$logstring)
 
-    Add-Content $Logfile -value $logstring
+    Add-Content $Logfile -Value $logstring
 }
 
 
@@ -71,7 +71,7 @@ $ServiceAccount = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDo
 LogWrite "Service Account Name= $ServiceAccount" -ErrorAction SilentlyContinue
 
 #Local Account Name
-$LocalAccount = $env:UserName
+$LocalAccount = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 
 LogWrite "Local Account Name= $LocalAccount" -ErrorAction SilentlyContinue
 
