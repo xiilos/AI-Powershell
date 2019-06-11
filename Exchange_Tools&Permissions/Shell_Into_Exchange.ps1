@@ -57,6 +57,7 @@ switch ($input1) {
         Write-Host "Sign in to Office365 as Tenant Admin"
         Do {
             $Cred = Get-Credential
+            If (!$Cred) { Exit }
             Connect-MsolService -Credential $Cred
             $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection -ErrorAction SilentlyContinue -ErrorVariable LoginError;
             If ($LoginError) { 
@@ -91,6 +92,7 @@ switch ($input1) {
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
                 $UserCredential = Get-Credential
+                If (!$Cred) { Exit }
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
                 If ($LoginError) { 
                     Write-Warning -Message "Username or Password is Incorrect!"
@@ -125,6 +127,7 @@ switch ($input1) {
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
                 $UserCredential = Get-Credential
+                If (!$Cred) { Exit }
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
                 If ($LoginError) { 
                     Write-Warning -Message "Username or Password is Incorrect!"
