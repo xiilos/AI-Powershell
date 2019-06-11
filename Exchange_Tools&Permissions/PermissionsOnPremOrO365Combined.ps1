@@ -85,7 +85,9 @@ switch ($input1) {
             Write-Host "Press '6' for Adding Permissions to a Single User"
             Write-Host "Press '7' for Removing Permissions from a Single User"
             Write-Host "Press '8' for Adding Permissions to Public Folders"
-            Write-Host "Press '9' for Removing Permissions From Public Folders" 
+            Write-Host "Press '9' for Removing Permissions From Public Folders"
+            Write-Host "Press '10' for Adding Add2Exchange Permissions to All Public Folders"
+            Write-Host "Press '11' for Removing Add2Exchange Permissions From All Public Folders" 
             Write-Host "Press 'Q' to Quit" -ForegroundColor Red
     
             
@@ -183,6 +185,24 @@ switch ($input1) {
                     Write-Host "Done"
                 }
 
+                # Option 10: Office 365-Add Permissions to All Public Folders
+                '10' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to All Public Folders'
+                    Write-Host "Adding Add2Exchange as Owner to All Public Folders"
+                    Get-PublicFolder –Identity “\” –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner
+                    Write-Host "Done"
+                }
+
+                # Option 11: Office 365-Removing Permissions From All Public Folders
+                '11' { 
+                    Clear-Host 
+                    'You chose to Remove Add2Exchange Permissions from All Public Folders'
+                    Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
+                    Get-PublicFolder –Identity “\” –Recurse | Remove-PublicFolderClientPermission –User $User
+                    Write-Host "Done"
+                }
+
                 # Option Q: Office 365-Quit
                 'q' { 
                     Write-Host "Quitting"
@@ -260,7 +280,9 @@ switch ($input1) {
             Write-Host "Press '6' for Adding Permissions to a Single User"
             Write-Host "Press '7' for Removing Permissions from a Single User"
             Write-Host "Press '8' for Adding Permissions to Public Folders"
-            Write-Host "Press '9' for Removing Permissions From Public Folders" 
+            Write-Host "Press '9' for Removing Permissions From Public Folders"
+            Write-Host "Press '10' for Adding Add2Exchange Permissions to All Public Folders"
+            Write-Host "Press '11' for Removing Add2Exchange Permissions From All Public Folders"
             Write-Host "Press 'Q' to Quit" -ForegroundColor Red
 
             $input3 = Read-Host "Please Make A Selection" 
@@ -358,6 +380,26 @@ switch ($input1) {
                     Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
                     Write-Host "Done"
                 }
+
+                # Option 10: Exchange 2010-Add Permissions to All Public Folders
+                '10' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to All Public Folders'
+                    Write-Host "Adding Add2Exchange as Owner to All Public Folders"
+                    Get-PublicFolder –Identity “\” –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner
+                    Write-Host "Done"
+                }
+
+                # Option 11: Exchange 2010-Removing Permissions From All Public Folders
+                '11' { 
+                    Clear-Host 
+                    'You chose to Remove Add2Exchange Permissions from All Public Folders'
+                    Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
+                    Get-PublicFolder –Identity “\” –Recurse | Remove-PublicFolderClientPermission –User $User
+                    Write-Host "Done"
+                }
+
+                
                 # Option Q: Exchange 2010-Quit
                 'q' { 
                     Write-Host "Quitting"
@@ -433,7 +475,9 @@ switch ($input1) {
             Write-Host "Press '6' for Adding Permissions to a Single User"
             Write-Host "Press '7' for Removing Permissions from a Single User"
             Write-Host "Press '8' for Adding Permissions to Public Folders"
-            Write-Host "Press '9' for Removing Permissions From Public Folders" 
+            Write-Host "Press '9' for Removing Permissions From Public Folders"
+            Write-Host "Press '10' for Adding Add2Exchange Permissions to All Public Folders"
+            Write-Host "Press '11' for Removing Add2Exchange Permissions From All Public Folders"
             Write-Host "Press 'Q' to Quit" -ForegroundColor Red
 
             
@@ -532,6 +576,25 @@ switch ($input1) {
                     Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
                     Write-Host "Done"
                 }
+                
+                # Option 10: Exchange 2013-2016-Add Permissions to All Public Folders
+                '10' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to All Public Folders'
+                    Write-Host "Adding Add2Exchange as Owner to All Public Folders"
+                    Get-PublicFolder –Identity “\” –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner
+                    Write-Host "Done"
+                }
+
+                # Option 11: Exchange 2013-2016-Removing Permissions From All Public Folders
+                '11' { 
+                    Clear-Host 
+                    'You chose to Remove Add2Exchange Permissions from All Public Folders'
+                    Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
+                    Get-PublicFolder –Identity “\” –Recurse | Remove-PublicFolderClientPermission –User $User
+                    Write-Host "Done"
+                }
+
                 # Option Q: Exchange 2013-2016-Quit
                 'q' { 
                     Write-Host "Quitting"
