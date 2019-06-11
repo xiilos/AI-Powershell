@@ -81,6 +81,7 @@ switch ($input1) {
         Write-Host "Sign in to Office365 as Tenant Admin"
         Do {
             $Cred = Get-Credential
+            If (!$Cred) { Exit }
             Connect-MsolService -Credential $Cred
             $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection -ErrorAction SilentlyContinue -ErrorVariable LoginError;
             If ($LoginError) { 
@@ -93,7 +94,7 @@ switch ($input1) {
         Import-PSSession $Session -DisableNameChecking
         Import-Module MSOnline
     
-        $User = read-host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com";
+        $User = Read-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com";
     
         Do {
             $Title2 = 'Office 365 Permissions Menu' 
@@ -109,7 +110,9 @@ switch ($input1) {
             Write-Host "Press '6' for Adding Permissions to a Single User"
             Write-Host "Press '7' for Removing Permissions from a Single User"
             Write-Host "Press '8' for Adding Permissions to Public Folders"
-            Write-Host "Press '9' for Removing Permissions From Public Folders" 
+            Write-Host "Press '9' for Removing Permissions From Public Folders"
+            Write-Host "Press '10' for Adding Add2Exchange Permissions to All Public Folders"
+            Write-Host "Press '11' for Removing Add2Exchange Permissions From All Public Folders" 
             Write-Host "Press 'Q' to Quit" -ForegroundColor Red
     
             
@@ -146,7 +149,7 @@ switch ($input1) {
                 '4' { 
                     Clear-Host 
                     'You chose to Add Permissions to a Distribution List'
-                    $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Adding Add2Exchange Permissions"
                     $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
@@ -158,7 +161,7 @@ switch ($input1) {
                 '5' { 
                     Clear-Host 
                     'You chose to Remove Permissions From a Distribution List'
-                    $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Removing Add2Exchange Permissions"
                     $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
@@ -170,7 +173,7 @@ switch ($input1) {
                 '6' { 
                     Clear-Host 
                     'You chose to Add Permissions to a Single User'
-                    $Identity = read-host "Enter user Email Address"
+                    $Identity = Read-Host "Enter user Email Address"
                     Write-Host "Adding Add2Exchange Permissions to Single User"
                     Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
                     Write-Host "Done"
@@ -179,7 +182,7 @@ switch ($input1) {
                 '7' { 
                     Clear-Host 
                     'You chose to Remove Permissions From a Single User'
-                    $Identity = read-host "Enter user Email Address"
+                    $Identity = Read-Host "Enter user Email Address"
                     Write-Host "Removing Add2Exchange Permissions to Single User"
                     Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                     Write-Host "Done"
@@ -190,9 +193,13 @@ switch ($input1) {
                     'You chose to Add Permissions to Public Folders'
                     Write-Host "Getting a list of Public Folders"
                     Get-PublicFolder -Identity "\" -Recurse
-                    $Identity = read-host "Public Folder Name (Alias)"
+                    $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Adding Permissions to Public Folders"
-                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                        Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
                 # Option 9: Office 365-Removing Permissions From Public Folders
@@ -201,9 +208,31 @@ switch ($input1) {
                     'You chose to Remove Permissions From Public Folders'
                     Write-Host "Getting a list of Public Folders"
                     Get-PublicFolder -Identity "\" -Recurse
-                    $Identity = read-host "Public Folder Name (Alias)"
+                    $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Removing Permissions to Public Folders"
                     Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                    Write-Host "Done"
+                }
+
+                # Option 10: Office 365-Add Permissions to All Public Folders
+                '10' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to All Public Folders'
+                    Write-Host "Adding Add2Exchange as Owner to All Public Folders"
+                    Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
+                        Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false
+                    }
+                    Write-Host "Done"
+                }
+
+                # Option 11: Office 365-Removing Permissions From All Public Folders
+                '11' { 
+                    Clear-Host 
+                    'You chose to Remove Add2Exchange Permissions from All Public Folders'
+                    Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
+                    Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
                     Write-Host "Done"
                 }
 
@@ -225,7 +254,7 @@ switch ($input1) {
         'You chose Exchange 2010'
         $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
         if ($confirmation -eq 'y') {
-            Add-PSsnapin Microsoft.Exchange.Management.PowerShell.E2010;
+            Add-PSSnapin Microsoft.Exchange.Management.PowerShell.E2010;
             Set-ADServerSettings -ViewEntireForest $true
         }
     
@@ -238,6 +267,7 @@ switch ($input1) {
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
                 $UserCredential = Get-Credential
+                If (!$Cred) { Exit }
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
                 If ($LoginError) { 
                     Write-Warning -Message "Username or Password is Incorrect!"
@@ -252,7 +282,7 @@ switch ($input1) {
         }
   
         Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
-        $User = read-host "Enter Sync Service Account";
+        $User = Read-Host "Enter Sync Service Account";
   
         #Exchange 2010 Thottling Policy Check
         Write-Host "Checking Throttling Policy"
@@ -284,7 +314,9 @@ switch ($input1) {
             Write-Host "Press '6' for Adding Permissions to a Single User"
             Write-Host "Press '7' for Removing Permissions from a Single User"
             Write-Host "Press '8' for Adding Permissions to Public Folders"
-            Write-Host "Press '9' for Removing Permissions From Public Folders" 
+            Write-Host "Press '9' for Removing Permissions From Public Folders"
+            Write-Host "Press '10' for Adding Add2Exchange Permissions to All Public Folders"
+            Write-Host "Press '11' for Removing Add2Exchange Permissions From All Public Folders"
             Write-Host "Press 'Q' to Quit" -ForegroundColor Red
 
             $input3 = Read-Host "Please Make A Selection" 
@@ -322,7 +354,7 @@ switch ($input1) {
                 '4' {
                     Clear-Host 
                     'You chose to Add Permissions To A Distribution List'
-                    $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Adding Add2Exchange Permissions"
                     $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
@@ -334,7 +366,7 @@ switch ($input1) {
                 '5' {
                     Clear-Host 
                     'You chose to Remove Permissions From A Distribution List'
-                    $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Removing Add2Exchange Permissions"
                     $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
@@ -346,7 +378,7 @@ switch ($input1) {
                 '6' {
                     Clear-Host 
                     'You chose to Add Permissions To A Single User'
-                    $Identity = read-host "Enter user Email Address";
+                    $Identity = Read-Host "Enter user Email Address";
                     Write-Host "Adding Add2Exchange Permissions to Single User"
                     Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
                     Write-Host "Done" 
@@ -355,7 +387,7 @@ switch ($input1) {
                 '7' {
                     Clear-Host 
                     'You chose to Remove Permissions To A Single User'
-                    $Identity = read-host "Enter user Email Address"
+                    $Identity = Read-Host "Enter user Email Address"
                     Write-Host "Removing Add2Exchange Permissions to Single User"
                     Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                     Write-Host "Done"
@@ -366,9 +398,13 @@ switch ($input1) {
                     'You chose to Add Permissions to Public Folders'
                     Write-Host "Getting a list of Public Folders"
                     Get-PublicFolder -Identity "\" -Recurse
-                    $Identity = read-host "Public Folder Name (Alias)"
+                    $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Adding Permissions to Public Folders"
-                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                        Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
                 # Option 9: Exchange 2010-Removing Permissions From Public Folders
@@ -377,11 +413,35 @@ switch ($input1) {
                     'You chose to Remove Permissions From Public Folders' 
                     Write-Host "Getting a list of Public Folders"
                     Get-PublicFolder -Identity "\" -Recurse
-                    $Identity = read-host "Public Folder Name (Alias)"
+                    $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Removing Permissions to Public Folders"
                     Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
                     Write-Host "Done"
                 }
+
+                # Option 10: Exchange 2010-Add Permissions to All Public Folders
+                '10' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to All Public Folders'
+                    Write-Host "Adding Add2Exchange as Owner to All Public Folders"
+                    Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
+                        Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false
+                    }
+                    Write-Host "Done"
+                }
+
+                # Option 11: Exchange 2010-Removing Permissions From All Public Folders
+                '11' { 
+                    Clear-Host 
+                    'You chose to Remove Add2Exchange Permissions from All Public Folders'
+                    Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
+                    Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
+                    Write-Host "Done"
+                }
+
+                
                 # Option Q: Exchange 2010-Quit
                 'q' { 
                     Write-Host "Quitting"
@@ -411,6 +471,7 @@ switch ($input1) {
             $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
             Do {
                 $UserCredential = Get-Credential
+                If (!$Cred) { Exit }
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
                 If ($LoginError) { 
                     Write-Warning -Message "Username or Password is Incorrect!"
@@ -425,7 +486,7 @@ switch ($input1) {
 
 
         Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
-        $User = read-host "Enter Sync Service Account";
+        $User = Read-Host "Enter Sync Service Account";
 
         #Exchange 2013-2016 Thottling Policy Check
         Write-Host "Checking Throttling Policy"
@@ -457,7 +518,9 @@ switch ($input1) {
             Write-Host "Press '6' for Adding Permissions to a Single User"
             Write-Host "Press '7' for Removing Permissions from a Single User"
             Write-Host "Press '8' for Adding Permissions to Public Folders"
-            Write-Host "Press '9' for Removing Permissions From Public Folders" 
+            Write-Host "Press '9' for Removing Permissions From Public Folders"
+            Write-Host "Press '10' for Adding Add2Exchange Permissions to All Public Folders"
+            Write-Host "Press '11' for Removing Add2Exchange Permissions From All Public Folders"
             Write-Host "Press 'Q' to Quit" -ForegroundColor Red
 
             
@@ -495,7 +558,7 @@ switch ($input1) {
                 '4' {
                     Clear-Host 
                     'You chose to Add Permissions To A Distribution List'
-                    $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Adding Add2Exchange Permissions"
                     $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
@@ -507,7 +570,7 @@ switch ($input1) {
                 '5' {
                     Clear-Host 
                     'You chose to Remove Permissions From A Distribution List'
-                    $DistributionGroupName = read-host "Enter distribution list name (Display Name)";
+                    $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Removing Add2Exchange Permissions"
                     $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
@@ -519,7 +582,7 @@ switch ($input1) {
                 '6' {
                     Clear-Host 
                     'You chose to Add Permissions To A Single User'
-                    $Identity = read-host "Enter user Email Address";
+                    $Identity = Read-Host "Enter user Email Address";
                     Write-Host "Adding Add2Exchange Permissions to Single User"
                     Add-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
                     Write-Host "Done" 
@@ -528,7 +591,7 @@ switch ($input1) {
                 '7' {
                     Clear-Host 
                     'You chose to Remove Permissions To A Single User'
-                    $Identity = read-host "Enter user Email Address"
+                    $Identity = Read-Host "Enter user Email Address"
                     Write-Host "Removing Add2Exchange Permissions to Single User"
                     Remove-MailboxPermission -Identity $identity -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                     Write-Host "Done"
@@ -540,9 +603,13 @@ switch ($input1) {
                     'You chose to Add Permissions to Public Folders'
                     Write-Host "Getting a list of Public Folders"
                     Get-PublicFolder -Identity "\" -Recurse
-                    $Identity = read-host "Public Folder Name (Alias)"
+                    $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Adding Permissions to Public Folders"
-                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                        Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
                 # Option 9: Exchange 2013-2016-Removing Permissions From Public Folders
@@ -551,11 +618,34 @@ switch ($input1) {
                     'You chose to Remove Permissions From Public Folders' 
                     Write-Host "Getting a list of Public Folders"
                     Get-PublicFolder -Identity "\" -Recurse
-                    $Identity = read-host "Public Folder Name (Alias)"
+                    $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Removing Permissions to Public Folders"
                     Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
                     Write-Host "Done"
                 }
+                
+                # Option 10: Exchange 2013-2016-Add Permissions to All Public Folders
+                '10' { 
+                    Clear-Host 
+                    'You chose to Add Permissions to All Public Folders'
+                    Write-Host "Adding Add2Exchange as Owner to All Public Folders"
+                    Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
+                        Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false
+                    }
+                    Write-Host "Done"
+                }
+
+                # Option 11: Exchange 2013-2016-Removing Permissions From All Public Folders
+                '11' { 
+                    Clear-Host 
+                    'You chose to Remove Add2Exchange Permissions from All Public Folders'
+                    Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
+                    Get-PublicFolder –Identity “\” –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
+                    Write-Host "Done"
+                }
+
                 # Option Q: Exchange 2013-2016-Quit
                 'q' { 
                     Write-Host "Quitting"
