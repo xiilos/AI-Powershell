@@ -170,7 +170,11 @@ switch ($input1) {
                     Get-PublicFolder -Identity "\" -Recurse
                     $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Adding Permissions to Public Folders"
-                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                        Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
                 # Option 9: Office 365-Removing Permissions From Public Folders
@@ -190,7 +194,11 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Add Permissions to All Public Folders'
                     Write-Host "Adding Add2Exchange as Owner to All Public Folders"
-                    Get-PublicFolder –Identity “\” –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner
+                    Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
+                        Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
 
@@ -199,7 +207,7 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Remove Add2Exchange Permissions from All Public Folders'
                     Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
-                    Get-PublicFolder –Identity “\” –Recurse | Remove-PublicFolderClientPermission –User $User
+                    Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
                     Write-Host "Done"
                 }
 
@@ -366,7 +374,11 @@ switch ($input1) {
                     Get-PublicFolder -Identity "\" -Recurse
                     $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Adding Permissions to Public Folders"
-                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                        Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
                 # Option 9: Exchange 2010-Removing Permissions From Public Folders
@@ -386,7 +398,11 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Add Permissions to All Public Folders'
                     Write-Host "Adding Add2Exchange as Owner to All Public Folders"
-                    Get-PublicFolder –Identity “\” –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner
+                    Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
+                        Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
 
@@ -395,7 +411,7 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Remove Add2Exchange Permissions from All Public Folders'
                     Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
-                    Get-PublicFolder –Identity “\” –Recurse | Remove-PublicFolderClientPermission –User $User
+                    Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
                     Write-Host "Done"
                 }
 
@@ -562,7 +578,11 @@ switch ($input1) {
                     Get-PublicFolder -Identity "\" -Recurse
                     $Identity = Read-Host "Public Folder Name (Alias)"
                     Write-Host "Adding Permissions to Public Folders"
-                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Remove-PublicFolderClientPermission -Identity "\$Identity" -User $User -confirm:$false
+                        Add-PublicFolderClientPermission -Identity "\$Identity" -User $User -AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
                 # Option 9: Exchange 2013-2016-Removing Permissions From Public Folders
@@ -582,7 +602,11 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Add Permissions to All Public Folders'
                     Write-Host "Adding Add2Exchange as Owner to All Public Folders"
-                    Get-PublicFolder –Identity “\” –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner
+                    Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false -ErrorAction SilentlyContinue -ErrorVariable $PError
+                    If ($PError) {
+                        Get-PublicFolder –Identity "\" –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
+                        Get-PublicFolder –Identity "\" –Recurse | Add-PublicFolderClientPermission –User $User –AccessRights Owner -confirm:$false
+                    }
                     Write-Host "Done"
                 }
 
@@ -591,7 +615,7 @@ switch ($input1) {
                     Clear-Host 
                     'You chose to Remove Add2Exchange Permissions from All Public Folders'
                     Write-Host "Removing Add2Exchange Owner Permissions from All Public Folders"
-                    Get-PublicFolder –Identity “\” –Recurse | Remove-PublicFolderClientPermission –User $User
+                    Get-PublicFolder –Identity “\” –Recurse | Remove-PublicFolderClientPermission –User $User -confirm:$false
                     Write-Host "Done"
                 }
 
