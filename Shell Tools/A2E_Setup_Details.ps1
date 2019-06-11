@@ -61,7 +61,7 @@ $Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Soft
 LogWrite "Install Location= $Install" -ErrorAction SilentlyContinue
 
 #Domain Name
-$Domain = Get-ItemPropertyValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name "Domain" -ErrorAction SilentlyContinue
+$Domain = $env:UserDomain
 
 LogWrite "Domain Name= $Domain" -ErrorAction SilentlyContinue
 
@@ -69,6 +69,22 @@ LogWrite "Domain Name= $Domain" -ErrorAction SilentlyContinue
 $ServiceAccount = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "ServiceAccount" -ErrorAction SilentlyContinue
 
 LogWrite "Service Account Name= $ServiceAccount" -ErrorAction SilentlyContinue
+
+#Local Account Name
+$LocalAccount = $env:UserName
+
+LogWrite "Local Account Name= $LocalAccount" -ErrorAction SilentlyContinue
+
+#Local Account Password
+
+$LocalPassword = Read-Host "What is the Local Account password?" -ErrorAction SilentlyContinue
+
+LogWrite "Local Account Password= $LocalPassword" -ErrorAction SilentlyContinue
+
+#Computer Name
+$CompName = $env:ComputerName
+
+LogWrite "Computer Name= $CompName" -ErrorAction SilentlyContinue
 
 #ServiceAccount Password
 #$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
