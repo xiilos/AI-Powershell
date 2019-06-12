@@ -438,7 +438,7 @@ $MigrateA2E.Add_Click({Start-Process http://guides.diditbetter.com/Migrating_A2E
 $ExhangeMigration.Add_Click({Start-Process http://guides.diditbetter.com/Migrating_Environments_A2E_Sync_Scenarios.pdf})
 $AD_Photos.Add_Click({Start-Process Powershell .\Export_ADPhoto.ps1})
 $MSExchangeDelegate.Add_Click({Start-Process Powershell .\MSExchangeDelegation.ps1})
-$ExchangeShell.Add_Click({Start-Process Powershell -noexit .\Shell_Into_Exchange.ps1 -noprofile})
+$ExchangeShell.Add_Click({Start-Process Powershell .\Shell.ps1})
 $CommandsList.Add_Click({Invoke-Item .\A2E_Permissions_Commands.rtf})
 
 #Write your logic code here
