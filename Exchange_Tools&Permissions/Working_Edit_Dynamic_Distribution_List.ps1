@@ -4,32 +4,18 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
-
 #Execution Policy
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+
 # Script #
-
-#Variables
-
-$Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
-$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-$DynamicDG1 = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_DistributionName.txt"
-$StaticDG1 = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_DistributionName.txt"
-
-$Cred = New-Object -typename System.Management.Automation.PSCredential `
-    -Argumentlist $Username, $Password
-
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
-Import-PSSession $Session -DisableNameChecking
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 Set-ADServerSettings -ViewEntireForest $true
-
-#Timed Execution Permissions to Dynamic Distribution Lists
-
-$DynamicDG = @($DynamicDG1)
-$StaticDG = @($StaticDG1)
+            
+#Variables
+$DynamicDG = @("Dyn1")
+$StaticDG = @("stat1")
 
 for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
     ### Get Dynamic Group members
@@ -59,6 +45,7 @@ for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
 
 
 
+Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
 Exit
 
