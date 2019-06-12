@@ -29,9 +29,9 @@ Write-Host "Running Directory Sync"
 Invoke-Command -Session $session -ScriptBlock {Import-Module -Name 'ADSync'}
 Invoke-Command -Session $session -ScriptBlock {Start-ADSyncSyncCycle -PolicyType Delta}
 Remove-PSSession $session
+Write-Host "Done"
 Pause
 
-Write-Host "Done"
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
 Exit
