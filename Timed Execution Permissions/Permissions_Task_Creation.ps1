@@ -154,14 +154,14 @@ Do {
    
                 if ($confirmation -eq 'Y') {
                     Read-Host "Type in the Dynamic Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-                Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
+                Note: Make sure to use qoutes  around each group seperated by a comma. 
                 Leave Blank for None. Press Enter when Finished." | out-file ".\Dynamic_DistributionName.txt"
                 }
             }
 
             Else {
                 Read-Host "Type in the Dynamic Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-                Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
+                Note: Make sure to use qoutes  around each group seperated by a comma. 
                 Leave Blank for None. Press Enter when Finished." | out-file ".\Dynamic_DistributionName.txt"
             }
 
@@ -180,14 +180,14 @@ Do {
    
                 if ($confirmation -eq 'Y') {
                     Read-Host "Type in the Static Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-                Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
+                Note: Make sure to use qoutes  around each group seperated by a comma. 
                 Leave Blank for None. Press Enter when Finished." | out-file ".\Static_DistributionName.txt"
                 }
             }
 
             Else {
                 Read-Host "Type in the Static Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-                Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
+                Note: Make sure to use qoutes  around each group seperated by a comma. 
                 Leave Blank for None. Press Enter when Finished." | out-file ".\Static_DistributionName.txt"
             }
 
@@ -412,14 +412,14 @@ Do {
 
                 if ($confirmation -eq 'Y') {
                     Read-Host "Type in the Dynamic Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-        Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
+        Note: Make sure to use qoutes  around each group seperated by a comma. 
         Leave Blank for None. Press Enter when Finished." | out-file ".\Dynamic_DistributionName.txt"
                 }
             }
 
             Else {
                 Read-Host "Type in the Dynamic Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-        Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
+        Note: Make sure to use qoutes  around each group seperated by a comma. 
         Leave Blank for None. Press Enter when Finished." | out-file ".\Dynamic_DistributionName.txt"
             }
 
@@ -438,14 +438,14 @@ Do {
 
                 if ($confirmation -eq 'Y') {
                     Read-Host "Type in the Static Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-        Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
+        Note: Make sure to use qoutes  around each group seperated by a comma. 
         Leave Blank for None. Press Enter when Finished." | out-file ".\Static_DistributionName.txt"
                 }
             }
 
             Else {
                 Read-Host "Type in the Static Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-        Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
+        Note: Make sure to use qoutes  around each group seperated by a comma. 
         Leave Blank for None. Press Enter when Finished." | out-file ".\Static_DistributionName.txt"
             }
 
