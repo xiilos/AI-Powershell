@@ -8,6 +8,11 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+# Service Stop #
+Get-Service -ComputerName "TYPE COMPUTER NAME HERE" -Name "Add2Exchange Service" | Stop-Service -Verbose -ErrorAction Stop
+Start-Sleep -s 30
+Get-Service -ComputerName "TYPE COMPUTER NAME HERE" -Name "Add2Exchange Agent" | Stop-Service -Verbose
+Start-Sleep -s 10
 
 # Script #
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
@@ -16,8 +21,8 @@ Set-ADServerSettings -ViewEntireForest $true
 #Variables
 # Fill Out Dynamic and Statis Distribution Groups Below
 
-$DynamicDG = @("_zDynAllCanadianUsers", "_All CES Employees", "_All PureChem Employees")
-$StaticDG = @("zGalCanada", "zGalCESOnly", "zGalPureChem")
+$DynamicDG = @("Dynamic DL HERE", "Dynamic DL HERE")
+$StaticDG = @("Static DL HERE", "Static DL HERE")
 
 for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
     ### Get Dynamic Group members
@@ -45,6 +50,10 @@ for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
     }
 }
 
+
+#Start Service#
+# Service Stop #
+Get-Service -ComputerName "TYPE COMPUTER NAME HERE" -Name "Add2Exchange Service" | Start-Service -Verbose
 
 
 Write-Host "ttyl"
