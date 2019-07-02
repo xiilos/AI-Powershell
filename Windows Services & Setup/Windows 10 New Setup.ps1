@@ -96,7 +96,7 @@ Disable-Indexing "D:" -ErrorAction SilentlyContinue
 
 #Unpin All Start Menu Apps
 Write-Host "Unpin All Start Menu Items"
-(New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items()| ForEach-Object { ($_).Verbs() | Where-Object{$_.Name.Replace('&', '') -match 'From "Start" UnPin|Unpin from Start'} | ForEach-Object{$_.DoIt()}  }
+(New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | ForEach-Object { ($_).Verbs() | Where-Object { $_.Name.Replace('&', '') -match 'From "Start" UnPin|Unpin from Start' } | ForEach-Object { $_.DoIt() } }
 
 # Disabled Services
 
