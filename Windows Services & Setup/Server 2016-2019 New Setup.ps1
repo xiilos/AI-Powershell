@@ -11,13 +11,32 @@ Write-Host "Disabling UAC In the Registry"
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | Out-Null
 
 # Setting Time Zone
-Write-Host "Setting the Time Zone"
-Set-TimeZone -Name "Central Standard Time"
+$Timezone = Read-Host "Do you want to change the Time Zone? Press E for Eastern Time Zone or C for Central Time Zone"
+if ($Timezone -eq 'E') {
+
+    Write-Host "Setting the Time Zone to EST"
+    Set-TimeZone -Name "Eastern Standard Time"
+}
+
+if ($Timezone -eq 'C') {
+
+    Write-Host "Setting the Time Zone CST"
+    Set-TimeZone -Name "Central Standard Time"
+} 
     
 # Rename Computer
-Write-Host "Renaming Computer"
-$Compname = Read-Host "Enter the new name of this Computer"
-Rename-Computer -NewName "$CompName"
+$CName = $env:computername | Select-Object
+Write-Host "Current Computer name is $Cname"
+$Compname = Read-Host "Do you want to Change the Computer Name? [Y/N]"
+if ($Compname -eq 'Y') {
+    Write-Host "Renaming Computer"
+    $Compname = Read-Host "Enter the new name of this Computer"
+    Rename-Computer -NewName "$CompName"
+}
+
+if ($Compname -eq 'n') {
+    Write-Host "Keeping the Name $CName"
+}
 
 
 # Rename HDD's
@@ -73,7 +92,7 @@ function Disable-Indexing {
 #Disable Drive Indexing on C:\ and D:\
 
 Disable-Indexing "C:"
-Disable-Indexing "D:"
+Disable-Indexing "D:" -ErrorAction SilentlyContinue
 
 # Disabled Services
 
@@ -335,6 +354,15 @@ reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\
 reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{A8804298-2D5F-42E3-9531-9C8C39EB29CE}" /T REG_SZ /V "Value" /D Deny /F
 reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" /T REG_SZ /V "Value" /D Deny /F
 reg.exe Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\{2297E4E2-5DBE-466D-A12B-0F8286F0D9CA}" /T REG_SZ /V "Value" /D Deny /F
+
+#Set Internet Explorer Settings
+
+$Path = 'HKCU:\Software\Microsoft\Internet Explorer\Main\'
+$Name = 'start page'
+$Value = 'About:none'
+Set-Itemproperty -Path $Path -Name $Name -Value $Value
+
+
 
 Write-Output "ttyl"
 Get-PSSession | Remove-PSSession

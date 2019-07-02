@@ -23,7 +23,7 @@ ForEach ($Server in $Hosts) {
 }
 
 Write-Host "Done"
-Write-Host "Quitting"
+Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
 Exit
 
