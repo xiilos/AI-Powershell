@@ -11,7 +11,7 @@ Write-Host "Disabling UAC In the Registry"
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA -Value 0 | Out-Null
 
 # Setting Time Zone
-$Timezone = Read-Host "Do you want to change the Time Zone? Press E for Eastern Time Zone or C for Central Time Zone"
+$Timezone = Read-Host "Do you want to change the Time Zone? Press E for Eastern Time Zone or C for Central Time Zone or S to Skip"
 if ($Timezone -eq 'E') {
 
     Write-Host "Setting the Time Zone to EST"
@@ -22,6 +22,11 @@ if ($Timezone -eq 'C') {
 
     Write-Host "Setting the Time Zone CST"
     Set-TimeZone -Name "Central Standard Time"
+}
+
+if ($Timezone -eq 'S') {
+
+    Write-Host "Skipping"
 } 
     
 # Rename Computer

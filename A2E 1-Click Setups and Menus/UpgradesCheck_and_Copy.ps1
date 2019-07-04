@@ -34,6 +34,29 @@ Else {
 }
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#Grab the Latest A2E Full Install Build
+
+$Dir = "\\diditbetter\DFS\FTP\download\A2E-Enterprise"
+$Filter = "a2e-enterprise.*"
+$Latest = Get-ChildItem -Path $Dir -Filter $Filter | Sort-Object LastAccessTime -Descending | Select-Object -First 1
+$Latest.Name
+
+#Testing to See if File Already Exists in Upgrades
+
+Write-Host "Checking New Installs Folder for Existing Installs"
+$TestPath = "\\diditbetter\DFS\FTP\download\A2E-Enterprise\New Installs\$Latest"
+if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
+
+    Write-Host "Latest Add2Exchange Enterprise Full Already Exists in New Installs Folder"
+}
+Else {
+    Write-Host "Copying Files Needed..."
+    Copy-Item "\\diditbetter\DFS\FTP\download\A2E-Enterprise\$Latest" -Destination "\\diditbetter\DFS\FTP\download\A2E-Enterprise\New Installs"
+    Rename-Item -Path "\\diditbetter\DFS\FTP\download\A2E-Enterprise\New Installs\$Latest" -NewName "a2e-enterprise.exe" -ErrorAction SilentlyContinue
+    Write-Host "Done"
+}
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Grab the Latest A2O Upgrade Build
 
