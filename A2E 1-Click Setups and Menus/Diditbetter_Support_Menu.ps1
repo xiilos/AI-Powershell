@@ -1,10 +1,7 @@
 <#
 .NAME
-    A2EMenu
-.DESCRIPTION
-    Add2Exchange Menu
+    A2E Menu
 #>
-
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
@@ -207,13 +204,13 @@ $IncludeRegistryFavorites.height  = 10
 $IncludeRegistryFavorites.location  = New-Object System.Drawing.Point(11,426)
 $IncludeRegistryFavorites.Font   = 'Microsoft Sans Serif,9'
 
-$ExportLicenseandProfile1        = New-Object system.Windows.Forms.Label
-$ExportLicenseandProfile1.text   = "Export Add2Exchange License and Profile 1"
-$ExportLicenseandProfile1.AutoSize  = $true
-$ExportLicenseandProfile1.width  = 150
-$ExportLicenseandProfile1.height  = 10
-$ExportLicenseandProfile1.location  = New-Object System.Drawing.Point(11,446)
-$ExportLicenseandProfile1.Font   = 'Microsoft Sans Serif,9'
+$Reset_A2E_Passwords             = New-Object system.Windows.Forms.Label
+$Reset_A2E_Passwords.text        = "Reset The Add2Exchange password"
+$Reset_A2E_Passwords.AutoSize    = $true
+$Reset_A2E_Passwords.width       = 150
+$Reset_A2E_Passwords.height      = 10
+$Reset_A2E_Passwords.location    = New-Object System.Drawing.Point(11,446)
+$Reset_A2E_Passwords.Font        = 'Microsoft Sans Serif,9'
 
 $SyncScenarios                   = New-Object system.Windows.Forms.Label
 $SyncScenarios.text              = "Add2Exchange Sync Scenarios"
@@ -319,7 +316,7 @@ $CreateSupporttext.location      = New-Object System.Drawing.Point(11,466)
 $CreateSupporttext.Font          = 'Microsoft Sans Serif,9'
 
 $Revision                        = New-Object system.Windows.Forms.Label
-$Revision.text                   = "Rev. 2.6112019"
+$Revision.text                   = "Rev. 2.7052019"
 $Revision.AutoSize               = $true
 $Revision.width                  = 25
 $Revision.height                 = 10
@@ -370,6 +367,23 @@ $CommandsList.height             = 10
 $CommandsList.location           = New-Object System.Drawing.Point(11,250)
 $CommandsList.Font               = 'Microsoft Sans Serif,9'
 
+$Migration_Wizards               = New-Object system.Windows.Forms.Label
+$Migration_Wizards.text          = "Migrations"
+$Migration_Wizards.AutoSize      = $true
+$Migration_Wizards.width         = 25
+$Migration_Wizards.height        = 10
+$Migration_Wizards.location      = New-Object System.Drawing.Point(295,485)
+$Migration_Wizards.Font          = 'Microsoft Sans Serif,12,style=Bold,Underline'
+
+$A2E_Migration_Wizard            = New-Object system.Windows.Forms.Label
+$A2E_Migration_Wizard.text       = "Add2Exchange Migration Wizard"
+$A2E_Migration_Wizard.AutoSize   = $true
+$A2E_Migration_Wizard.width      = 150
+$A2E_Migration_Wizard.height     = 10
+$A2E_Migration_Wizard.location   = New-Object System.Drawing.Point(295,510)
+$A2E_Migration_Wizard.Font       = 'Microsoft Sans Serif,9'
+
+
 $ToolTip1.SetToolTip($Add2ExchangeUpgrade,'This will Upgrade your Current Version of Add2Exchange Enterprise to the Latest Version')
 $ToolTip1.SetToolTip($UpgradeRMM,'This will Upgrade your Current Version of Recovery and Migration Manager to the Latest Version')
 $ToolTip1.SetToolTip($O365ExchangePermissions,'Run this to Add Permissions to any users that will be syncing with Add2Exchange')
@@ -382,7 +396,7 @@ $ToolTip1.SetToolTip($GroupPolicyResults,'PowerShell Script to check current Gro
 $ToolTip1.SetToolTip($CheckPowerShell,'PowerShell Script to check and Upgrade PowerShell if needed')
 $ToolTip1.SetToolTip($RemoveOutlookAddons,'PowerShell Script to Remove Outlook Add-Ins like Social Connector')
 $ToolTip1.SetToolTip($IncludeRegistryFavorites,'PowerShell Script to Add Add2Exchange Favorites in the Registry')
-$ToolTip1.SetToolTip($ExportLicenseandProfile1,'PowerShell Script to Export and Save your License and User Information for Add2Exchange')
+$ToolTip1.SetToolTip($Reset_A2E_Passwords,'PowerShell Script to Reset the Add2Exchange Password in Both Locations')
 $ToolTip1.SetToolTip($GALSync,'Click for more information on How To Setup a Global Address Sync ')
 $ToolTip1.SetToolTip($PrivatetoPrivate,'Click for more information on How To Setup a Private to Private Relationship')
 $ToolTip1.SetToolTip($PublictoPublic,'Click for more information on How To Setup a Public to Public Relationship')
@@ -398,11 +412,13 @@ $ToolTip1.SetToolTip($AD_Photos,'This tool will Export User Active Directory Pho
 $ToolTip1.SetToolTip($MSExchangeDelegate,'Removes the List Link in AD for Users that are getting Auto Mapped in Outlook')
 $ToolTip1.SetToolTip($ExchangeShell,'Log Into Exchange or Office 365 Shell')
 $ToolTip1.SetToolTip($CommandsList,'Show the List of Commands to Run for Add2Exchange Permissions')
+$ToolTip1.SetToolTip($A2E_Migration_Wizard,'Wizard for Migrating Add2Exchange to another Appliance')
 
-$DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$UpgradeToolkit,$Permissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,
-$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$ExportLicenseandProfile1,
-$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$A2EDiags,$CreateSupporttext,$UpgradeAdd2Outlook,$Revision,$AD_Photos,
-$MSExchangeDelegate,$ExchangeShell,$CommandsList))
+$DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$Permissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,
+$DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,
+$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$Reset_A2E_Passwords,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,
+$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$UpgradeToolkit,$A2EDiags,$CreateSupporttext,$Revision,$UpgradeAdd2Outlook,$AD_Photos,$MSExchangeDelegate,$ExchangeShell,
+$CommandsList,$Migration_Wizards,$A2E_Migration_Wizard))
 
 $Add2ExchangeUpgrade.Add_Click({Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1})
 $UpgradeRMM.Add_Click({Start-Process Powershell .\Auto_Upgrade_RMM.ps1})
@@ -426,7 +442,7 @@ $GroupPolicyResults.Add_Click({Start-Process Powershell .\GP_Results.ps1})
 $CheckPowerShell.Add_Click({Start-Process Powershell .\Legacy_PowerShell.ps1})
 $RemoveOutlookAddons.Add_Click({Start-Process Powershell .\Remove_Outlook_Add_ins.ps1})
 $IncludeRegistryFavorites.Add_Click({Start-Process Powershell .\Registry_Favorites.ps1})
-$ExportLicenseandProfile1.Add_Click({Start-Process Powershell .\Export_License_and_Profile1.ps1})
+$Reset_A2E_Passwords.Add_Click({Start-Process Powershell .\Reset_A2E_Password.ps1.ps1})
 $CreateSupporttext.Add_Click({Start-Process PowerShell .\A2E_Setup_Details.ps1})
 $GALSync.Add_Click({Start-Process http://guides.diditbetter.com/GAL_Sync_Scenario.pdf})
 $PrivatetoPrivate.Add_Click({Start-Process http://guides.diditbetter.com/Private_to_Private_Sync_Scenarios.pdf})
@@ -440,6 +456,9 @@ $AD_Photos.Add_Click({Start-Process Powershell .\Export_ADPhoto.ps1})
 $MSExchangeDelegate.Add_Click({Start-Process Powershell .\MSExchangeDelegation.ps1})
 $ExchangeShell.Add_Click({Start-Process Powershell .\Shell.ps1})
 $CommandsList.Add_Click({Invoke-Item .\A2E_Permissions_Commands.rtf})
+$A2E_Migration_Wizard.Add_Click({Start-Process Powershell .\A2E_Auto_Migration.ps1})
+
+
 
 #Write your logic code here
 
