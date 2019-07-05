@@ -10,6 +10,14 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 
 # Script #
+
+<# Incase CU Updates wont install
+Create new file call profile.ps1
+stick it in c:\Windows\System32\Powershell\v1.0
+New-Alias Stop-SetupService Stop-Service
+run manually Update
+#>
+
 Get-Service | Where-Object { $_.DisplayName -like "Microsoft Exchange *" } | Set-Service –StartupType Automatic
 
 Get-Service | Where-Object { $_.DisplayName -like "Windows Management Instrumentation" } | Set-Service –StartupType Automatic
