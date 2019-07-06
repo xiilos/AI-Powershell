@@ -18,8 +18,8 @@ Do {
     ""
     Write-Host "How would you like to Migrate?"
     ""
-    Write-Host "Press '1' for Automatic Way"
-    Write-Host "Press '2' for Manual Way (Just Copies Files Needed and stored in C:\zLibray\A2E_Backup" 
+    Write-Host "Press '1' for The Migration Wizard"
+    Write-Host "Press '2' for Just Copy Files Needed and store it in C:\zLibray\A2E_Backup" 
     Write-Host "Press 'Q' to Quit." -ForegroundColor Red 
 
     #Migration Method
@@ -31,7 +31,7 @@ Do {
         
         '1' { 
             Clear-Host 
-            'You chose The Auto Migration Way'
+            'You chose The Migration Wizard'
 
             #Creating Landing Zone
             Write-Host "Creating Landing Zone"
@@ -191,7 +191,7 @@ Do {
             Push-Location $env:USERPROFILE
             
             #Download Program Files
-            $Download = Read-Host "Do you want The Add2Exchange Files before Moving? [Y/N]"
+            $Download = Read-Host "Do you want The Add2Exchange Install Files before Moving? [Y/N]"
             If ($Download -eq 'Y') {
                 Write-Host "Downloading Add2Exchange Enterprise"
                 Write-Host "Please Wait......"
@@ -225,15 +225,30 @@ Do {
                 Write-Host "Resuming..."
             }
             
+            #Creating Next Steps File
+
+            #Variables
+
+            $NewA2E = Read-Host "What is the Name of your New Add2Exchange Appliance?"
+            
+            Write-Host "Creating Next Steps File"
+            New-Item "C:\zLibrary\A2E_Backup\Next Steps.txt"
+            "Next Steps....
+            Step 1. Log Into your New Appliance as $env:UserName Account if remaing on the domain
+            Step 2. Ensure that $env:UserName is a Local Admin of the new appliance
+            Step 3. Copy over the A2E_Backup folder found in C:\zlibrary to $NewA2E
+            Step 4. Run the PowerSehll File Called First_Time_Installer.ps1 in the self extracted Add2Exchange Install" | Out-File -FilePath "C:\zLibrary\A2E_Backup\Next Steps.txt" -Append
+
             $wshell = New-Object -ComObject Wscript.Shell
             $answer = $wshell.Popup("All Files are now Backed up and ready for you to Move them over to the New Add2Exchange Appliance", 0, "Migration Wizard", 0x1)
             if ($answer -eq 2) { Break }
 
+            Invoke-Item -Path "C:\zLibrary\A2E_Backup\Next Steps.txt"
         }
 
         '2' { 
             Clear-Host 
-            'You chose The Manual Migration Way'
+            'You chose To Just Copy Files Needed and store it in C:\zLibray\A2E_Backup'
 
             #Creating Landing Zone
             Write-Host "Creating Landing Zone"
