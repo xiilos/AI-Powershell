@@ -52,7 +52,7 @@ Do {
             New-Item -ItemType directory -Path "C:\zlibrary\A2E_Backup\DidItBetterSoftware"
             Copy-Item "C:\Program Files (x86)\DidItBetterSoftware\*" -Destination "C:\zlibrary\A2E_Backup\DidItBetterSoftware\" -Recurse -ErrorAction SilentlyContinue
             REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" C:\zlibrary\A2E_Backup\License_Info.Reg
-            REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" C:\zlibrary\A2E_Backup\Profile_1.Reg
+            REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" C:\zlibrary\A2E_Backup\Old_Profile_1.Reg
             
             #Upgrade Before Migration
             $Upgrade = Read-Host "Do you want to Upgrade Add2Exchange before Migrating? [Y/N]"
@@ -141,7 +141,10 @@ Do {
                 sc.exe config "Add2Exchange Service" start= delayed-auto
                 Write-Host "Done"
 
-                Write-Host "Please Hit Enter to Conitue After You Have Started and the Closed the Add2Exchange Console"
+                $Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
+                Push-Location $Install
+                Start-Process ".\Console\Add2Exchange Console.exe"
+                Write-Host "Once the Console is Up and Running, Please close it by Hitting File>Exit. Once Finished, click Enter to Continue"
                 Pause
     
             }
@@ -150,12 +153,13 @@ Do {
                 Write-Host "Resuming...."
             } 
 
-            #Shuttding Down Services
+            #Shutting Down Services
 
             Write-Host "Stopping Add2Exchange Service"
             Stop-Service -Name "Add2Exchange Service"
             Start-Sleep -s 2
             Write-Host "Done"
+            Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service –StartupType Disabled
 
             #Stop The Add2Exchange Agent
             Write-Host "Stopping the Agent. Please Wait."
@@ -197,7 +201,7 @@ Do {
                 Write-Host "Please Wait......"
 
                 $URL = "ftp://ftp.diditbetter.com/A2E-Enterprise/New%20Installs/a2e-enterprise.exe"
-                $Output = "C:\zlibrary\A2E_Backup/A2E-Enterprise.exe"
+                $Output = "C:\zlibrary\A2E_Backup\A2E-Enterprise.exe"
                 $Start_Time = Get-Date
 
                 (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
@@ -219,6 +223,7 @@ Do {
                 Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
 
                 Write-Host "Finished Downloading"
+
             }
 
             If ($Download -eq 'N') {
@@ -237,13 +242,19 @@ Do {
             Step 1. Log Into your New Appliance as $env:UserName Account if remaing on the domain
             Step 2. Ensure that $env:UserName is a Local Admin of the new appliance
             Step 3. Copy over the A2E_Backup folder found in C:\zlibrary to $NewA2E
-            Step 4. Run the PowerSehll File Called First_Time_Installer.ps1 in the self extracted Add2Exchange Install" | Out-File -FilePath "C:\zLibrary\A2E_Backup\Next Steps.txt" -Append
+            Step 4. Run the PowerShell File Called Post_A2E_Migration.ps1 in the A2E_Backup Folder on the new Machine" | Out-File -FilePath "C:\zLibrary\A2E_Backup\Next Steps.txt" -Append
 
+            Invoke-Item -Path "C:\zLibrary\A2E_Backup\Next Steps.txt"
+            
+            #Copy Over Post Migration PowerShell
+            $InstallLocation = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
+            Push-Location $InstallLocation
+            Copy-Item ".\Setup\Post_A2E_Migration.ps1" -Destination "C:\zlibrary\A2E_Backup" -ErrorAction SilentlyContinue 
+            
             $wshell = New-Object -ComObject Wscript.Shell
             $answer = $wshell.Popup("All Files are now Backed up and ready for you to Move them over to the New Add2Exchange Appliance", 0, "Migration Wizard", 0x1)
             if ($answer -eq 2) { Break }
 
-            Invoke-Item -Path "C:\zLibrary\A2E_Backup\Next Steps.txt"
         }
 
         '2' { 
@@ -269,7 +280,7 @@ Do {
             New-Item -ItemType directory -Path "C:\zlibrary\A2E_Backup\DidItBetterSoftware"
             Copy-Item "C:\Program Files (x86)\DidItBetterSoftware\*" -Destination "C:\zlibrary\A2E_Backup\DidItBetterSoftware\" -Recurse -ErrorAction SilentlyContinue
             REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\LicenseRegistryInfo" C:\zlibrary\A2E_Backup\License_Info.Reg
-            REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" C:\zlibrary\A2E_Backup\Profile_1.Reg
+            REG EXPORT "HKLM\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" C:\zlibrary\A2E_Backup\Old_Profile_1.Reg
 
 
             #Shuttding Down Services
@@ -277,6 +288,7 @@ Do {
             Stop-Service -Name "Add2Exchange Service"
             Start-Sleep -s 2
             Write-Host "Done"
+            Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service –StartupType Disabled
 
             #Stop The Add2Exchange Agent
             Write-Host "Stopping the Agent. Please Wait."

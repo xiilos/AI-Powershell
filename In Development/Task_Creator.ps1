@@ -21,11 +21,11 @@ $Description = Read-Host "Description of Task?"
 
 #Task
 $Repeater = (New-TimeSpan -Days $Time)
-                    $Duration = ([timeSpan]::maxvalue)
-                    $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-                    $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument -NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file "$File"
-                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "$TaskName" -Description "$Description"
-                    Write-Host "Done"
+$Duration = ([timeSpan]::maxvalue)
+$Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
+$Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument -NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file "$File"
+Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "$TaskName" -Description "$Description"
+Write-Host "Done"
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession

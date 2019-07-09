@@ -46,12 +46,12 @@ IPConfig /FlushDNS
 Write-Host "Done"
 
 Write-Host "Cleaning up Files via Disk Cleanup"
-CleanMgr /verylowdisk -wait
+Cleanmgr /verylowdisk /SageRun:5 | Out-Null
 Write-Host "Done"
-pause
 
 #Rebooting
-Restart-Computer -Timeout 10
+Write-Host "Rebooting...."
+Shutdown -r -t 10
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession

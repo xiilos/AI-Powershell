@@ -31,13 +31,12 @@ IPConfig /FlushDNS
 Write-Host "Done"
 
 Write-Host "Cleaning up Files via Disk Cleanup"
-CleanMgr /verylowdisk -wait
+Cleanmgr /verylowdisk /SageRun:5 | Out-Null
 Write-Host "Done"
-pause
 
 #Rebooting
 Write-Host "Rebooting...."
-Shutdown -R -T 02
+Shutdown -r -t 10
 
 
 Write-Host "ttyl"

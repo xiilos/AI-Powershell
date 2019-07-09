@@ -681,7 +681,7 @@ $wshell = New-Object -ComObject Wscript.Shell
 $answer = $wshell.Popup("System Setup Complete. Lets Install the Software", 0, "Complete", 0x1)
 if ($answer -eq 2) { Break }
 Do {
-    Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction Inquire -ErrorVariable InstallError;
+    Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction SilentlyContinue -ErrorVariable InstallError;
 
     If ($InstallError) { 
         Write-Warning -Message "Something Went Wrong with the Install!"
