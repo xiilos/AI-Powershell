@@ -19,24 +19,9 @@ If ($error) {
 Else { Write-Host 'Module is installed' }
 
 
-
-#Logging
-$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
-if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-
-    Write-Host "Support Directory Exists...Resuming"
-}
-Else {
-    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
-}
-
-Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\QU_Cleane.txt" -Append
-
-
-
 #Installing Windows Updates
 Write-Host "Getting Windows Updates...Please Wait..."
-Get-WindowsUpdate -Install -Confirm:$False -wait
+Get-WindowsUpdate -Install -Confirm:$False
 
 
 #Cleaning
@@ -52,6 +37,7 @@ Write-Host "Done"
 #Rebooting
 Write-Host "Rebooting...."
 Shutdown -r -t 10
+
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
