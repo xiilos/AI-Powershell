@@ -26,7 +26,8 @@ Import-PSSession $Session -DisableNameChecking
 Set-ADServerSettings -ViewEntireForest $true
 
 #Timed Execution Permissions to All Users
-Get-Mailbox -Resultsize Unlimited | Where-Object {$_.WhenCreated -ge ((Get-Date).Adddays(-1))} | Add-MailboxPermission -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
+Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+#Get-Mailbox -Resultsize Unlimited | Where-Object {$_.WhenCreated -ge ((Get-Date).Adddays(-1))} | Add-MailboxPermission -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
 
 Get-PSSession | Remove-PSSession
 Exit

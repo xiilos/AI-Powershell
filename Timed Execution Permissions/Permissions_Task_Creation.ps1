@@ -169,7 +169,7 @@ Do {
 
             $TestPath = ".\Static_DistributionName.txt"
             if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Statis Distribution List Name File Exists..."
+                Write-Host "Static Distribution List Name File Exists..."
                 Write-Host "Current Content of File:" -ForegroundColor Green
                 Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_DistributionName.txt"
                 ""
