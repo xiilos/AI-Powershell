@@ -4,26 +4,57 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+<#
+
+Variables:
+
+Office365_Tenent
+$TenentUsername
+$TenentPassword
+
+Sync_Account
+$SyncUsername
+$SyncPassword
+
+Distribution_Group_Name
+$DistributionGroupName
+
+Dynamic_Distribution_Group
+$DynamicDG
+
+Static_Distribution_Group
+$StaticDG
+
+Exchange_Server
+$ExchangeServerName
+$ExchangeUsername
+$ExchangePassword
+
+#>
+
+
+
 #Execution Policy
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
-#Check and Create Stored Credentials
+#Check for Credential Manager Module
+
+
+$error.clear()
+Import-Module "CredentialManager" -ErrorAction SilentlyContinue
+If ($error) {
+    Write-Host "Adding Credential Manager module"
+    Install-Module -Name 'CredentialManager' -WarningAction "Inquire"
+} 
+Else { Write-Host 'Module is installed' }
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Do {
-
-    $TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"
-    if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-        Write-Host "Secure Location Exists...Resuming"
-    }
-    Else {
-        Write-Host "Creating Secure Location"
-        New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"
-    }
-
-    Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"
-    #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     $Title1 = 'Add2Exchange Task Creation'
 
     Clear-Host 
@@ -45,193 +76,130 @@ Do {
         '1' { 
             Clear-Host 
             'You chose Office 365'
-            #Create Secure Credentials File
-
-            Write-Host "We will now create your Secure Credential Files"
-            #Checking Source Tenent or Exchange Admin Username
-
-            $TestPath = ".\ServerUser.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Exchange/Tenent Admin Username File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
-   
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Global Admin Username or Exchange Admin Username (Used to Log Into Office 365 or On Premise Exchange)" | out-file ".\ServerUser.txt"
-                }
-
-            }
-
-            Else {
-                Read-Host "Global Admin Username or Exchange Admin Username (Used to Log Into Office 365 or On Premise Exchange)" | out-file ".\ServerUser.txt"
+            
+            #Create Secure Credentials Office 365 Tenent
+                
+            $confirmation = Read-Host "Add Office 365 Credentials? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
             }
    
-            #Checking Source Tenent or Exchange Admin Password
-
-            $TestPath = ".\ServerPass.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Exchange/Tenent Admin Password File Exists..."
-                Write-Host "Last Updated:" -ForegroundColor Green
-                Get-Item "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | ForEach-Object { $_.LastWriteTime }
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
+            if ($confirmation -eq 'Y') {
+                $TenentUsername = Read-Host "Please Type In your Tenent Admin Username"
+                $TenentPassword = Read-Host "Please Type in your Tenent Admin Password" -AsSecureString
+                $Office365 = @{
+                    Target   = "Office365_Tenent"
+                    UserName = "$TenentUsername"
+                    Password = "$TenentPassword"
+                    Comment  = "Office 365 Tenent username and password"
+                    Persist  = "LocalMachine"
                 }
-   
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Global Admin Password or Exchange Admin Password" -assecurestring | convertfrom-securestring | out-file ".\ServerPass.txt"
-                }
-
+                New-StoredCredential @Office365
             }
 
-            Else {
-                Read-Host "Global Admin Password or Exchange Admin Password" -assecurestring | convertfrom-securestring | out-file ".\ServerPass.txt"
+            #Create Secure Credentials Sync Service Account
+                
+            $confirmation = Read-Host "Add Sync Service Account Credentials? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
             }
    
-
-            #Checking Source Exchange Name
-
-            $TestPath = ".\ExchangeName.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Exchange Server Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
+            if ($confirmation -eq 'Y') {
+                $SyncUsername = Read-Host "Please Type In your Sync Service Account Username"
+                $SyncPassword = Read-Host "Please Type in your Sync Service Account Password" -AsSecureString
+                $ServiceAccount = @{
+                    Target   = "Sync_Account"
+                    UserName = "$SyncUsername"
+                    Password = "$SyncPassword"
+                    Comment  = "Sync Service Account username and password"
+                    Persist  = "LocalMachine"
                 }
-       
-                if ($confirmation -eq 'Y') {
-                    Read-Host "If on Premise; Type in your Exchange Server Name. Leave Blank for None. Press Enter when Finished." | out-file ".\ExchangeName.txt"
-                }
+                New-StoredCredential @ServiceAccount
+            }
+
+
+            #Create Secure Distribution List Name
+
+            $confirmation = Read-Host "Add Distribution List? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
             }
    
-            Else {
-                Read-Host "If on Premise; Type in your Exchange Server Name. Leave Blank for None. Press Enter when Finished." | out-file ".\ExchangeName.txt"
+            if ($confirmation -eq 'Y') {
+                $DistributionGroupName = Read-Host "Please Type In your Office 365 Distribution Group Name"
+                    
+                $DistributionList = @{
+                    Target   = "Distribution_Group_Name"
+                    UserName = "$DistributionGroupName"
+                    Password = "1234"
+                    Comment  = "Office 365 Distribution List Name"
+                    Persist  = "LocalMachine"
+                }
+                New-StoredCredential @DistributionList
             }
 
-            #Checking Source Distribution List Name
+            #Create Source Dynamic Distribution List Name
 
-            $TestPath = ".\DistributionName.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Distribution List Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\DistributionName.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
+            $confirmation = Read-Host "Add Dynamic Distribution Group? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
+            }
    
-                if ($confirmation -eq 'Y') {
-                    Read-Host "If Adding Permissions to a Distribution List Type in the Distribution List Name. Leave Blank for None. Press Enter when Finished." | out-file ".\DistributionName.txt"
+            if ($confirmation -eq 'Y') {
+                $DynamicDG = Read-Host "Please Type In your Office 365 Dynamic Distribution Group Name"
+                    
+                $DynamicDGList = @{
+                    Target   = "Dynamic_Distribution_Group"
+                    UserName = "$DynamicDG"
+                    Password = "1234"
+                    Comment  = "Dynamic Distribution Group Name"
+                    Persist  = "LocalMachine"
                 }
-            }
-
-            Else {
-                Read-Host "If Adding Permissions to a Distribution List Type in the Distribution List Name. Leave Blank for None. Press Enter when Finished." | out-file ".\DistributionName.txt"
-            }
-
-            #Checking Source Dynamic Distribution List Name
-
-            $TestPath = ".\Dynamic_DistributionName.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Dynamic Distribution List Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_DistributionName.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
-   
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Type in the Dynamic Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-                Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
-                Leave Blank for None. Press Enter when Finished." | out-file ".\Dynamic_DistributionName.txt"
-                }
-            }
-
-            Else {
-                Read-Host "Type in the Dynamic Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-                Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
-                Leave Blank for None. Press Enter when Finished." | out-file ".\Dynamic_DistributionName.txt"
+                New-StoredCredential @DynamicDGList
             }
 
             #Checking Source Static Distribution List Name
 
-            $TestPath = ".\Static_DistributionName.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Statis Distribution List Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_DistributionName.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
+            $confirmation = Read-Host "Add Static Distribution Group? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
+            }
    
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Type in the Static Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-                Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
-                Leave Blank for None. Press Enter when Finished." | out-file ".\Static_DistributionName.txt"
+            if ($confirmation -eq 'Y') {
+                $StaticDG = Read-Host "Please Type In your Office 365 Static Distribution Group Name"
+                    
+                $StaticDGList = @{
+                    Target   = "Static_Distribution_Group"
+                    UserName = "$StaticDG"
+                    Password = "1234"
+                    Comment  = "Static Distribution Group Name"
+                    Persist  = "LocalMachine"
                 }
+                New-StoredCredential @StaticDGList
             }
 
-            Else {
-                Read-Host "Type in the Static Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-                Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
-                Leave Blank for None. Press Enter when Finished." | out-file ".\Static_DistributionName.txt"
-            }
-
-            #Checking Source Service Account Name
-
-            $TestPath = ".\ServiceAccount.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Service Account Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServiceAccount.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
-   
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Type in the Sync Service Account Name. Example: *zAdd2Exchange* Press Enter when Finished." | out-file ".\ServiceAccount.txt"
-                }
-            }
-
-            Else {
-                Read-Host "Type in the Sync Service Account Name. Example: *zAdd2Exchange* Press Enter when Finished." | out-file ".\ServiceAccount.txt"
-            }
-
+            #----------------------------------------------------------------------------------------------------------------------------------------------------
 
             #Check If Tasks Already Exists
 
-            if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
-                Write-Host "Add2Exchange Permissions Task Already Exists..."
-                $confirmation = Read-Host "Would You Like to Update the Current Task? [Y/N]"
+            $TaskName = Read-Host "Please Name this Task i.e. Add2Exchange Permissions"
+
+            if (Get-ScheduledTask "$TaskName" -ErrorAction SilentlyContinue) {
+                Write-Host "Task Already Exists..."
+                $confirmation = Read-Host "Would you like to create a new task? [Y/N]"
                 if ($confirmation -eq 'N') {
                     Write-Host "Resuming"
                 }
 
                 if ($confirmation -eq 'Y') {
-                    Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
+                    Write-Host "Creating New Task..."
                 }
             }
 
             #Check for Powershell File Paths
 
-            $Location = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange' -Name "InstallLocation").InstallLocation
-            Set-Location $Location
+            $Location = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange' -Name "InstallLocation" -ErrorAction SilentlyContinue).InstallLocation
+            Set-Location $Location -ErrorAction SilentlyContinue
 
 
 
@@ -258,7 +226,7 @@ Do {
                     $Duration = ([timeSpan]::maxvalue)
                     $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
                     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_All_Permissions.ps1"'
-                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to users mailboxes"
+                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to All Users Mailboxes"
                     Write-Host "Done"
                 }
                 
@@ -271,7 +239,7 @@ Do {
                     $Duration = ([timeSpan]::maxvalue)
                     $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
                     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_Dist_List_Permissions.ps1"'
-                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to users mailboxes"
+                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to a Distribution List"
                     Write-Host "Done" 
                 } 
 
@@ -283,7 +251,7 @@ Do {
                     $Duration = ([timeSpan]::maxvalue)
                     $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
                     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_Dynamic_Distribution.ps1"'
-                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to users mailboxes"
+                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Exports a Dynamic Distribution List of Users into a Static List of Users"
                     Write-Host "Done"
                 } 
             
@@ -300,196 +268,134 @@ Do {
             
         
         #Exchange2010-2019--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         '2' {
             Clear-Host 
             'You chose Exchange 2010-2019'
-            #Create Secure Credentials File
-
-            Write-Host "We will now create your Secure Credential Files"
-            #Checking Source Tenent or Exchange Admin Username
-
-            $TestPath = ".\ServerUser.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Exchange/Tenent Admin Username File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
+            
+            #Create Secure Credentials Exchange Server
+            
+            $confirmation = Read-Host "Add Exchange Server Credentials? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
+            }
+            if ($confirmation -eq 'Y') {
+                $ExchangeServerName = Read-Host "Please Type In your Exchange Server Name"
+                $ExchangeUsername = Read-Host "Please Type In your Exchange Server Admin Username"
+                $ExchangePassword = Read-Host "Please Type in your Exchange Server Admin Password" -AsSecureString
+                $ExchangeServer = @{
+                    Target   = "Exchange_Server"
+                    UserName = "$ExchangeUsername"
+                    Password = "$ExchangePassword"
+                    Comment  = "$ExchangeServerName"
+                    Persist  = "LocalMachine"
                 }
-   
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Global Admin Username or Exchange Admin Username (Used to Log Into Office 365 or On Premise Exchange)" | out-file ".\ServerUser.txt"
-                }
-
+                New-StoredCredential @ExchangeServer
             }
 
-            Else {
-                Read-Host "Global Admin Username or Exchange Admin Username (Used to Log Into Office 365 or On Premise Exchange)" | out-file ".\ServerUser.txt"
-            }
-   
-            #Checking Source Tenent or Exchange Admin Password
-
-            $TestPath = ".\ServerPass.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Exchange/Tenent Admin Password File Exists..."
-                Write-Host "Last Updated:" -ForegroundColor Green
-                Get-Item "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | ForEach-Object { $_.LastWriteTime }
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
-   
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Global Admin Password or Exchange Admin Password" -assecurestring | convertfrom-securestring | out-file ".\ServerPass.txt"
-                }
-
-            }
-
-            Else {
-                Read-Host "Global Admin Password or Exchange Admin Password" -assecurestring | convertfrom-securestring | out-file ".\ServerPass.txt"
+            #Create Secure Credentials Sync Service Account
+                
+            $confirmation = Read-Host "Add Sync Service Account Credentials? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
             }
    
-
-            #Checking Source Exchange Name
-
-            $TestPath = ".\ExchangeName.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Exchange Server Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
+            if ($confirmation -eq 'Y') {
+                $SyncUsername = Read-Host "Please Type In your Sync Service Account Username"
+                $SyncPassword = Read-Host "Please Type in your Sync Service Account Password" -AsSecureString
+                $ServiceAccount = @{
+                    Target   = "Sync_Account"
+                    UserName = "$SyncUsername"
+                    Password = "$SyncPassword"
+                    Comment  = "Sync Service Account username and password"
+                    Persist  = "LocalMachine"
                 }
-       
-                if ($confirmation -eq 'Y') {
-                    Read-Host "If on Premise; Type in your Exchange Server Name. Leave Blank for None. Press Enter when Finished." | out-file ".\ExchangeName.txt"
-                }
+                New-StoredCredential @ServiceAccount
+            }
+
+
+            #Create Secure Distribution List Name
+
+            $confirmation = Read-Host "Add a Distribution List? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
             }
    
-            Else {
-                Read-Host "If on Premise; Type in your Exchange Server Name. Leave Blank for None. Press Enter when Finished." | out-file ".\ExchangeName.txt"
+            if ($confirmation -eq 'Y') {
+                $DistributionGroupName = Read-Host "Please Type In your Distribution Group Name"
+                    
+                $DistributionList = @{
+                    Target   = "Distribution_Group_Name"
+                    UserName = "$DistributionGroupName"
+                    Password = "1234"
+                    Comment  = "Exchange Distribution List Name"
+                    Persist  = "LocalMachine"
+                }
+                New-StoredCredential @DistributionList
             }
 
-            #Checking Source Distribution List Name
+            #Create Source Dynamic Distribution List Name
 
-            $TestPath = ".\DistributionName.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Distribution List Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\DistributionName.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
+            $confirmation = Read-Host "Add a Dynamic Distribution Group? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
+            }
    
-                if ($confirmation -eq 'Y') {
-                    Read-Host "If Adding Permissions to a Distribution List Type in the Distribution List Name. Leave Blank for None. Press Enter when Finished." | out-file ".\DistributionName.txt"
+            if ($confirmation -eq 'Y') {
+                $DynamicDG = Read-Host "Please Type In your Exchange Dynamic Distribution Group Name"
+                    
+                $DynamicDGList = @{
+                    Target   = "Dynamic_Distribution_Group"
+                    UserName = "$DynamicDG"
+                    Password = "1234"
+                    Comment  = "Dynamic Distribution Group Name"
+                    Persist  = "LocalMachine"
                 }
-            }
-
-            Else {
-                Read-Host "If Adding Permissions to a Distribution List Type in the Distribution List Name. Leave Blank for None. Press Enter when Finished." | out-file ".\DistributionName.txt"
-            }
-
-            #Checking Source Dynamic Distribution List Name
-
-            $TestPath = ".\Dynamic_DistributionName.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Dynamic Distribution List Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_DistributionName.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
-
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Type in the Dynamic Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-        Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
-        Leave Blank for None. Press Enter when Finished." | out-file ".\Dynamic_DistributionName.txt"
-                }
-            }
-
-            Else {
-                Read-Host "Type in the Dynamic Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-        Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
-        Leave Blank for None. Press Enter when Finished." | out-file ".\Dynamic_DistributionName.txt"
+                New-StoredCredential @DynamicDGList
             }
 
             #Checking Source Static Distribution List Name
 
-            $TestPath = ".\Static_DistributionName.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Statis Distribution List Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_DistributionName.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
-
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Type in the Static Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-        Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
-        Leave Blank for None. Press Enter when Finished." | out-file ".\Static_DistributionName.txt"
-                }
+            $confirmation = Read-Host "Add a Static Distribution Group? [Y/N]"
+            if ($confirmation -eq 'N') {
+                Write-Host "Skipping"
             }
-
-            Else {
-                Read-Host "Type in the Static Distribution List Name. For Multiple Entries Example: zFirmContacts,zFirmCalendar
-        Note: Make sure to use qoutes  arounf each groupseperated by a comma. 
-        Leave Blank for None. Press Enter when Finished." | out-file ".\Static_DistributionName.txt"
-            }
-
-            #Checking Source Service Account Name
-
-            $TestPath = ".\ServiceAccount.txt"
-            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-                Write-Host "Service Account Name File Exists..."
-                Write-Host "Current Content of File:" -ForegroundColor Green
-                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServiceAccount.txt"
-                ""
-                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
-                if ($confirmation -eq 'N') {
-                    Write-Host "Resuming"
-                }
    
-                if ($confirmation -eq 'Y') {
-                    Read-Host "Type in the Sync Service Account Name. Example: *zAdd2Exchange* Press Enter when Finished." | out-file ".\ServiceAccount.txt"
+            if ($confirmation -eq 'Y') {
+                $StaticDG = Read-Host "Please Type In your Exchange Static Distribution Group Name"
+                    
+                $StaticDGList = @{
+                    Target   = "Static_Distribution_Group"
+                    UserName = "$StaticDG"
+                    Password = "1234"
+                    Comment  = "Static Distribution Group Name"
+                    Persist  = "LocalMachine"
                 }
+                New-StoredCredential @StaticDGList
             }
 
-            Else {
-                Read-Host "Type in the Sync Service Account Name. Example: *zAdd2Exchange* Press Enter when Finished." | out-file ".\ServiceAccount.txt"
-            }
-
+            #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
             #Check If Tasks Already Exists
 
-            if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
-                Write-Host "Add2Exchange Permissions Task Already Exists..."
-                $confirmation = Read-Host "Would You Like to Update the Current Task? [Y/N]"
+            $TaskName = Read-Host "Please Name this Task i.e. Add2Exchange Permissions"
+
+            if (Get-ScheduledTask "$TaskName" -ErrorAction SilentlyContinue) {
+                Write-Host "Task Already Exists..."
+                $confirmation = Read-Host "Would you like to create a new task? [Y/N]"
                 if ($confirmation -eq 'N') {
                     Write-Host "Resuming"
                 }
 
                 if ($confirmation -eq 'Y') {
-                    Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
+                    Write-Host "Creating New Task..."
                 }
             }
 
             #Check for Powershell File Paths
 
-            $Location = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange' -Name "InstallLocation").InstallLocation
-            Set-Location $Location
+            $Location = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange' -Name "InstallLocation" -ErrorAction SilentlyContinue).InstallLocation
+            Set-Location $Location -ErrorAction SilentlyContinue
 
             $Title3 = 'Exchange 2010-2019 Task Creation' 
             ""
@@ -512,7 +418,7 @@ Do {
                     $Duration = ([timeSpan]::maxvalue)
                     $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
                     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010-2019_All_Permissions.ps1"'
-                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to users mailboxes"
+                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to All Users Mailboxes"
                     Write-Host "Done"
                 }
 
@@ -524,7 +430,7 @@ Do {
                     $Duration = ([timeSpan]::maxvalue)
                     $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
                     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010-2019_Dist_List_Permissions.ps1"'
-                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to users mailboxes"
+                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to a Distribution List"
                     Write-Host "Done"
                 }
                 # Option 3: Exchange 2010-2019-Adding Permissions to a Dynamic Distribution List
@@ -535,7 +441,7 @@ Do {
                     $Duration = ([timeSpan]::maxvalue)
                     $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
                     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010-2019_Dynamic_Distribution.ps1"'
-                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to users mailboxes"
+                    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Exports a Dynamic Distribution List of Users into a Static List of Users"
                     Write-Host "Done"
                 }
             
@@ -549,6 +455,7 @@ Do {
         }    
 
     }#Origin LogonMethod End
+
     $repeat = Read-Host 'Return to the Main Menu? [Y/N]'
 } Until ($repeat -eq 'n')
 

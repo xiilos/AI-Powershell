@@ -9,27 +9,26 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+# Variables #
+$TenentUsername = Get-StoredCredential -target 'Office365_Tenent' -ascredentialobject | Select-Object Username -ExpandProperty Username
+$TenentPassword = Get-StoredCredential -target 'Office365_Tenent' | Select-Object password -ExpandProperty password
+$DynamicDG = Get-StoredCredential -target 'Dynamic_Distribution_Group' -ascredentialobject | Select-Object username -ExpandProperty username
+$StaticDG = Get-StoredCredential -target 'Static_Distribution_Group' -ascredentialobject | Select-Object username -ExpandProperty username
+
 # Script #
 
-#Variables
-
-$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-$DynamicGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_DistributionName.txt"
-$StaticGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_DistributionName.txt"
-
-$Cred = New-Object -typename System.Management.Automation.PSCredential `
-    -Argumentlist $Username, $Password
+$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList $TenentUsername, $TenentPassword
 
 Connect-MsolService -Credential $Cred
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
 Import-PSSession $Session -DisableNameChecking
 Import-Module MSOnline
 
-#Timed Execution Permissions to Distribution Lists
-for ($i = 0; $i -lt $DynamicGroupName.Length; $i++) {
+#Timed Execution Permissions to Dynamic Distribution Lists
+
+for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
     ### Get Dynamic Group members
-    $members = Get-DynamicDistributionGroup $DynamicGroupName[$i]
+    $members = Get-DynamicDistributionGroup $DynamicDG[$i]
     $recipients = Get-Recipient -RecipientPreviewFilter $members.RecipientFilter
     $constrainedRecipients = @()
     foreach ($recipient in $recipients) {
@@ -40,16 +39,16 @@ for ($i = 0; $i -lt $DynamicGroupName.Length; $i++) {
     #### Members are stored in $constrainedRecipients
 
     ### Remove the Distribution Group
-    ##Changes SID for the group if done this way -> Remove-DistributionGroup -Identity $StaticGroupName -Confirm:$false
-    $removeMembers = Get-DistributionGroupMember -Identity $StaticGroupName[$i]
+    ##Changes SID for the group if done this way -> Remove-DistributionGroup -Identity $StaticDG -Confirm:$false
+    $removeMembers = Get-DistributionGroupMember -Identity $StaticDG[$i]
     foreach ($remMember in $removeMembers) {
-        Remove-DistributionGroupMember -Identity $StaticGroupName[$i] -Member $remMember -Confirm:$false
+        Remove-DistributionGroupMember -Identity $StaticDG[$i] -Member $remMember -Confirm:$false
     }
 
     ###Create DistributionGroup members, same as the Dynamic Group
-    ##New-DistributionGroup -Name $StaticGroupName -Type "Distribution"
+    ##New-DistributionGroup -Name $StaticDG -Type "Distribution"
     foreach ($Entry in $constrainedRecipients) {
-        Add-DistributionGroupMember -Identity $StaticGroupName[$i] -Member $Entry
+        Add-DistributionGroupMember -Identity $StaticDG[$i] -Member $Entry
     }
 }
 

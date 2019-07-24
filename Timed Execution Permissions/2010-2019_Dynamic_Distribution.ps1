@@ -9,27 +9,22 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+# Variables #
+$ExchangeUsername = Get-StoredCredential -target 'Exchange_Server' -ascredentialobject | Select-Object Username -ExpandProperty Username
+$ExchangePassword = Get-StoredCredential -target 'Exchange_Server' | Select-Object password -ExpandProperty password
+$ExchangeServer = Get-StoredCredential -target 'Exchange_Server' -ascredentialobject | Select-Object Comment -ExpandProperty Comment
+$DynamicDG = Get-StoredCredential -target 'Dynamic_Distribution_Group' -ascredentialobject | Select-Object username -ExpandProperty username
+$StaticDG = Get-StoredCredential -target 'Static_Distribution_Group' -ascredentialobject | Select-Object username -ExpandProperty username
+
 # Script #
 
-#Variables
+$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList $Exchangeusername, $ExchangePassword
 
-$Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
-$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-$DynamicDG1 = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_DistributionName.txt"
-$StaticDG1 = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_DistributionName.txt"
-
-$Cred = New-Object -typename System.Management.Automation.PSCredential `
-    -Argumentlist $Username, $Password
-
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$ExchangeServer/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
 Set-ADServerSettings -ViewEntireForest $true
 
 #Timed Execution Permissions to Dynamic Distribution Lists
-
-$DynamicDG = @($DynamicDG1)
-$StaticDG = @($StaticDG1)
 
 for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
     ### Get Dynamic Group members

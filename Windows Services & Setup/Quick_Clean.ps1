@@ -16,7 +16,7 @@ IPConfig /FlushDNS
 Write-Host "Done"
 
 Write-Host "Cleaning up Files via Disk Cleanup"
-CleanMgr /verylowdisk -wait
+Cleanmgr /verylowdisk /SageRun:5 | Out-Null
 Write-Host "Done"
 
 Write-Host "Running CCleaner for Temp Files"
