@@ -13,14 +13,14 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 $ExchangeUsername = Get-StoredCredential -target 'Exchange_Server' -ascredentialobject | Select-Object Username -ExpandProperty Username
 $ExchangePassword = Get-StoredCredential -target 'Exchange_Server' | Select-Object password -ExpandProperty password
 $SyncUsername = Get-StoredCredential -target 'Sync_Account' | Select-Object Username -ExpandProperty Username
-$ExchangeServer = Get-StoredCredential -target 'Exchange_Server' -ascredentialobject | Select-Object Comment -ExpandProperty Comment
+$Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
 $DistributionGroupName = Get-StoredCredential -target 'Distribution_Group_Name' -ascredentialobject | Select-Object username -ExpandProperty username
 
 # Script #
 
 $Cred = New-Object System.Management.Automation.PSCredential -ArgumentList $Exchangeusername, $ExchangePassword
 
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$ExchangeServer/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
 Set-ADServerSettings -ViewEntireForest $true
 

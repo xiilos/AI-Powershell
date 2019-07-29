@@ -17,7 +17,6 @@ $SyncUsername
 $SyncPassword
 
 Exchange_Server
-$ExchangeServerName
 $ExchangeUsername
 $ExchangePassword
 
@@ -295,6 +294,30 @@ Do {
             Clear-Host 
             'You chose Exchange 2010-2019'
             
+            Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds" -ErrorAction SilentlyContinue
+
+            #Checking Source Exchange Name
+
+            $TestPath = ".\ExchangeName.txt"
+            if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
+                Write-Host "Exchange Server Name File Exists..."
+                Write-Host "Current Content of File:" -ForegroundColor Green
+                Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
+                ""
+                $confirmation = Read-Host "Would You Like to Update the Current File? [Y/N]"
+                if ($confirmation -eq 'N') {
+                    Write-Host "Resuming"
+                }
+
+                if ($confirmation -eq 'Y') {
+                    Read-Host "Type in your Exchange Server Name. Press Enter when Finished." | out-file ".\ExchangeName.txt"
+                }
+            }
+
+            Else {
+                Read-Host "Type in your Exchange Server Name. Press Enter when Finished." | out-file ".\ExchangeName.txt" | out-file ".\ExchangeName.txt"
+            }
+
             #Create Secure Credentials Exchange Server
             
             $confirmation = Read-Host "Add Exchange Server Credentials? [Y/N]"
@@ -302,14 +325,13 @@ Do {
                 Write-Host "Skipping"
             }
             if ($confirmation -eq 'Y') {
-                $ExchangeServerName = Read-Host "Please Type In your Exchange Server Name"
                 $ExchangeUsername = Read-Host "Please Type In your Exchange Server Admin Username"
                 $ExchangePassword = Read-Host "Please Type in your Exchange Server Admin Password" -AsSecureString
                 $ExchangeServer = @{
                     Target   = "Exchange_Server"
                     UserName = "$ExchangeUsername"
                     Password = "$ExchangePassword"
-                    Comment  = "$ExchangeServerName"
+                    Comment  = "Exchange Server Credentials"
                     Persist  = "LocalMachine"
                 }
                 New-StoredCredential @ExchangeServer
