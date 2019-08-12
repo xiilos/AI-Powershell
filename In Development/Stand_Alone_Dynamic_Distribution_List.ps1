@@ -4,32 +4,25 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
-
 #Execution Policy
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+# Service Stop #
+Get-Service -ComputerName "TYPE COMPUTER NAME HERE" -Name "Add2Exchange Service" | Stop-Service -Verbose -ErrorAction Stop
+Start-Sleep -s 30
+Get-Service -ComputerName "TYPE COMPUTER NAME HERE" -Name "Add2Exchange Agent" | Stop-Service -Verbose
+Start-Sleep -s 10
+
 # Script #
-
-#Variables
-
-$Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
-$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-$DynamicDG1 = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_DistributionName.txt"
-$StaticDG1 = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_DistributionName.txt"
-
-$Cred = New-Object -typename System.Management.Automation.PSCredential `
-    -Argumentlist $Username, $Password
-
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
-Import-PSSession $Session -DisableNameChecking
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
 Set-ADServerSettings -ViewEntireForest $true
+            
+#Variables
+# Fill Out Dynamic and Statis Distribution Groups Below
 
-#Timed Execution Permissions to Dynamic Distribution Lists
-
-$DynamicDG = @($DynamicDG1)
-$StaticDG = @($StaticDG1)
+$DynamicDG = @("Dynamic DL HERE", "Dynamic DL HERE")
+$StaticDG = @("Static DL HERE", "Static DL HERE")
 
 for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
     ### Get Dynamic Group members
@@ -58,7 +51,12 @@ for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
 }
 
 
+#Start Service#
+# Service Stop #
+Get-Service -ComputerName "TYPE COMPUTER NAME HERE" -Name "Add2Exchange Service" | Start-Service -Verbose
 
+
+Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
 Exit
 

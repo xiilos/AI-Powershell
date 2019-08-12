@@ -9,16 +9,14 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+# Variables #
+$TenentUsername = Get-StoredCredential -target 'Office365_Tenent' -ascredentialobject | Select-Object Username -ExpandProperty Username
+$TenentPassword = Get-StoredCredential -target 'Office365_Tenent' | Select-Object password -ExpandProperty password
+$SyncUsername = Get-StoredCredential -target 'Sync_Account' | Select-Object Username -ExpandProperty Username
+
 # Script #
 
-#Variables
-
-$ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServiceAccount.txt"
-$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-
-$Cred = New-Object -typename System.Management.Automation.PSCredential `
-    -Argumentlist $Username, $Password
+$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList $TenentUsername, $TenentPassword
 
 Connect-MsolService -Credential $Cred
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
@@ -26,7 +24,7 @@ Import-PSSession $Session -DisableNameChecking
 Import-Module MSOnline
 
 #Timed Execution Permissions to All Users
-Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $SyncUsername -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
 
 Get-PSSession | Remove-PSSession
 Exit

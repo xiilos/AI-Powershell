@@ -9,18 +9,16 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+# Variables #
+$ExchangeUsername = Get-StoredCredential -target 'Exchange_Server' -ascredentialobject | Select-Object Username -ExpandProperty Username
+$ExchangePassword = Get-StoredCredential -target 'Exchange_Server' | Select-Object password -ExpandProperty password
+$SyncUsername = Get-StoredCredential -target 'Sync_Account' | Select-Object Username -ExpandProperty Username
+$Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
+$DistributionGroupName = Get-StoredCredential -target 'Distribution_Group_Name' -ascredentialobject | Select-Object username -ExpandProperty username
+
 # Script #
 
-#Variables
-
-$Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
-$ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServiceAccount.txt"
-$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-$DistributionGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\DistributionName.txt"
-
-$Cred = New-Object -typename System.Management.Automation.PSCredential `
-    -Argumentlist $Username, $Password
+$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList $Exchangeusername, $ExchangePassword
 
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
@@ -29,7 +27,7 @@ Set-ADServerSettings -ViewEntireForest $true
 #Timed Execution Permissions to Distribution Lists
 $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
 ForEach ($Member in $DistributionGroupName) {
-    Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+    Add-MailboxPermission -Identity $Member.name -User $SyncUsername -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 }
 
 

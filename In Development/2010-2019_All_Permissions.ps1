@@ -9,29 +9,25 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+# Variables #
+$ExchangeUsername = Get-StoredCredential -target 'Exchange_Server' -ascredentialobject | Select-Object Username -ExpandProperty Username
+$ExchangePassword = Get-StoredCredential -target 'Exchange_Server' | Select-Object password -ExpandProperty password
+$SyncUsername = Get-StoredCredential -target 'Sync_Account' | Select-Object Username -ExpandProperty Username
+$Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
+
 # Script #
 
-#Variables
-
-$Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchangename.txt"
-$ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServiceAccount.txt"
-$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerUser.txt"
-$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
-
-$Cred = New-Object -typename System.Management.Automation.PSCredential `
-    -Argumentlist $Username, $Password
+$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList $Exchangeusername, $ExchangePassword
 
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred -ErrorAction Inquire
 Import-PSSession $Session -DisableNameChecking
 Set-ADServerSettings -ViewEntireForest $true
 
 #Timed Execution Permissions to All Users
-#Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
 #Get-Mailbox -Resultsize Unlimited | Where-Object {$_.WhenCreated -ge ((Get-Date).Adddays(-1))} | Add-MailboxPermission -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
 
+Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $SyncUsername -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
 
-Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-Get-Mailbox -Resultsize Unlimited | Where-Object {$_.WhenCreated -ge ((Get-Date).Adddays(-90))} | Add-MailboxPermission -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
 
 
 
