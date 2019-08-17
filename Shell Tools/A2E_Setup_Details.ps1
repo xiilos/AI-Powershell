@@ -71,7 +71,6 @@ $ServiceAccount = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDo
 LogWrite "Service Account Name= $ServiceAccount" -ErrorAction SilentlyContinue
 
 #ServiceAccount Password
-#$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\ServerPass.txt" | convertto-securestring
 $Password = Read-Host "What is the Service Account password?" -ErrorAction SilentlyContinue
 
 LogWrite "Service Account Password= $Password" -ErrorAction SilentlyContinue
