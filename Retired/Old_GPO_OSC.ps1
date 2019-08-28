@@ -110,8 +110,28 @@ Write-Host "You Are on the latest version of PowerShell"
 #>
 #---------------------------------------------------------------------------------------------------------------------------------------
 
+
+# Script #
+
+Write-Host "What OS Version is the DC on?"
+""
+Write-Host "Press '1' for Server 2008 R2"
+Write-Host "Press '2' for 2012 R2"
+Write-Host "Press '3' for 2016+"
+Write-Host "Press 'Q' to Quit." -ForegroundColor Red
+
+
+#DC OS Version
+ 
+$input1 = Read-Host "Please Make A Selection" 
+switch ($input1) { 
+
+    #DC Options--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    '1' { 
+        Clear-Host 
+        'You chose Server 2008R2'
         #Create the GPO
-        Import-GPO -BackupId 1CBF8955-FA37-4588-928E-3B76F370422F -TargetName "Disable Outlook Social Connector" -path $PSScriptRoot -CreateIfNeeded -Domain $Domain
+        Import-GPO -BackupId 15D2F64C-C68B-4DE7-8647-86F0D6B149CE -TargetName "Disable Outlook Social Connector" -path "./Server2008R2" -CreateIfNeeded -Domain $Domain
         $GPO = (get-gpo -name "Disable Outlook Social Connector" | Select-Object -ExpandProperty ID | Format-Table -hidetableheaders | out-String).Trim()
         Write-Host "Copying Files Needed..."
         Copy-Item ".\OSC_Disable.bat" -Destination "C:\Windows\SYSVOL\sysvol\$Domain\Policies\{$GPO}\Machine\Scripts\Startup"
@@ -121,6 +141,42 @@ Write-Host "You Are on the latest version of PowerShell"
             New-GPLink -Name "Disable Outlook Social Connector" -Target "$Partition"
         }
         Write-Host "Done"
+    }
+
+    '2' { 
+        Clear-Host 
+        'You chose Server 2012R2'
+        #Create the GPO
+        Import-GPO -BackupId F8903325-19D1-461D-B306-60783653DEAF -TargetName "Disable Outlook Social Connector" -path "./2012R2" -CreateIfNeeded -Domain $Domain
+        $GPO = (get-gpo -name "Disable Outlook Social Connector" | Select-Object -ExpandProperty ID | Format-Table -hidetableheaders | out-String).Trim()
+        Write-Host "Copying Files Needed..."
+        Copy-Item ".\OSC_Disable.bat" -Destination "C:\Windows\SYSVOL\sysvol\$Domain\Policies\{$GPO}\Machine\Scripts\Startup"
+        Set-GPPermissions -Name "Disable Outlook Social Connector" -TargetName "Domain Computers" -TargetType Group -PermissionLevel GpoRead -ErrorAction SilentlyContinue
+        Set-GPLink -Name "Disable Outlook Social Connector" -Target "$Partition" -LinkEnabled Yes -ErrorAction SilentlyContinue -ErrorVariable LinkFault
+        If ($LinkFault) { 
+            New-GPLink -Name "Disable Outlook Social Connector" -Target "$Partition"
+        }
+        Write-Host "Done"
+    }
+
+    '3' { 
+        Clear-Host 
+        'You chose Server 2016+'
+        #Create the GPO
+        Import-GPO -BackupId 1CBF8955-FA37-4588-928E-3B76F370422F -TargetName "Disable Outlook Social Connector" -path "./Server2016+" -CreateIfNeeded -Domain $Domain
+        $GPO = (get-gpo -name "Disable Outlook Social Connector" | Select-Object -ExpandProperty ID | Format-Table -hidetableheaders | out-String).Trim()
+        Write-Host "Copying Files Needed..."
+        Copy-Item ".\OSC_Disable.bat" -Destination "C:\Windows\SYSVOL\sysvol\$Domain\Policies\{$GPO}\Machine\Scripts\Startup"
+        Set-GPPermissions -Name "Disable Outlook Social Connector" -TargetName "Domain Computers" -TargetType Group -PermissionLevel GpoRead -ErrorAction SilentlyContinue
+        Set-GPLink -Name "Disable Outlook Social Connector" -Target "$Partition" -LinkEnabled Yes -ErrorAction SilentlyContinue -ErrorVariable LinkFault
+        If ($LinkFault) { 
+            New-GPLink -Name "Disable Outlook Social Connector" -Target "$Partition"
+        }
+        Write-Host "Done"
+    }
+
+}
+
 
 Pause
 

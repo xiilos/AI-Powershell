@@ -40,9 +40,9 @@ if ($answer -eq 2) {
 #Removing the MSExchDelegateListlink from an account
 
 Import-Module ActiveDirectory
-
-$Domain = Read-Host "What is the Name of your Domain? i.e. <DidItBetter> Do not put .com or .local at end"
-Get-ADUser -Properties msExchDelegateListlink -SearchBase "dc=$domain,dc=local" -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n = 'UserName'; e = { $_.userprincipalname } }, @{n = 'ListLink'; e = { $_.msExchDelegateListLink } } | Export-csv "C:\Program Files (x86)\DidItBetterSoftware\Support\ExchangeDelegateLinkList.csv"
+$Server = (Get-ADDomain).DNSRoot
+$Domain = Get-ADDomainController -Filter * -Server $Server | Select-Object -ExpandProperty DefaultPartition
+Get-ADUser -Properties msExchDelegateListlink -SearchBase $Domain -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n = 'UserName'; e = { $_.userprincipalname } }, @{n = 'ListLink'; e = { $_.msExchDelegateListLink } } | Export-csv "C:\Program Files (x86)\DidItBetterSoftware\Support\ExchangeDelegateLinkList.csv"
 
 Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\ExchangeDelegateLinkList.csv"
 
