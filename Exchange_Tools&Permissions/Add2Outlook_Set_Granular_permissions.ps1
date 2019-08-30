@@ -54,7 +54,7 @@ switch ($input1) {
         Else { Write-Host 'Module is installed' }
 
 
-        Write-Host "Sign in to Office365 as Tenant Admin"
+        Write-Host "Sign in to Office365 as Global Admin"
         Do {
             $Cred = Get-Credential
             Connect-MsolService -Credential $Cred
