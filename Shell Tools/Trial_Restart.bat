@@ -1,0 +1,1 @@
+reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DittoTA2E\Profile 1" /f

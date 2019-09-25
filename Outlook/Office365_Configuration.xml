@@ -11,6 +11,7 @@
       <ExcludeApp ID="PowerPoint" />
       <ExcludeApp ID="Publisher" />
       <ExcludeApp ID="Word" />
+      <ExcludeApp ID="Teams" />
     </Product>
   </Add>
   <Property Name="SharedComputerLicensing" Value="0" />

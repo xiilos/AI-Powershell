@@ -188,13 +188,13 @@ $CheckPowerShell.height          = 10
 $CheckPowerShell.location        = New-Object System.Drawing.Point(11,385)
 $CheckPowerShell.Font            = 'Microsoft Sans Serif,9'
 
-$RemoveOutlookAddons             = New-Object system.Windows.Forms.Label
-$RemoveOutlookAddons.text        = "Remove Outlook Add-ins"
-$RemoveOutlookAddons.AutoSize    = $true
-$RemoveOutlookAddons.width       = 150
-$RemoveOutlookAddons.height      = 10
-$RemoveOutlookAddons.location    = New-Object System.Drawing.Point(11,406)
-$RemoveOutlookAddons.Font        = 'Microsoft Sans Serif,9'
+$DisableOSC                      = New-Object system.Windows.Forms.Label
+$DisableOSC.text                 = "Disable Outlook Social Connector"
+$DisableOSC.AutoSize             = $true
+$DisableOSC.width                = 150
+$DisableOSC.height               = 10
+$DisableOSC.location             = New-Object System.Drawing.Point(11,406)
+$DisableOSC.Font                 = 'Microsoft Sans Serif,9'
 
 $IncludeRegistryFavorites        = New-Object system.Windows.Forms.Label
 $IncludeRegistryFavorites.text   = "Include Registry Favorites"
@@ -394,7 +394,7 @@ $ToolTip1.SetToolTip($DirSync,'PowerShell Script to run an on Demand Directory S
 $ToolTip1.SetToolTip($DisableUAC,'PowerShell Script to Disable User Account Control from within the Registry')
 $ToolTip1.SetToolTip($GroupPolicyResults,'PowerShell Script to check current Group Policy on this Appliance ')
 $ToolTip1.SetToolTip($CheckPowerShell,'PowerShell Script to check and Upgrade PowerShell if needed')
-$ToolTip1.SetToolTip($RemoveOutlookAddons,'PowerShell Script to Remove Outlook Add-Ins like Social Connector')
+$ToolTip1.SetToolTip($DisableOSC,'PowerShell Script to Unload Outlook Social Connector')
 $ToolTip1.SetToolTip($IncludeRegistryFavorites,'PowerShell Script to Add Add2Exchange Favorites in the Registry')
 $ToolTip1.SetToolTip($Reset_A2E_Passwords,'PowerShell Script to Reset the Add2Exchange Password in Both Locations')
 $ToolTip1.SetToolTip($GALSync,'Click for more information on How To Setup a Global Address Sync ')
@@ -416,7 +416,7 @@ $ToolTip1.SetToolTip($A2E_Migration_Wizard,'Wizard for Migrating Add2Exchange to
 
 $DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$Permissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,
 $DownloadAdd2Exchange,$DownloadToolKit,$DownloadSQL,$FTPDownloads,$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,
-$CheckPowerShell,$RemoveOutlookAddons,$IncludeRegistryFavorites,$Reset_A2E_Passwords,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,
+$CheckPowerShell,$DisableOSC,$IncludeRegistryFavorites,$Reset_A2E_Passwords,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,
 $TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,$UpgradeToolkit,$A2EDiags,$CreateSupporttext,$Revision,$UpgradeAdd2Outlook,$AD_Photos,$MSExchangeDelegate,$ExchangeShell,
 $CommandsList,$Migration_Wizards,$A2E_Migration_Wizard))
 
@@ -440,7 +440,9 @@ $DirSync.Add_Click({Start-Process Powershell .\Dir_Sync.ps1})
 $DisableUAC.Add_Click({Start-Process Powershell .\Disable_UAC.ps1})
 $GroupPolicyResults.Add_Click({Start-Process Powershell .\GP_Results.ps1})
 $CheckPowerShell.Add_Click({Start-Process Powershell .\Legacy_PowerShell.ps1})
-$RemoveOutlookAddons.Add_Click({Start-Process Powershell .\Remove_Outlook_Add_ins.ps1})
+$DisableOSC.Add_Click({
+    Copy-Item ".\OSC_Disable.bat" -Destination "$Home\Desktop\" -ErrorAction SilentlyContinue
+    Start-Process Powershell .\OSC_Disable.bat})
 $IncludeRegistryFavorites.Add_Click({Start-Process Powershell .\Registry_Favorites.ps1})
 $Reset_A2E_Passwords.Add_Click({Start-Process Powershell .\Reset_A2E_Password.ps1})
 $CreateSupporttext.Add_Click({Start-Process PowerShell .\A2E_Setup_Details.ps1})

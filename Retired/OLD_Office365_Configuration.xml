@@ -11,6 +11,7 @@
       <ExcludeApp ID="PowerPoint" />
       <ExcludeApp ID="Lync" />
       <ExcludeApp ID="Excel" />
+      <ExcludeApp ID="Teams" />
     </Product>
   </Add>
   <Property Name="SharedComputerLicensing" Value="0" />

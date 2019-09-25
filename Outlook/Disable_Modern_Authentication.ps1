@@ -10,7 +10,11 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 
+
 # Script #
+Write-Host "Disabling Modern Authentication"
+New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Office\16.0\Common\Identity" -Name "EnableADAL" -PropertyType DWORD -Value "0"
+Write-Host "Done"
 
 
 

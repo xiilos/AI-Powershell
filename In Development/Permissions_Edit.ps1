@@ -17,7 +17,7 @@ Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $Add2Exchange_Permissions_Menu   = New-Object system.Windows.Forms.Form
-$Add2Exchange_Permissions_Menu.ClientSize  = '438,583'
+$Add2Exchange_Permissions_Menu.ClientSize  = '454,583'
 $Add2Exchange_Permissions_Menu.text  = "DiditBetter Software Auto Permissions Setup"
 $Add2Exchange_Permissions_Menu.BackColor  = "#ffffff"
 $Add2Exchange_Permissions_Menu.TopMost  = $false
@@ -45,20 +45,12 @@ $ExServ_Name_txt.height          = 20
 $ExServ_Name_txt.location        = New-Object System.Drawing.Point(15,45)
 $ExServ_Name_txt.Font            = 'Microsoft Sans Serif,10'
 
-$EX_Pass                         = New-Object system.Windows.Forms.Label
-$EX_Pass.text                    = "Exchange Admin Password"
-$EX_Pass.AutoSize                = $true
-$EX_Pass.width                   = 25
-$EX_Pass.height                  = 10
-$EX_Pass.location                = New-Object System.Drawing.Point(250,45)
-$EX_Pass.Font                    = 'Microsoft Sans Serif,10,style=Bold,Italic'
-
-$Submit                          = New-Object system.Windows.Forms.Button
-$Submit.text                     = "Submit!"
-$Submit.width                    = 118
-$Submit.height                   = 58
-$Submit.location                 = New-Object System.Drawing.Point(287,509)
-$Submit.Font                     = 'Microsoft Sans Serif,12,style=Bold'
+$Create_Task                     = New-Object system.Windows.Forms.Button
+$Create_Task.text                = "Create Task!"
+$Create_Task.width               = 140
+$Create_Task.height              = 40
+$Create_Task.location            = New-Object System.Drawing.Point(275,517)
+$Create_Task.Font                = 'Microsoft Sans Serif,10,style=Bold'
 
 $O365_GA_Label                   = New-Object system.Windows.Forms.Label
 $O365_GA_Label.text              = "Global Admin Account Name"
@@ -74,14 +66,6 @@ $GB_Admin_txt.width              = 200
 $GB_Admin_txt.height             = 20
 $GB_Admin_txt.location           = New-Object System.Drawing.Point(15,100)
 $GB_Admin_txt.Font               = 'Microsoft Sans Serif,10'
-
-$GB_Admin_Pass                   = New-Object system.Windows.Forms.Label
-$GB_Admin_Pass.text              = "Global Admin Password"
-$GB_Admin_Pass.AutoSize          = $true
-$GB_Admin_Pass.width             = 25
-$GB_Admin_Pass.height            = 10
-$GB_Admin_Pass.location          = New-Object System.Drawing.Point(250,100)
-$GB_Admin_Pass.Font              = 'Microsoft Sans Serif,10,style=Bold,Italic'
 
 $Sync_Account_Label              = New-Object system.Windows.Forms.Label
 $Sync_Account_Label.text         = "Sync Service Account Name"
@@ -101,7 +85,7 @@ $Sync_Accoun_txt.Font            = 'Microsoft Sans Serif,10'
 $O365_Check                      = New-Object system.Windows.Forms.CheckBox
 $O365_Check.text                 = "Office 365"
 $O365_Check.AutoSize             = $false
-$O365_Check.width                = 160
+$O365_Check.width                = 175
 $O365_Check.height               = 20
 $O365_Check.location             = New-Object System.Drawing.Point(270,470)
 $O365_Check.Font                 = 'Microsoft Sans Serif,10,style=Bold'
@@ -109,7 +93,7 @@ $O365_Check.Font                 = 'Microsoft Sans Serif,10,style=Bold'
 $On_Premise_Check                = New-Object system.Windows.Forms.CheckBox
 $On_Premise_Check.text           = "Exchange On Premise"
 $On_Premise_Check.AutoSize       = $false
-$On_Premise_Check.width          = 160
+$On_Premise_Check.width          = 175
 $On_Premise_Check.height         = 20
 $On_Premise_Check.location       = New-Object System.Drawing.Point(270,440)
 $On_Premise_Check.Font           = 'Microsoft Sans Serif,10,style=Bold'
@@ -184,7 +168,7 @@ $Static_txt.location             = New-Object System.Drawing.Point(15,320)
 $Static_txt.Font                 = 'Microsoft Sans Serif,10'
 
 $Permissions_Options             = New-Object system.Windows.Forms.Label
-$Permissions_Options.text        = "select a single option"
+$Permissions_Options.text        = "Select a single option"
 $Permissions_Options.AutoSize    = $true
 $Permissions_Options.width       = 25
 $Permissions_Options.height      = 10
@@ -192,7 +176,7 @@ $Permissions_Options.location    = New-Object System.Drawing.Point(15,400)
 $Permissions_Options.Font        = 'Microsoft Sans Serif,10,style=Bold,Underline'
 
 $Logon_Choice                    = New-Object system.Windows.Forms.Label
-$Logon_Choice.text               = "select multiple choices"
+$Logon_Choice.text               = "Select logon method"
 $Logon_Choice.AutoSize           = $true
 $Logon_Choice.width              = 25
 $Logon_Choice.height             = 10
@@ -204,7 +188,7 @@ $Exchange_Admin_Password_Update.text  = "Updated:"
 $Exchange_Admin_Password_Update.AutoSize  = $true
 $Exchange_Admin_Password_Update.width  = 25
 $Exchange_Admin_Password_Update.height  = 10
-$Exchange_Admin_Password_Update.location  = New-Object System.Drawing.Point(250,65)
+$Exchange_Admin_Password_Update.location  = New-Object System.Drawing.Point(250,70)
 $Exchange_Admin_Password_Update.Font  = 'Microsoft Sans Serif,9'
 $Exchange_Admin_Password_Update.ForeColor  = "#d0021b"
 
@@ -213,25 +197,47 @@ $Global_Admin_Password_Update.text  = "Updated:"
 $Global_Admin_Password_Update.AutoSize  = $true
 $Global_Admin_Password_Update.width  = 25
 $Global_Admin_Password_Update.height  = 10
-$Global_Admin_Password_Update.location  = New-Object System.Drawing.Point(250,120)
+$Global_Admin_Password_Update.location  = New-Object System.Drawing.Point(250,140)
 $Global_Admin_Password_Update.Font  = 'Microsoft Sans Serif,9'
 $Global_Admin_Password_Update.ForeColor  = "#d0021b"
 
-$Add2Exchange_Permissions_Menu.controls.AddRange(@($DIB_Logo,$ExchangeServerName_Label,$ExServ_Name_txt,$EX_Pass,$Submit,$O365_GA_Label,$GB_Admin_txt,$GB_Admin_Pass,$Sync_Account_Label,$Sync_Accoun_txt,$O365_Check,$On_Premise_Check,$All_Perm_Check,$Dist_List_Check,$Dynamic_Check,$Dist_List_Label,$Dist_Name_txt,$Dynamic_Label,$Dynamix_txt,$Static_Label,$Static_txt,$Permissions_Options,$Logon_Choice,$Exchange_Admin_Password_Update,$Global_Admin_Password_Update))
+$UpdateCreds                     = New-Object system.Windows.Forms.Button
+$UpdateCreds.text                = "Update Credentials"
+$UpdateCreds.width               = 140
+$UpdateCreds.height              = 40
+$UpdateCreds.location            = New-Object System.Drawing.Point(275,320)
+$UpdateCreds.Font                = 'Microsoft Sans Serif,10,style=Bold'
+
+$EX_Pass                         = New-Object system.Windows.Forms.Button
+$EX_Pass.text                    = "Exchange Admin Password"
+$EX_Pass.width                   = 195
+$EX_Pass.height                  = 30
+$EX_Pass.location                = New-Object System.Drawing.Point(250,40)
+$EX_Pass.Font                    = 'Microsoft Sans Serif,10,style=Bold,Italic'
+
+$GB_Admin_Pass                   = New-Object system.Windows.Forms.Button
+$GB_Admin_Pass.text              = "Global Admin Password"
+$GB_Admin_Pass.width             = 195
+$GB_Admin_Pass.height            = 30
+$GB_Admin_Pass.location          = New-Object System.Drawing.Point(250,110)
+$GB_Admin_Pass.Font              = 'Microsoft Sans Serif,10,style=Bold,Italic'
+
+$Add2Exchange_Permissions_Menu.controls.AddRange(@($DIB_Logo,$ExchangeServerName_Label,$ExServ_Name_txt,$Create_Task,$O365_GA_Label,$GB_Admin_txt,$Sync_Account_Label,$Sync_Accoun_txt,$O365_Check,$On_Premise_Check,$All_Perm_Check,$Dist_List_Check,$Dynamic_Check,$Dist_List_Label,$Dist_Name_txt,$Dynamic_Label,$Dynamix_txt,$Static_Label,$Static_txt,$Permissions_Options,$Logon_Choice,$Exchange_Admin_Password_Update,$Global_Admin_Password_Update,$UpdateCreds,$EX_Pass,$GB_Admin_Pass))
+
 
 
 $EX_Pass.Add_Click({Read-Host "Exchange Admin Password" -assecurestring | convertfrom-securestring | out-file ".\Exchange_Server_Pass.txt"})
 $GB_Admin_Pass.Add_Click({Read-Host "Global Admin Password" -assecurestring | convertfrom-securestring | out-file ".\GA_Admin_Pass.txt"})
 
-$Submit.Add_Click({$ExServ_Name_txt.text | Out-File ".\Exchange_Server_Name.txt"})
-$Submit.Add_Click({$GB_Admin_txt.text | Out-File ".\GA_Service_Account_Name.txt"})
-$Submit.Add_Click({$Sync_Accoun_txt.text | Out-File ".\Sync_Account_Name.txt"})
-$Submit.Add_Click({$Dist_Name_txt.text | Out-File ".\Dist_List_Name.txt"})
-$Submit.Add_Click({$Dynamix_txt.text | Out-File ".\Dynamic_Name.txt"})
-$Submit.Add_Click({$Static_txt.text | Out-File ".\Static_Name"})
+$UpdateCreds.Add_Click({$ExServ_Name_txt.text | Out-File ".\Exchange_Server_Name.txt"})
+$UpdateCreds.Add_Click({$GB_Admin_txt.text | Out-File ".\GA_Service_Account_Name.txt"})
+$UpdateCreds.Add_Click({$Sync_Accoun_txt.text | Out-File ".\Sync_Account_Name.txt"})
+$UpdateCreds.Add_Click({$Dist_Name_txt.text | Out-File ".\Dist_List_Name.txt"})
+$UpdateCreds.Add_Click({$Dynamix_txt.text | Out-File ".\Dynamic_Name.txt"})
+$UpdateCreds.Add_Click({$Static_txt.text | Out-File ".\Static_Name"})
 
 
-$Submit.Add_Click({
+$UpdateCreds.Add_Click({
     $wshell = New-Object -ComObject Wscript.Shell
                 $answer = $wshell.Popup("Updated Credentials Successfully.", 0, "Permissions Creator", 0x1)
                 if ($answer -eq 2) { break }
@@ -248,16 +254,37 @@ $Static_txt.text = get-content ".\Static_Name"
 $Exchange_Admin_Password_Update.text = Get-Item ".\Exchange_Server_Pass.txt" | ForEach-Object { $_.LastWriteTime }
 $Global_Admin_Password_Update.text = Get-Item ".\GA_Admin_Pass.txt" | ForEach-Object { $_.LastWriteTime }
 
-
+$Create_Task.Add_Click({  })
 
 #Creating the Task
 
-$Submit.Add_Click({
-    if ($On_Premise_Check.Checked -eq $true)
-    { write-host "You Chose Office 365"}
-    else 
-    {Write-Host "Not Checked"}
+# Option 1: Office 365-Adding Permissions to All Users
+
+$Create_Task.Add_Click({
+    if ($O365_Check.Checked -and $All_Perm_Check.checked)
+    { Write-Host "You chose to Add Permissions to All Users in Office 365"
+
+    $Repeater = (New-TimeSpan -Minutes 360)
+    $Duration = ([timeSpan]::maxvalue)
+    $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
+    $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_All_Permissions.ps1"'
+    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange Permissions" -Description "Adds Add2Exchange Permissions Automatically to All Users Mailboxes"
+    Write-Host "Done"
+}
+ 
 })
+
+
+
+
+
+
+
+
+
+
+
+
 
 [void]$Add2Exchange_Permissions_Menu.ShowDialog()
 
