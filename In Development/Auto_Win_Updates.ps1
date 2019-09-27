@@ -12,8 +12,14 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
-Copy-Item "\\diditbetter\dev\DevLimAccess\a2e-enterprise\Contrib\Setup.zip" -Destination "\\diditbetter\dev\DevLimAccess\Add2Outlook\contrib\Support.zip" -Force
-Copy-Item "\\diditbetter\dev\DevLimAccess\a2e-enterprise\Contrib\Setup.zip" -Destination "\\diditbetter\dev\DevLimAccess\Add2Outlook\contrib\Setup.zip" -Force
+$UserCredential = Get-Credential
+If (!$UserCredential) { Exit }
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://A2E_O365/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+Import-PSSession $Session -DisableNameChecking
+
+
+
+
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
