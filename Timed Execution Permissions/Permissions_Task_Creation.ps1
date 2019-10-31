@@ -9,6 +9,16 @@ Else {
     New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"
 }
 
+#Check for MS Online Module
+
+$error.clear()
+        Import-Module "MSonline" -ErrorAction SilentlyContinue
+        If ($error) {
+            Write-Host "Adding Azure MSonline module"
+            Set-PSRepository -Name psgallery -InstallationPolicy Trusted
+            Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
+        } 
+        Else { Write-Host 'Module is installed' }
 
 #Start Script
 
@@ -270,7 +280,8 @@ $Server2008.ForeColor            = "#4a90e2"
 
 $Add2Exchange_Permissions_Menu.controls.AddRange(@($DIB_Logo, $ExchangeServerName_Label, $ExServ_Name_txt, $Create_Task, $O365_GA_Label, $GB_Admin_txt, $Sync_Account_Label, 
         $Sync_Accoun_txt, $O365_Check, $On_Premise_Check, $All_Perm_Check, $Dist_List_Check, $Dynamic_Check, $Dist_List_Label, $Dist_Name_txt, $Dynamic_Label, $Dynamic_txt, $Static_Label, 
-        $Static_txt, $Permissions_Options, $Logon_Choice, $Exchange_Admin_Password_Update, $Global_Admin_Password_Update, $UpdateCreds, $EX_Pass, $GB_Admin_Pass, $DualPermissions, $ExchangeAdmin, $ExAdmin_txt, $Server2008))
+        $Static_txt, $Permissions_Options, $Logon_Choice, $Exchange_Admin_Password_Update, $Global_Admin_Password_Update, $UpdateCreds, $EX_Pass, $GB_Admin_Pass, $DualPermissions, 
+        $ExchangeAdmin, $ExAdmin_txt, $Server2008))
 
 #Server 2008+ Legacy
 $Server2008.Add_Click( { 
