@@ -12,8 +12,8 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
-Copy-Item "\\diditbetter\dev\DevLimAccess\a2e-enterprise\Contrib\Setup.zip" -Destination "\\diditbetter\dev\DevLimAccess\Add2Outlook\contrib\Support.zip" -Force
-Copy-Item "\\diditbetter\dev\DevLimAccess\a2e-enterprise\Contrib\Setup.zip" -Destination "\\diditbetter\dev\DevLimAccess\Add2Outlook\contrib\Setup.zip" -Force
+Copy-Item "\\diditbetter\dev\DevLimAccess\a2e-enterprise\Contrib\Setup.zip" -Destination "\\diditbetter\dev\DevLimAccess\Add2Outlook\contrib\Support.zip" -Force -Verbose
+Copy-Item "\\diditbetter\dev\DevLimAccess\a2e-enterprise\Contrib\Setup.zip" -Destination "\\diditbetter\dev\DevLimAccess\Add2Outlook\contrib\Setup.zip" -Force -Verbose
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
