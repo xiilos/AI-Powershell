@@ -112,6 +112,32 @@ Else {
     Write-Host "Done"
 }
 
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Grab the Latest ToolKit Upgrade Build
+
+$Dir = "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit"
+$Filter = "Add2Outlook ToolKit Full Installation*"
+$Latest = Get-ChildItem -Path $Dir -Filter $Filter | Sort-Object LastAccessTime -Descending | Select-Object -First 1
+$Latest.Name
+
+#Testing to See if File Already Exists in Upgrades
+
+Write-Host "Checking Upgrades Folder for Existing Installs"
+$TestPath = "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades\$Latest"
+if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
+
+    Write-Host "Latest ToolKit Upgrade Already Exists in Upgrades Folder" -ForegroundColor Green
+}
+Else {
+    Write-Host "Copying Files Needed..."
+    Copy-Item "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\$Latest" -Destination "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades"
+    Remove-Item -path "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades\Add2OutlookToolKitFullInstallation.exe" -ErrorAction SilentlyContinue
+    Rename-Item -Path "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades\$Latest" -NewName "Add2OutlookToolKitFullInstallation.exe" -ErrorAction SilentlyContinue
+    Copy-Item "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\$Latest" -Destination "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades"
+    Write-Host "Done"
+}
+
 Write-Host "All Upgrades Have Been Copied Over!!!" -ForegroundColor Green
 
 Pause
