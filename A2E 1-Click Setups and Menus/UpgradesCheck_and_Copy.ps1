@@ -132,8 +132,8 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 Else {
     Write-Host "Copying Files Needed..."
     Copy-Item "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\$Latest" -Destination "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades"
-    Remove-Item -path "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades\Add2OutlookToolKitFullInstallation.exe" -ErrorAction SilentlyContinue
-    Rename-Item -Path "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades\$Latest" -NewName "Add2OutlookToolKitFullInstallation.exe" -ErrorAction SilentlyContinue
+    Remove-Item -path "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades\Add2Outlook ToolKit Full Installation.exe" -ErrorAction SilentlyContinue
+    Rename-Item -Path "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades\$Latest" -NewName "Add2Outlook ToolKit Full Installation.exe" -ErrorAction SilentlyContinue
     Copy-Item "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\$Latest" -Destination "\\diditbetter\DFS\FTP\download\Add2Outlook Toolkit\Upgrades"
     Write-Host "Done"
 }
