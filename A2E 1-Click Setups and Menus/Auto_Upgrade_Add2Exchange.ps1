@@ -16,7 +16,7 @@ try {
 }
 catch {
     $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-    $answer = $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+    $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
     Start-Process "http://support.diditbetter.com/Secure/Login.aspx?returnurl=/downloads.aspx"
     Write-Host "Quitting"
     Get-PSSession | Remove-PSSession

@@ -7,14 +7,22 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
-<#Remove Add2Outlook ToolKit
+# Test for FTP
 
-Write-Host "Removing A2O ToolKit"
-Write-Host "Please Wait...."
-$Program = Get-WmiObject -Class Win32_Product -Filter "Name = 'Add2Outlook ToolKit'"
-$Program.Uninstall()
-Write-Host "Done"
-#>
+try {
+    $FTP = New-Object System.Net.Sockets.TcpClient("ftp.diditbetter.com", 21)
+    $FTP.Close()
+    Write-Host "Connectivity OK."
+}
+catch {
+    $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+    $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+    Start-Process "http://support.diditbetter.com/Secure/Login.aspx?returnurl=/downloads.aspx"
+    Write-Host "Quitting"
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+
 
 #Create zLibrary\Add2Outlook ToolKit Directory
 
