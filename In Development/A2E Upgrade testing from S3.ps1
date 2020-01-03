@@ -62,3 +62,50 @@ Get-PSSession | Remove-PSSession
 Exit
 
 # End Scripting
+
+
+
+
+
+#Get-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1*" | Select-Object LicenseKeyASMDate, LicenseKeyCSMDate, LicenseKeyNSMDate, LicenseKeyOSMDate, LicenseKeyPSMDate, LicenseKeyTSMDate
+
+$wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+    $answer = $wshell.Popup("Your Add2Exchange License has Expired! Click OK to continue with the upgrade, or Cancel to Quit.", 0, "ATTENTION!! Add2Exchange Licensing", 0 + 1)
+    if ($answer -eq 2) { Break }
+
+
+$LicenseKeyASMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyASMDate" -ErrorAction SilentlyContinue
+$LicenseKeyCSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyCSMDate" -ErrorAction SilentlyContinue
+$LicenseKeyNSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyNSMDate" -ErrorAction SilentlyContinue
+$LicenseKeyOSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyOSMDate" -ErrorAction SilentlyContinue
+$LicenseKeyPSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyPSMDate" -ErrorAction SilentlyContinue
+$LicenseKeyTSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyTSMDate" -ErrorAction SilentlyContinue
+
+$Today = Get-Date -format MM/dd/yyy
+
+if ($Today -ge $LicenseKeyASMDate)
+{
+    Write-Host "Add2Exchange Calendar License Key Expired on $LicenseKeyASMDate" -ForegroundColor Red
+}
+
+else {
+    Write-Host "We are good to go"
+}
+
+Pause
+
+
+$wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+
+$answer = $wshell.Popup("If yourCurrent License Dates:
+        $LicenseKeyASMDate
+        $LicenseKeyCSMDate
+        $LicenseKeyNSMDate
+        $LicenseKeyOSMDate
+        $LicenseKeyPSMDate
+        $LicenseKeyTSMDate", 0, "ATTENTION!! Add2Exchange Licensing", 0 + 1)
+if ($answer -eq 2) { Break }
+
+
+
+
