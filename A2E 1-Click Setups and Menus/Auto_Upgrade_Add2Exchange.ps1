@@ -7,6 +7,64 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Test for Upgrade Eligibility
+
+#Get-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1*" | Select-Object LicenseKeyASMDate, LicenseKeyCSMDate, LicenseKeyNSMDate, LicenseKeyOSMDate, LicenseKeyPSMDate, LicenseKeyTSMDate
+
+$LicenseKeyASMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyASMDate" -ErrorAction SilentlyContinue
+$LicenseKeyCSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyCSMDate" -ErrorAction SilentlyContinue
+$LicenseKeyNSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyNSMDate" -ErrorAction SilentlyContinue
+$LicenseKeyOSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyOSMDate" -ErrorAction SilentlyContinue
+$LicenseKeyPSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyPSMDate" -ErrorAction SilentlyContinue
+$LicenseKeyTSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyTSMDate" -ErrorAction SilentlyContinue
+
+$Today = Get-Date -format MM/dd/yyy
+
+if ($Today -ge $LicenseKeyASMDate,
+    $Today -ge $LicenseKeyCSMDate,
+    $Today -ge $LicenseKeyNSMDate,
+    $Today -ge $LicenseKeyOSMDate,
+    $Today -ge $LicenseKeyPSMDate,
+    $Today -ge $LicenseKeyTSMDate)
+{
+    $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+    $answer = $wshell.Popup("Your Add2Exchange License has Expired! Click OK to continue with the upgrade, or Cancel to Quit.", 0, "ATTENTION!! Add2Exchange Licensing", 0 + 1)
+    if ($answer -eq 2) { Break }
+}
+
+else {
+    Write-Host "We are good to go"
+}
+
+Pause
+
+
+$wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+
+$answer = $wshell.Popup("If yourCurrent License Dates:
+        $LicenseKeyASMDate
+        $LicenseKeyCSMDate
+        $LicenseKeyNSMDate
+        $LicenseKeyOSMDate
+        $LicenseKeyPSMDate
+        $LicenseKeyTSMDate", 0, "ATTENTION!! Add2Exchange Licensing", 0 + 1)
+if ($answer -eq 2) { Break }
+
+
+
+
+
+# Test for FTP
+
+$FTP = Test-NetConnection -ComputerName ftp.diditbetter.com -Port 21
+if ( $(Try { Test-Path $FTP.trim() } Catch { $false }) ) {
+
+    Write-Host "No FTP Access... Taking you to Downloads...."
+    Invoke-Item "http://support.diditbetter.com/Secure/Login.aspx?returnurl=/downloads.aspx"
+    Write-Host "Quitting"
+    Get-PSSession | Remove-PSSession
+    Exit
+}
 
 #Stop Add2Exchange Service
 

