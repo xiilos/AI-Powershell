@@ -302,10 +302,23 @@ Log off and back on as the new Sync Service account and run this again before pr
                     Push-Location "c:\zlibrary\"
                     Expand-Archive -Path "c:\zlibrary\O365Outlook32.zip" -DestinationPath "c:\zlibrary\Office 365"
                     Start-Sleep -Seconds 2
-                    Write-Host "Installing Office 365. Please Wait..."
-                    Push-Location -Path "c:\zlibrary\Office 365"
-                    .\setup.exe /configure Office365x32bit.xml
-                    Write-Host "Done"
+
+                    $confirmation = Read-Host "Office 365 Pro Retail or Business Retail? [P/B]"
+                    if ($confirmation -eq 'P') {
+    
+                        Write-Host "Please Wait while we install Office 365 Pro Retail"
+                        Push-Location -Path "c:\zlibrary\Office 365"
+                        .\setup.exe /configure Office365_Pro_Reatil_Configuration.xml
+                    }
+    
+                    if ($confirmation -eq 'B') {
+    
+                        Write-Host "Please Wait while we install Office 365 Business Retail"
+                        Push-Location -Path "c:\zlibrary\Office 365"
+                        .\setup.exe /configure Office365_Business_Retail_Configuration.xml
+                    
+                    }
+
 
                 }
 

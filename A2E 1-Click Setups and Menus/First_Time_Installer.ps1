@@ -296,10 +296,22 @@ Log off and back on as the new Sync Service account and run this again before pr
             Write-host "We need to install Outlook on this machine"
             $confirmation = Read-Host "Would you like me to Install Outlook 365? [Y/N]"
             if ($confirmation -eq 'y') {
-                Write-Host "Please Wait while we install Office 365"
-                Push-Location -Path ".\O365Outlook32"
-                .\setup.exe /configure Office365x32bit.xml
 
+                $confirmation = Read-Host "Office 365 Pro Retail or Business Retail? [P/B]"
+                if ($confirmation -eq 'P') {
+
+                    Write-Host "Please Wait while we install Office 365 Pro Retail"
+                    Push-Location -Path ".\O365Outlook32"
+                    .\setup.exe /configure Office365_Pro_Reatil_Configuration.xml
+                }
+
+                if ($confirmation -eq 'B') {
+
+                    Write-Host "Please Wait while we install Office 365 Business Retail"
+                    Push-Location -Path ".\O365Outlook32"
+                    .\setup.exe /configure Office365_Business_Retail_Configuration.xml
+                
+                }
             }
 
             if ($confirmation -eq 'n') {
@@ -401,8 +413,8 @@ Click OK to Continue", 0, "AutoLogin", 0x1)
         New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Session Manager" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControl\Control\Session Manager" -Force -ErrorAction SilentlyContinue
         New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "EnableLUA" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force -ErrorAction SilentlyContinue
         New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name ".Net Framework" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\.NETFramework" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "OpenDoor Software" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Add2Exchange"  -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ\Add2Exchange" -Force -ErrorAction SilentlyContinue
+        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "OpenDoor Software" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Softwareù" -Force -ErrorAction SilentlyContinue
+        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Add2Exchange"  -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Softwareù\Add2Exchange" -Force -ErrorAction SilentlyContinue
         New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Pendingfilerename" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager" -Force -ErrorAction SilentlyContinue
         New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "AutoDiscover" -Type string -Value "Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office" -Force -ErrorAction SilentlyContinue
         New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Office" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office" -Force -ErrorAction SilentlyContinue
