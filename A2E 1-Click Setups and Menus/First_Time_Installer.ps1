@@ -301,15 +301,15 @@ Log off and back on as the new Sync Service account and run this again before pr
                 if ($confirmation -eq 'P') {
 
                     Write-Host "Please Wait while we install Office 365 Pro Retail"
-                    Push-Location -Path ".\O365Outlook32"
-                    .\setup.exe /configure Office365_Pro_Reatil_Configuration.xml
+                    Push-Location -Path ".\O365Outlook32\Setup Files"
+                    .\setup.exe /configure Office365_Pro_Reatilx86_Configuration.xml
                 }
 
                 if ($confirmation -eq 'B') {
 
                     Write-Host "Please Wait while we install Office 365 Business Retail"
-                    Push-Location -Path ".\O365Outlook32"
-                    .\setup.exe /configure Office365_Business_Retail_Configuration.xml
+                    Push-Location -Path ".\O365Outlook32\Setup Files"
+                    .\setup.exe /configure Office365_Business_Retailx86_Configuration.xml
                 
                 }
             }

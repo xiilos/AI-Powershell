@@ -1,0 +1,1 @@
+setup.exe /configure Office365_Business_Retailx64_Configuration.xml

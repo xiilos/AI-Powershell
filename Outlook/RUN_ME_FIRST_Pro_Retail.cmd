@@ -1,1 +1,0 @@
-setup.exe /configure Office365_Pro_Reatil_Configuration.xml
