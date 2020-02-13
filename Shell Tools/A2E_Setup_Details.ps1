@@ -155,71 +155,104 @@ LogWrite "End User Email= $EndUserEmail" -ErrorAction SilentlyContinue
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 LogWrite "..............License Keys.............."
 
-#License Key Dates
-$LicenseKeyASMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyASMDate" -ErrorAction SilentlyContinue
-
-LogWrite "License Key A Date= $LicenseKeyASMDate" -ErrorAction SilentlyContinue
-
-$LicenseKeyCSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyCSMDate" -ErrorAction SilentlyContinue
-
-LogWrite "License Key C Date= $LicenseKeyCSMDate" -ErrorAction SilentlyContinue
-
-$LicenseKeyNSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyNSMDate" -ErrorAction SilentlyContinue
-
-LogWrite "License Key N Date= $LicenseKeyNSMDate" -ErrorAction SilentlyContinue
-
-$LicenseKeyOSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyOSMDate" -ErrorAction SilentlyContinue
-
-LogWrite "License Key O Date= $LicenseKeyOSMDate" -ErrorAction SilentlyContinue
-
-$LicenseKeyPSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyPSMDate" -ErrorAction SilentlyContinue
-
-LogWrite "License Key P Date= $LicenseKeyPSMDate" -ErrorAction SilentlyContinue
-
-$LicenseKeyTSMDate = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyTSMDate" -ErrorAction SilentlyContinue
-
-LogWrite "License Key T Date= $LicenseKeyTSMDate" -ErrorAction SilentlyContinue
-
-#License Keys
+#License Keys & Dates
 $LicenseKeyA = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyA" -ErrorAction SilentlyContinue
 
 LogWrite "License Key A= $LicenseKeyA" -ErrorAction SilentlyContinue
+
+$LicenseKeyAExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyAExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key A Date= $LicenseKeyAExpiry" -ErrorAction SilentlyContinue
+
+
 
 $LicenseKeyC = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyC" -ErrorAction SilentlyContinue
 
 LogWrite "License Key C= $LicenseKeyC" -ErrorAction SilentlyContinue
 
+$LicenseKeyCExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyCExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key C Date= $LicenseKeyCExpiry" -ErrorAction SilentlyContinue
+
+
+
 $LicenseKeyD = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyD" -ErrorAction SilentlyContinue
 
 LogWrite "License Key D= $LicenseKeyD" -ErrorAction SilentlyContinue
+
+$LicenseKeyDExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyDExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key D Date= $LicenseKeyDExpiry" -ErrorAction SilentlyContinue
+
+
 
 $LicenseKeyE = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyE" -ErrorAction SilentlyContinue
 
 LogWrite "License Key E= $LicenseKeyE" -ErrorAction SilentlyContinue
 
+$LicenseKeyEExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyEExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key E Date= $LicenseKeyEExpiry" -ErrorAction SilentlyContinue
+
+
+
 $LicenseKeyG = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyG" -ErrorAction SilentlyContinue
 
 LogWrite "License Key G= $LicenseKeyG" -ErrorAction SilentlyContinue
+
+$LicenseKeyGExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyGExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key G Date= $LicenseKeyGExpiry" -ErrorAction SilentlyContinue
+
+
 
 $LicenseKeyM = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyM" -ErrorAction SilentlyContinue
 
 LogWrite "License Key M= $LicenseKeyM" -ErrorAction SilentlyContinue
 
+$LicenseKeyMExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyMExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key M Date= $LicenseKeyMExpiry" -ErrorAction SilentlyContinue
+
+
+
 $LicenseKeyN = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyN" -ErrorAction SilentlyContinue
 
 LogWrite "License Key N= $LicenseKeyN" -ErrorAction SilentlyContinue
+
+$LicenseKeyNExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyNExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key N Date= $LicenseKeyNExpiry" -ErrorAction SilentlyContinue
+
+
 
 $LicenseKeyO = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyO" -ErrorAction SilentlyContinue
 
 LogWrite "License Key O= $LicenseKeyO" -ErrorAction SilentlyContinue
 
+$LicenseKeyOExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyOExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key O Date= $LicenseKeyOExpiry" -ErrorAction SilentlyContinue
+
+
+
 $LicenseKeyP = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyP" -ErrorAction SilentlyContinue
 
 LogWrite "License Key P= $LicenseKeyP" -ErrorAction SilentlyContinue
 
+$LicenseKeyPExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyPExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key P Date= $LicenseKeyPExpiry" -ErrorAction SilentlyContinue
+
+
+
 $LicenseKeyT = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyT" -ErrorAction SilentlyContinue
 
 LogWrite "License Key T= $LicenseKeyT" -ErrorAction SilentlyContinue
+
+$LicenseKeyTExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyTExpiry" -ErrorAction SilentlyContinue
+
+LogWrite "License Key T Date= $LicenseKeyTExpiry" -ErrorAction SilentlyContinue
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 LogWrite "..............Information and Notes.............."
