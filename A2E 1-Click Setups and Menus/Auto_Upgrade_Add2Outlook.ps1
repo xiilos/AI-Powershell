@@ -7,6 +7,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Stop Menu Process
+Stop-Process -Name "DidItBetterSupportMenu" -Force -ErrorAction SilentlyContinue
+
 # Test for FTP
 
 try {
