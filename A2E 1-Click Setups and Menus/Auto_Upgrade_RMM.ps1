@@ -7,6 +7,44 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Test for Upgrade Eligibility
+$LicenseKeyDExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyDExpiry" -ErrorAction SilentlyContinue
+
+$Today = Get-Date
+
+#License Varify
+
+#Recovery and Migration Manager--------------
+
+$RMM = if ($LicenseKeyDExpiry -eq "") {
+    "Not Licensed or in Trial"
+}
+
+Elseif ($Today -ge $LicenseKeyDExpiry -and $LicenseKeyDExpiry -notlike "") {
+    "$LicenseKeyAExpiry !!EXPIRED!!" 
+}
+
+Else {
+    "$LicenseKeyDExpiry"
+}
+
+
+$wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+$answer = $wshell.Popup("Please Review your Recovery and Migration Manager License Expiration Dates. If your keys are expired please renew the software.
+Click OK to continue with the upgrade, or Cancel to Quit.
+
+Expirations Dates as of $Today :
+
+Recovery and Migration Manager= $RMM
+
+
+
+NOTE* Upgrading Recoery and Migration Manager with expired keys will stop functionality!
+", 0, "ATTENTION!! RMM Licensing", 0 + 1)
+if ($answer -eq 2) { Break }
+
+
+
 # Test for FTP
 
 try {

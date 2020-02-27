@@ -1,7 +1,7 @@
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    # Relaunch as an elevated process:
-    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-    exit
+  # Relaunch as an elevated process:
+  Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+  exit
 }
 
 #Execution Policy
@@ -18,21 +18,172 @@ $LicenseKeyOExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\Ope
 $LicenseKeyPExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyPExpiry" -ErrorAction SilentlyContinue
 $LicenseKeyTExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyTExpiry" -ErrorAction SilentlyContinue
 
-$Today = Get-Date -format M/dd/yyy
+$Today = Get-Date
 
 #License Varify
-if ($Today -ge $LicenseKeyAExpiry -and $LicenseKeyAExpiry -notlike "") {
-    "$LicenseKeyAExpiry !!EXPIRED!!"
 
+#Calendars--------------
+
+$Calendars = if ($LicenseKeyAExpiry -eq "") {
+    "Not Licensed or in Trial"
 }
 
-Elseif ($LicenseKeyAExpiry -eq "") {
-    "Not Licensed or in Trial"
+
+Elseif ($Today -ge $LicenseKeyAExpiry -and $LicenseKeyAExpiry -notlike "") {
+    "$LicenseKeyAExpiry !!EXPIRED!!" 
+
 }
 
 Else {
     "$LicenseKeyAExpiry"
 }
+
+#Contacts--------------
+
+$Contacts = if ($Today -ge $LicenseKeyCExpiry -and $LicenseKeyCExpiry -notlike "") {
+  "$LicenseKeyCExpiry !!EXPIRED!!"
+
+}
+
+Elseif ($LicenseKeyCExpiry -eq "") {
+  "Not Licensed or in Trial"
+}
+
+Else {
+  "$LicenseKeyCExpiry"
+}
+
+#RGM--------------
+
+$RGM = if ($Today -ge $LicenseKeyEExpiry -and $LicenseKeyEExpiry -notlike "") {
+  "$LicenseKeyEExpiry !!EXPIRED!!"
+
+}
+
+Elseif ($LicenseKeyEExpiry -eq "") {
+  "Not Licensed or in Trial"
+}
+
+Else {
+  "$LicenseKeyEExpiry"
+}
+
+#GAL--------------
+
+$GAL = if ($Today -ge $LicenseKeyGExpiry -and $LicenseKeyGExpiry -notlike "") {
+  "$LicenseKeyGExpiry !!EXPIRED!!"
+
+}
+
+Elseif ($LicenseKeyGExpiry -eq "") {
+  "Not Licensed or in Trial"
+}
+
+Else {
+  "$LicenseKeyGExpiry"
+}
+
+
+#MAIL--------------
+
+$Mail = if ($Today -ge $LicenseKeyMExpiry -and $LicenseKeyMExpiry -notlike "") {
+  "$LicenseKeyMExpiry !!EXPIRED!!"
+
+}
+
+Elseif ($LicenseKeyMExpiry -eq "") {
+  "Not Licensed or in Trial"
+}
+
+Else {
+  "$LicenseKeyMExpiry"
+}
+
+
+#EMAIL--------------
+
+$Email = if ($Today -ge $LicenseKeyNExpiry -and $LicenseKeyNExpiry -notlike "") {
+  "$LicenseKeyNExpiry !!EXPIRED!!"
+
+}
+
+Elseif ($LicenseKeyNExpiry -eq "") {
+  "Not Licensed or in Trial"
+}
+
+Else {
+  "$LicenseKeyNExpiry"
+}
+
+
+#Notes--------------
+
+$Notes = if ($Today -ge $LicenseKeyOExpiry -and $LicenseKeyOExpiry -notlike "") {
+  "$LicenseKeyOExpiry !!EXPIRED!!"
+
+}
+
+Elseif ($LicenseKeyOExpiry -eq "") {
+  "Not Licensed or in Trial"
+}
+
+Else {
+  "$LicenseKeyOExpiry"
+}
+
+
+#Posts--------------
+
+$Posts = if ($Today -ge $LicenseKeyPExpiry -and $LicenseKeyPExpiry -notlike "") {
+  "$LicenseKeyPExpiry !!EXPIRED!!"
+
+}
+
+Elseif ($LicenseKeyPExpiry -eq "") {
+  "Not Licensed or in Trial"
+}
+
+Else {
+  "$LicenseKeyPExpiry"
+}
+
+
+#Tasks--------------
+
+$Tasks = if ($Today -ge $LicenseKeyTExpiry -and $LicenseKeyTExpiry -notlike "") {
+  "$LicenseKeyTExpiry !!EXPIRED!!"
+
+}
+
+Elseif ($LicenseKeyTExpiry -eq "") {
+  "Not Licensed or in Trial"
+}
+
+Else {
+  "$LicenseKeyTExpiry"
+}
+
+
+$wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+$answer = $wshell.Popup("Please Review your Add2Exchange License Expiration Dates. If your keys are expired please renew the software. Click OK to continue with the upgrade, or Cancel to Quit.
+
+Expirations Dates as of $Today :
+
+Calendars Sync= $Calendars
+Contacts Sync=  $Contacts
+Relationship Group Manager= $RGM
+GAL Sync= $GAL
+Mail Confidentiality= $Mail
+Email Notifications= $Email
+Notes Sync= $Notes
+Posts Sync= $Posts
+Tasks Sync= $Tasks
+
+
+NOTE* Upgrading Add2Exchange with expired keys will stop synchronization!
+", 0, "ATTENTION!! Add2Exchange Licensing", 0 + 1)
+if ($answer -eq 2) { Break }
+
 
 
 
@@ -42,17 +193,17 @@ Stop-Process -Name "DidItBetterSupportMenu" -Force -ErrorAction SilentlyContinue
 #Test for FTP
 
 try {
-    $FTP = New-Object System.Net.Sockets.TcpClient("ftp.diditbetter.com", 21)
-    $FTP.Close()
-    Write-Host "Connectivity OK."
+  $FTP = New-Object System.Net.Sockets.TcpClient("ftp.diditbetter.com", 21)
+  $FTP.Close()
+  Write-Host "Connectivity OK."
 }
 catch {
-    $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-    $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
-    Start-Process "http://support.diditbetter.com/Secure/Login.aspx?returnurl=/downloads.aspx"
-    Write-Host "Quitting"
-    Get-PSSession | Remove-PSSession
-    Exit
+  $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+  $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+  Start-Process "http://support.diditbetter.com/Secure/Login.aspx?returnurl=/downloads.aspx"
+  Write-Host "Quitting"
+  Get-PSSession | Remove-PSSession
+  Exit
 }
 
 #Stop Add2Exchange Service
@@ -68,11 +219,11 @@ Write-Host "Stopping the Agent. Please Wait."
 Start-Sleep -s 5
 $Agent = Get-Process "Add2Exchange Agent" -ErrorAction SilentlyContinue
 if ($Agent) {
-    Write-Host "Waiting for Agent to Exit"
-    Start-Sleep -s 5
-    if (!$Agent.HasExited) {
-        $Agent | Stop-Process -Force
-    }
+  Write-Host "Waiting for Agent to Exit"
+  Start-Sleep -s 5
+  if (!$Agent.HasExited) {
+      $Agent | Stop-Process -Force
+  }
 }
 
 
@@ -90,10 +241,10 @@ Write-Host "Creating Landing Zone"
 $TestPath = "C:\zlibrary\Add2Exchange Upgrades"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
-    Write-Host "Add2Exchange Upgrades Directory Exists...Resuming"
+  Write-Host "Add2Exchange Upgrades Directory Exists...Resuming"
 }
 Else {
-    New-Item -ItemType directory -Path "C:\zlibrary\Add2Exchange Upgrades"
+  New-Item -ItemType directory -Path "C:\zlibrary\Add2Exchange Upgrades"
 }
 
 #Downloading Add2Exchange
@@ -122,17 +273,17 @@ Write-Host "Done"
 
 #Installing Add2Exchange
 Do {
-    Write-Host "Installing Add2Exchange"
-    $Location = Get-ChildItem -Path $root | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-    Push-Location $Location
-    Start-Process msiexec.exe -Wait -ArgumentList '/I "Add2Exchange_Upgrade.msi" /quiet' -ErrorAction Inquire -ErrorVariable InstallError;
-    Write-Host "Finished...Upgrade Complete"
+  Write-Host "Installing Add2Exchange"
+  $Location = Get-ChildItem -Path $root | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+  Push-Location $Location
+  Start-Process msiexec.exe -Wait -ArgumentList '/I "Add2Exchange_Upgrade.msi" /quiet' -ErrorAction Inquire -ErrorVariable InstallError;
+  Write-Host "Finished...Upgrade Complete"
 
-    If ($InstallError) { 
-        Write-Warning -Message "Something Went Wrong with the Install!"
-        Write-Host "Trying The Install Again in 2 Seconds"
-        Start-Sleep -S 2
-    }
+  If ($InstallError) { 
+      Write-Warning -Message "Something Went Wrong with the Install!"
+      Write-Host "Trying The Install Again in 2 Seconds"
+      Start-Sleep -S 2
+  }
 } Until (-not($InstallError))
 
 
