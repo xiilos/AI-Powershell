@@ -501,7 +501,7 @@ $A2OPermissions.Add_Click( { Start-Process Powershell .\Add2Outlook_Set_Granular
 $AutoPermissions.Add_Click( { Start-Process PowerShell .\Permissions_Task_Creation.ps1 })
 $DownloadAdd2Exchange.Add_Click( { Start-Process http://support.DidItBetter.com/Secure/Login.aspx?returnurl=/downloads.aspx })
 $DownloadToolKit.Add_Click( { Start-Process ftp://ftp.diditbetter.com/Add2Outlook%20Toolkit/Upgrades/Add2Outlook%20ToolKit%20Full%20Installation.exe })
-$DownloadSQL.Add_Click( { Start-Process ftp://ftp.DidItBetter.com/SQL/SQL2012Management/2012SQLManagementStudio_x64_ENU.exe })
+$DownloadSQL.Add_Click( { Start-Process https://aka.ms/ssmsfullsetup })
 $A2EDiags.Add_Click( { Start-Process PowerShell .\Get_Diags.ps1 })
 $FTPDownloads.Add_Click( { Start-Process ftp.DidItBetter.com })
 $GetHelp.Add_Click( { Start-Process http://support.DidItBetter.com/support-request.aspx })
