@@ -200,7 +200,7 @@ catch {
 
 Write-Host "Stopping Add2Exchange Service"
 Stop-Service -Name "Add2Exchange Service"
-Start-Sleep -s 2
+Start-Sleep -s 5
 Write-Host "Done"
 
 #Stop The Add2Exchange Agent
