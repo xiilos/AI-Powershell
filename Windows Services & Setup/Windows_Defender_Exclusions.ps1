@@ -24,8 +24,12 @@ if ($Enabled -eq $True) {
   #Variables:
   $EXCL1 = join-path -path $Drive -childpath "Program Files (x86)\OpenDoor Software®"
   $EXCL2 = join-path -path $Drive -childpath "Program Files (x86)\Microsoft SQL Server"
-  $EXCL3 = join-path -path $Drive -childpath "Program Files (x86)\DidItBetterSoftware"
-  $EXCL4 = join-path -path $Drive -childpath "zLibrary"
+  $EXCL3 = join-path -path $Drive -childpath "Program Files\Microsoft SQL Server"
+  $EXCL4 = join-path -path $Drive -childpath "Program Files (x86)\DidItBetterSoftware"
+  $EXCL5 = join-path -path $Drive -childpath "zLibrary"
+  $EXCL6 = join-path -path $Drive -childpath "Program Files (x86)\Microsoft Office"
+  $EXCL7 = "C:\Users\zadd2exchange\AppData"
+
 
 
   #Write the Exclusions
@@ -34,6 +38,9 @@ if ($Enabled -eq $True) {
   Add-MpPreference -ExclusionPath $EXCL2
   Add-MpPreference -ExclusionPath $EXCL3
   Add-MpPreference -ExclusionPath $EXCL4
+  Add-MpPreference -ExclusionPath $EXCL5
+  Add-MpPreference -ExclusionPath $EXCL6
+  Add-MpPreference -ExclusionPath $EXCL7
 
   Write-Host "Done"
 
