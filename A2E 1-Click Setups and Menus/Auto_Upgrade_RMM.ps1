@@ -30,16 +30,22 @@ Else {
 
 
 $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-$answer = $wshell.Popup("Please Review your Recovery and Migration Manager License Expiration Dates. If your keys are expired please renew the software.
-Click OK to continue with the upgrade, or Cancel to Quit.
+$answer = $wshell.Popup("Please Review your Recovery and Migration Manager License Expiration Dates below.
 
-Expirations Dates as of $Today :
+If your Free Upgrade Period (Software Assurance) has passed and they are expired, you will need to renew the software to continue using it.
+If you have already renewed or in that process, please Press Continue. 
 
-Recovery and Migration Manager= $RMM
+Your Software Mainenance Free Upgrade Periods
 
+$RMM for Recovery and Migration Manager
 
+$Today  is today’s date, and any keys for your active functioning modules should expire AFTER this date.
 
-NOTE* Upgrading Recoery and Migration Manager with expired keys will stop functionality!
+Click OK to continue with your upgrade, or Cancel to Quit.
+
+NOTE* Upgrading Recovery and Migration Manager with expired keys and outside Software Assurance will stop synchronization until a renewal is purchased and new keys are issued.
+Also, if the service account can receive email, after you purchase, the keys will automatically be applied, usually without intervention.
+
 ", 0, "ATTENTION!! RMM Licensing", 0 + 1)
 if ($answer -eq 2) { Break }
 

@@ -155,22 +155,30 @@ Else {
 
 
 $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-$answer = $wshell.Popup("Please Review your Add2Exchange License Expiration Dates. If your keys are expired please renew the software. Click OK to continue with the upgrade, or Cancel to Quit.
+$answer = $wshell.Popup("Please Review your Add2Exchange License Expiration Dates below.
 
-Expirations Dates as of $Today :
+If your Free Upgrade Period (Software Assurance) has passed and they are expired, you will need to renew the software to continue using it.
+If you have already renewed or in that process, please Press Continue.
 
-Calendars Sync= $Calendars
-Contacts Sync=  $Contacts
-Relationship Group Manager= $RGM
-GAL Sync= $GAL
-Mail Confidentiality= $Mail
-Email Notifications= $Email
-Notes Sync= $Notes
-Posts Sync= $Posts
-Tasks Sync= $Tasks
+Your Software Mainenance Free Upgrade Periods
 
+$Calendars for Calendars Synchronization
+$Contacts for Contacts Synchronization
+$RGM  for the Relationship Group Manager 
+$GAL for GAL Synchronization 
+$Notes for Notes Synchronization 
+$Posts  for Posts Synchronization 
+$Tasks for Tasks Synchronization 
+$Mail for Email Synchronization
+$Email  for Confidential Email Notifier
 
-NOTE* Upgrading Add2Exchange with expired keys will stop synchronization!
+$Today is today’s date, and any keys for your active functioning modules should expire AFTER this date.  
+
+Click OK to continue with your upgrade, or Cancel to Quit.
+
+NOTE* Upgrading Add2Exchange with expired keys and outside Software Assurance will stop synchronization until a renewal is purchased and new keys are issued.
+Also, if the service account can receive email, after you purchase, the keys will automatically be applied, usually without intervention.
+
 ", 0, "ATTENTION!! Add2Exchange Licensing", 0 + 1)
 if ($answer -eq 2) { Break }
 
