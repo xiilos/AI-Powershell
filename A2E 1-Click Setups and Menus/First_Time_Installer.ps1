@@ -22,7 +22,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 #Step 5: Mailbox Creation
 #Step 6: Create a Mail Profile
 #Step 7: Add Permissions
-#Strp 8: Add Public Folder Permissions
+#Step 8: Add Public Folder Permissions
 #Step 9: Enable AutoLogon
 #Step 10: Install Add2Exchange
 #Step 11: Add Registry Favs
