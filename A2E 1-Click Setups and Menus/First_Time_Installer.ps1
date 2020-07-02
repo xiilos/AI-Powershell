@@ -170,89 +170,16 @@ Log off and back on as the new Sync Service account and run this again before pr
 
         # Powershell Update
         # Check if .Net 4.5 or above is installed
+        # Check Operating Sysetm
 
-        $release = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Release -ErrorAction SilentlyContinue -ErrorVariable evRelease).release
-        $installed = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Install -ErrorAction SilentlyContinue -ErrorVariable evInstalled).install
-
-        if (($installed -ne 1) -or ($release -lt 378389)) {
-            Write-Host "We need to download .Net 4.5.2"
-            Write-Host "Downloading"
-            $Directory = "C:\PowerShell"
-
-            if ( -Not (Test-Path $Directory.trim() )) {
-                New-Item -ItemType directory -Path C:\PowerShell
-            }
-
-            $url = "ftp://ftp.diditbetter.com/PowerShell/NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-            $output = "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-            (New-Object System.Net.WebClient).DownloadFile($url, $output)    
-            Start-Process -FilePath "C:\PowerShell\NDP452-KB2901907-x86-x64-AllOS-ENU.exe" -wait
-            Write-Host "Download Complete"
-            $wshell = New-Object -ComObject Wscript.Shell
-            $answer = $wshell.Popup("Please Reboot after Installing and run this again", 0, "Done", 0x1)
-            if ($answer -eq 2) { Break }
-            Write-Host "Quitting"
-            Get-PSSession | Remove-PSSession
-            Exit
+        $Confirmation = Read-Host "Check to see if you are on the latest powershell? [Y/N]"
+        if ($confirmation -eq 'y') {
+            Push-Location ".\Setup"
+            Start-Process Powershell .\Legacy_PowerShell.ps1
         }
-
-
-        #Check Operating Sysetm
-
-        $BuildVersion = [System.Environment]::OSVersion.Version
-
-
-        #OS is 10+
-        if ($BuildVersion.Major -like '10') {
-            Write-Host "WMF 5.1 is not supported for Windows 10 and above"
+        if ($confirmation -eq 'n') {
+            Write-Host "Skipping"
         }
-
-        #OS is 7
-        if ($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '1') {
-        
-            Write-Host "Downloading WMF 5.1 for 7+"
-            $Directory = "C:\PowerShell"
-
-            if ( -Not (Test-Path $Directory.trim() )) {
-                New-Item -ItemType directory -Path C:\PowerShell
-            }
-            $url = "ftp://ftp.diditbetter.com/PowerShell/Win7AndW2K8R2-KB3191566-x64.msu"
-            $output = "C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu"
-            (New-Object System.Net.WebClient).DownloadFile($url, $output)
-            Start-Process -FilePath 'C:\PowerShell\Win7AndW2K8R2-KB3191566-x64.msu' -wait
-            Write-Host "Download Complete"
-            $wshell = New-Object -ComObject Wscript.Shell
-            $answer = $wshell.Popup("Please Reboot after Installing and run this again", 0, "Done", 0x1)
-            if ($answer -eq 2) { Break }
-            Write-Host "Quitting"
-            Get-PSSession | Remove-PSSession
-            Exit
-        }
-
-        #OS is 8
-        elseif ($BuildVersion.Major -eq '6' -and $BuildVersion.Minor -le '3') {
-        
-            Write-Host "Downloading WMF 5.1 for 8+"
-            $Directory = "C:\PowerShell"
-
-            if ( -Not (Test-Path $Directory.trim() )) {
-                New-Item -ItemType directory -Path C:\PowerShell
-            }
-            $url = "ftp://ftp.diditbetter.com/PowerShell/Win8.1AndW2K12R2-KB3191564-x64.msu"
-            $output = "C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu"
-            (New-Object System.Net.WebClient).DownloadFile($url, $output)
-            Start-Process -FilePath 'C:\PowerShell\Win8.1AndW2K12R2-KB3191564-x64.msu' -wait
-            Write-Host "Download Complete"
-            $wshell = New-Object -ComObject Wscript.Shell
-            $answer = $wshell.Popup("Please Reboot after Installing and run this again", 0, "Done", 0x1)
-            if ($answer -eq 2) { Break }
-            Write-Host "Quitting"
-            Get-PSSession | Remove-PSSession
-            Exit
-        }
-
-        Write-Host "Nothing to do"
-        Write-Host "You Are on the latest version of PowerShell"
 
 
         #Step 3-----------------------------------------------------------------------------------------------------------------------------------------------------Step 3
@@ -297,22 +224,10 @@ Log off and back on as the new Sync Service account and run this again before pr
             $confirmation = Read-Host "Would you like me to Install Outlook 365? [Y/N]"
             if ($confirmation -eq 'y') {
 
-                $confirmation = Read-Host "Office 365 Pro Retail or Business Retail? [P/B]"
-                if ($confirmation -eq 'P') {
-
                     Write-Host "Please Wait while we install Office 365 Pro Retail"
                     Push-Location -Path ".\O365Outlook32\Setup Files"
                     .\setup.exe /configure Office365_Pro_Reatilx86_Configuration.xml
                 }
-
-                if ($confirmation -eq 'B') {
-
-                    Write-Host "Please Wait while we install Office 365 Business Retail"
-                    Push-Location -Path ".\O365Outlook32\Setup Files"
-                    .\setup.exe /configure Office365_Business_Retailx86_Configuration.xml
-                
-                }
-            }
 
             if ($confirmation -eq 'n') {
 
@@ -358,7 +273,7 @@ Note* Make sure you do not have Cache checked. When this is finished click OK to
         # Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
 
         #Adding Permissions
-        $Confirmation = Read-Host "Do We need to run through permissions? [Y/N]"
+        $Confirmation = Read-Host "Do We need to run through Add2Exchange permissions? [Y/N]"
         if ($confirmation -eq 'y') {
             Push-Location ".\Setup"
             Start-Process Powershell .\PermissionsOnPremOrO365Combined.ps1
