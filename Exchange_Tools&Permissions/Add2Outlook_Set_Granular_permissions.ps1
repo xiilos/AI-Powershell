@@ -48,6 +48,7 @@ switch ($input1) {
         Import-Module "MSonline" -ErrorAction SilentlyContinue
         If ($error) {
             Write-Host "Adding Azure MSonline module"
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
             Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
         } 
