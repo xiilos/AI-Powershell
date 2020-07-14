@@ -13,29 +13,40 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 # Script #
 
 # Bypass AutoDiscover
+Get-ItemProperty -Path "HKCU:Software\Policies\Microsoft\Office\16.0\Outlook\Autodiscover" -Name "ExcludeExplicitO365Endpoint" -ErrorAction SilentlyContinue -ErrorVariable Error
 
-$Val = Get-ItemProperty -Path "HKCU:Software\Policies\Microsoft\Office\16.0\Outlook\Autodiscover" -Name "ExcludeExplicitO365Endpoint" -ErrorAction SilentlyContinue -ErrorVariable Error
+    If ($Error) {
+        New-Item "HKCU:Software\Policies\Microsoft\Office\16.0\Outlook" -Name "Autodiscover"
+    }
 
-If ($Error) {
-    New-ItemProperty "HKCU:Software\Policies\Microsoft\Office\16.0\Outlook\Autodiscover" -Name "ExcludeExplicitO365Endpoint" -Value 1 -PropertyType "DWord"
-}
 
-if($val.ExcludeExplicitO365Endpoint -ne 0)
+Do {
+  $confirmation = Read-Host "Do you want to Bypass AutoDiscover for Office 365 [Y/N]"
+  if ($confirmation -eq 'Y') {
+    Write-Host "Bypassing AutoDiscover for Office 365"
+   
+        New-ItemProperty "HKCU:Software\Policies\Microsoft\Office\16.0\Outlook\Autodiscover" -Name "ExcludeExplicitO365Endpoint" -Value 1 -PropertyType "DWord"
+    
+    
+    if($val.ExcludeExplicitO365Endpoint -ne 0)
+    
+    {
+    Set-ItemProperty -Path "HKCU:Software\Policies\Microsoft\Office\16.0\Outlook\Autodiscover" -Name "ExcludeExplicitO365Endpoint" -value 1
+    }
+    Write-Host "AutoDiscover has now been bypassed"
+    Write-Host "Done"
+  }
 
-{
-Set-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA" -value 0
-Write-Host "UAC is now Disabled"
-$wshell = New-Object -ComObject Wscript.Shell
-$wshell.Popup("Please Reboot",0,"Done",0x1)
-}
+    
+  if ($confirmation -eq 'N') {
+    Write-Host "Disabling Bypass for Office 365"
+    Set-ItemProperty -Path "HKCU:Software\Policies\Microsoft\Office\16.0\Outlook\Autodiscover" -Name "ExcludeExplicitO365Endpoint" -value 0
+    Write-Host "AutoDiscover has now been set to default on premise"
+    Write-Host "Done"
+  }
+  $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
-Else {
-
-  $wshell = New-Object -ComObject Wscript.Shell
-  $wshell.Popup("UAC Is already Disabled",0,"Done",0x1)
-
-}
-
+} Until ($repeat -eq 'n')
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
