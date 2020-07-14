@@ -45,30 +45,23 @@ switch ($input1) {
         Clear-Host 
         'You chose Office 365'
         $error.clear()
-        Import-Module "MSonline" -ErrorAction SilentlyContinue
+        Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
         If ($error) {
-            Write-Host "Adding Azure MSonline module"
+            Write-Host "Adding EXO-V2 module"
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-            Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
-        } 
+            Install-Module –Name ExchangeOnlineManagement -WarningAction "Inquire"
+        }
+         
         Else { Write-Host 'Module is installed' }
 
+        Write-Host "Updating EXO-V2 Module Please Wait..."
+        Update-Module -Name ExchangeOnlineManagement
+        Import-Module –Name ExchangeOnlineManagement
 
         Write-Host "Sign in to Office365 as Global Admin"
-        Do {
-            $Cred = Get-Credential
-            If (!$Cred) { Exit }
-            Connect-MsolService -Credential $Cred
-            $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection -ErrorAction SilentlyContinue -ErrorVariable LoginError;
-            If ($LoginError) { 
-                Write-Warning -Message "Username or Password is Incorrect!"
-                Write-Host "Trying Again in 2 Seconds....."
-                Start-Sleep -S 2
-            }
-        } Until (-not($LoginError))
         
-        Import-PSSession $Session -DisableNameChecking
-        Import-Module MSOnline
+        Connect-ExchangeOnline
     
     }
             
