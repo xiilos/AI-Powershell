@@ -97,9 +97,6 @@ $Outlook_Profile_Set.Add_Click({Start-Process Powershell .\Outlook_Profile_Set.p
 $Bypass_O365.Add_Click({Start-Process Powershell .\Bypass AutoDiscover.ps1})
 
 
-
-#Write your logic code here
-
 [void]$OutlookTools_Menu.ShowDialog()
 
 # End Scripting
