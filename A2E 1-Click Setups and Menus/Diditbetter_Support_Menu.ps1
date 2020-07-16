@@ -447,6 +447,14 @@ $WindowsDefender.height          = 10
 $WindowsDefender.location        = New-Object System.Drawing.Point(255,315)
 $WindowsDefender.Font            = 'Microsoft Sans Serif,9'
 
+$Outlook_Tools_Menu              = New-Object system.Windows.Forms.Label
+$Outlook_Tools_Menu.text         = "Outlook Tools"
+$Outlook_Tools_Menu.AutoSize     = $true
+$Outlook_Tools_Menu.width        = 150
+$Outlook_Tools_Menu.height       = 10
+$Outlook_Tools_Menu.location     = New-Object System.Drawing.Point(255,443)
+$Outlook_Tools_Menu.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
+
 
 $ToolTip1.SetToolTip($Add2ExchangeUpgrade,'This will Upgrade your Current Version of Add2Exchange Enterprise to the Latest Version')
 $ToolTip1.SetToolTip($UpgradeRMM,'This will Upgrade your Current Version of Recovery and Migration Manager to the Latest Version')
@@ -489,7 +497,7 @@ $DidItBetterSupportMenu.controls.AddRange(@($Upgrades, $Add2ExchangeUpgrade, $Up
         $DownloadToolKit, $DownloadSQL, $FTPDownloads, $GetSupport, $GetHelp, $SearchDidItBetter, $QuickStartGuide, $Tools, $AutoLogon, $DirSync, $DisableUAC, $GroupPolicyResults, $CheckPowerShell, $DisableOSC,
         $AddRegistryFavorites, $Reset_A2E_Passwords, $SyncScenarios, $GALSync, $PrivatetoPrivate, $PublictoPublic, $PrivatetoPublic, $PublictoPrivate, $TemplateCreation, $MigrateA2E, $ExhangeMigration, $DidItBetterLogo,
         $UpgradeToolkit, $A2EDiags, $CreateSupporttext, $Revision, $UpgradeAdd2Outlook, $AD_Photos, $MSExchangeDelegate, $ExchangeShell, $CommandsList, $A2E_Migration_Wizard, $Configuration, $FixesEvents, $ModernAuth,
-        $Shortcuts,$DIBMMC,$RegistryEditor,$DIBDirectory,$TaskScheduler,$WindowsDefender))
+        $Shortcuts,$DIBMMC,$RegistryEditor,$DIBDirectory,$TaskScheduler,$WindowsDefender,$Outlook_Tools_Menu))
 
 
 $Add2ExchangeUpgrade.Add_Click( { Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1 })
@@ -549,6 +557,7 @@ $DIBDirectory.Add_Click({
 $TaskScheduler.Add_Click({Start-Process taskschd.msc})
 
 $WindowsDefender.Add_Click({Start-Process Powershell .\Windows_Defender_Exclusions.ps1})
+$Outlook_Tools_Menu.Add_Click({Start-Process Powershell .\Outlook_Tools_Menu.ps1})
 
 
 

@@ -291,7 +291,7 @@ Note* Make sure you do not have Cache checked. When this is finished click OK to
 Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
 Click OK to Continue", 0, "AutoLogin", 0x1)
         if ($answer -eq 2) { Break }
-
+        Set-Location $home
         Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
 
 
@@ -303,6 +303,7 @@ Click OK to Continue", 0, "AutoLogin", 0x1)
         $answer = $wshell.Popup("System Setup Complete. Lets Install the Software", 0, "Complete", 0x1)
         if ($answer -eq 2) { Break }
         Do {
+            Set-Location $home
             Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction SilentlyContinue -ErrorVariable InstallError;
 
             If ($InstallError) { 
