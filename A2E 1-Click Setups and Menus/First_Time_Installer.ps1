@@ -174,9 +174,9 @@ Log off and back on as the new Sync Service account and run this again before pr
 
         $Confirmation = Read-Host "Check to see if you are on the latest powershell? [Y/N]"
         if ($confirmation -eq 'y') {
-            Set-Location $Home
-            Push-Location ".\Setup"
-            Start-Process Powershell .\Legacy_PowerShell.ps1
+        
+            Start-Process Powershell ".\Setup\Legacy_PowerShell.ps1" -wait
+
         }
         if ($confirmation -eq 'n') {
             Write-Host "Skipping"
@@ -226,9 +226,10 @@ Log off and back on as the new Sync Service account and run this again before pr
             if ($confirmation -eq 'y') {
 
                     Write-Host "Please Wait while we install Office 365 Pro Retail"
-                    Set-Location $Home
+                
                     Push-Location -Path ".\O365Outlook32\Setup Files"
                     .\setup.exe /configure Office365_Pro_Reatilx86_Configuration.xml
+                    Pop-Location
                 }
 
             if ($confirmation -eq 'n') {
@@ -277,9 +278,9 @@ Note* Make sure you do not have Cache checked. When this is finished click OK to
         #Adding Permissions
         $Confirmation = Read-Host "Do We need to run through Add2Exchange permissions? [Y/N]"
         if ($confirmation -eq 'y') {
-            Set-Location $Home
-            Push-Location ".\Setup"
-            Start-Process Powershell .\PermissionsOnPremOrO365Combined.ps1
+        
+            Start-Process Powershell ".\Setup\PermissionsOnPremOrO365Combined.ps1" -wait
+            
         }
         if ($confirmation -eq 'n') {
             Write-Host "Skipping"
@@ -294,7 +295,7 @@ Note* Make sure you do not have Cache checked. When this is finished click OK to
 Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
 Click OK to Continue", 0, "AutoLogin", 0x1)
         if ($answer -eq 2) { Break }
-        Set-Location $Home
+    
         Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
 
 
@@ -306,7 +307,7 @@ Click OK to Continue", 0, "AutoLogin", 0x1)
         $answer = $wshell.Popup("System Setup Complete. Lets Install the Software", 0, "Complete", 0x1)
         if ($answer -eq 2) { Break }
         Do {
-            Set-Location $Home
+        
             Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction SilentlyContinue -ErrorVariable InstallError;
 
             If ($InstallError) { 
@@ -323,38 +324,24 @@ Click OK to Continue", 0, "AutoLogin", 0x1)
         $answer = $wshell.Popup("Once the Install is complete, Click OK to finish the setup", 0, "Finishing Installation", 0x1)
         if ($answer -eq 2) { Break }
 
-        Stop-Process -Name "Add2Exchange Console"
+        #Stop-Process -Name "Add2Exchange Console"
 
         # Step 10-----------------------------------------------------------------------------------------------------------------------------------------------------Step 11
         # Registry Favorites & Shortcuts
 
-        Write-Host "Creating Registry Favorites"
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Session Manager" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControl\Control\Session Manager" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "EnableLUA" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name ".Net Framework" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\.NETFramework" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "OpenDoor Software" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Softwareù" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Add2Exchange"  -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\OpenDoor Softwareù\Add2Exchange" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Pendingfilerename" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "AutoDiscover" -Type string -Value "Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Office" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Group Policy History" -Type string -Value "Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Group Policy\History" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Windows Logon" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Windows Update" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Outlook Social Connector" -Type string -Value "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\ClickToRun\REGISTRY\MACHINE\Software\Wow6432Node\Microsoft\Office\Outlook\AddIns\OscAddin.Connect" -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Regedit\Favorites" -Name "Modern Authentication" -Type string -Value "Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\Identity" -Force -ErrorAction SilentlyContinue
-
+        Start-Process Powershell ".\Setup\Registry_Favorites.ps1" -wait
 
         # Step 11-----------------------------------------------------------------------------------------------------------------------------------------------------Step 11
         # Completion and Wrap-Up
 
         #Removing Outlook Social Connector
         Write-Host "Removing Outlook Social Connector"
-        Set-Location $Home
-        Start-Process ".\Setup\OSC_Disable.bat"
+    
+        Start-Process Powershell ".\Setup\OSC_Disable.bat" -wait
 
         #Creating Setup Details
-        Set-Location $Home
-        Start-Process ".\Setup\A2E_Setup_Details.ps1"
+    
+        Start-Process Powershell ".\Setup\A2E_Setup_Details.ps1" -wait
 
 
         $wshell = New-Object -ComObject Wscript.Shell
