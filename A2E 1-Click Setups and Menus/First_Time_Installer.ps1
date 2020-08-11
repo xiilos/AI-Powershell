@@ -225,12 +225,12 @@ Log off and back on as the new Sync Service account and run this again before pr
             $confirmation = Read-Host "Would you like me to Install Outlook 365? [Y/N]"
             if ($confirmation -eq 'y') {
 
-                    Write-Host "Please Wait while we install Office 365 Pro Retail"
+                Write-Host "Please Wait while we install Office 365 Pro Retail"
                 
-                    Push-Location -Path ".\O365Outlook32\Setup Files"
-                    .\setup.exe /configure Office365_Pro_Reatilx86_Configuration.xml
-                    Pop-Location
-                }
+                Push-Location -Path ".\O365Outlook32\Setup Files"
+                .\setup.exe /configure Office365_Pro_Reatilx86_Configuration.xml
+                Pop-Location
+            }
 
             if ($confirmation -eq 'n') {
 
@@ -293,10 +293,15 @@ Note* Make sure you do not have Cache checked. When this is finished click OK to
 
         $answer = $wshell.Popup("Now we can set the AutoLogon feature for this account.
 Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
-Click OK to Continue", 0, "AutoLogin", 0x1)
-        if ($answer -eq 2) { Break }
-    
-        Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
+Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
+
+        if ($answer -eq 1) {
+            Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
+        }         
+
+        if ($answer -eq 2) { 
+            Write-Host "Skipping AutoLogon"
+        }
 
 
         # Step 9-----------------------------------------------------------------------------------------------------------------------------------------------------Step 9
@@ -324,7 +329,6 @@ Click OK to Continue", 0, "AutoLogin", 0x1)
         $answer = $wshell.Popup("Once the Install is complete, Click OK to finish the setup", 0, "Finishing Installation", 0x1)
         if ($answer -eq 2) { Break }
 
-        #Stop-Process -Name "Add2Exchange Console"
 
         # Step 10-----------------------------------------------------------------------------------------------------------------------------------------------------Step 11
         # Registry Favorites & Shortcuts
@@ -346,7 +350,7 @@ Click OK to Continue", 0, "AutoLogin", 0x1)
 
         $wshell = New-Object -ComObject Wscript.Shell
 
-        $answer = $wshell.Popup("Setup is Complete. You can now start the Add2Exchange Console", 0, "Done", 0x1)
+        $answer = $wshell.Popup("Setup is Complete. You can now use Add2Exchange", 0, "Done", 0x1)
         if ($answer -eq 2) { Break }
         Write-Host "ttyl"
         Get-PSSession | Remove-PSSession
