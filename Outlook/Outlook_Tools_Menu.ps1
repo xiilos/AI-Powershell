@@ -94,7 +94,7 @@ $Install_Outlook64.Add_Click({Start-Process Powershell .\Outlook_Installer.ps1})
 $Outlook_Updates.Add_Click({Start-Process Powershell .\Office_Updater.ps1})
 $Disable_OSC.Add_Click({Start-Process Powershell .\OSC_Disable.bat})
 $Outlook_Profile_Set.Add_Click({Start-Process Powershell .\Outlook_Profile_Set.ps1})
-$Bypass_O365.Add_Click({Start-Process Powershell .\Bypass AutoDiscover.ps1})
+$Bypass_O365.Add_Click({Start-Process Powershell .\Bypass_AutoDiscover.ps1})
 
 
 [void]$OutlookTools_Menu.ShowDialog()

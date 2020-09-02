@@ -214,11 +214,11 @@ Write-Host "Done"
 #Stop The Add2Exchange Agent
 
 Write-Host "Stopping the Agent. Please Wait."
-Start-Sleep -s 5
+Start-Sleep -s 10
 $Agent = Get-Process "Add2Exchange Agent" -ErrorAction SilentlyContinue
 if ($Agent) {
     Write-Host "Waiting for Agent to Exit"
-    Start-Sleep -s 5
+    Start-Sleep -s 10
     if (!$Agent.HasExited) {
         $Agent | Stop-Process -Force
     }

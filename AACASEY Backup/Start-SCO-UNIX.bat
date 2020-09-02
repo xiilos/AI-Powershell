@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\VMware\VMware Workstation\vmrun" -T ws start "E:\vmware\SCO-Unix\SCO Unix IST.vmx"
