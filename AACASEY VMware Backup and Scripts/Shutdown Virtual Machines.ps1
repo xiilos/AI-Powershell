@@ -50,6 +50,7 @@ Start-Sleep -S 60
 
 
 Write-Host "Shutting Down VMware Workstation"
+Write-Host "Waiting 900 seconds for Virtual Machines to Power Off.........."
 Start-Sleep -S 900
 Stop-Process -Name vmware
 
