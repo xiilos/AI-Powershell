@@ -12,15 +12,14 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Script #
 
-#Start-Process "https://downloads.malwarebytes.com/file/mb3" -Wait
 
-Copy-Item "\\fileserv-db1\Sandbox\Port Apps\PortableApps\ccPortable\*" -Destination "\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools\ccPortable" -Recurse
-Copy-Item "\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Quick_Clean.ps1" -Destination "\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools" -Recurse
-Copy-Item "\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Server 2016-2019 New Setup.ps1" -Destination "\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools" -Recurse
-Copy-Item "\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\VM_QuickUpdate_Clean.ps1" -Destination "\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools" -Recurse
-Copy-Item "\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Windows 10 App Removal.ps1" -Destination "\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools" -Recurse
-Copy-Item "\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Windows 10 New Setup.ps1" -Destination "\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools" -Recurse
-Copy-Item "\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Quick_Clean_v2.ps1" -Destination "\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools" -Recurse
+Copy-Item '\\fileserv-db1\Sandbox\Port Apps\PortableApps\ccPortable\*' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools\ccPortable' -Recurse -Force
+Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Quick_Clean.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
+Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Server 2016-2019 New Setup.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
+Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\VM_QuickUpdate_Clean.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
+Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Windows 10 App Removal.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
+Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Windows 10 New Setup.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
+Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Quick_Clean_v2.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
 
 Write-Host "Success"
 Pause
