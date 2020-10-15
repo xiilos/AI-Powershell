@@ -14,7 +14,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Variables
 #List All VM's Below
-Get-VM –computername ‘Hyper-V’,‘Hyper-V01’,‘Hyper-V02’,‘Hyper-V03’,‘Hyper-V04’,‘Hyper-V05’,‘Hyper-V06’,‘Hyper-V08’,‘Hyper-V09’ | EXPORT-CSV C:\Current_VM.csv
+Get-VM –computername ‘Hyper-V01’,‘Hyper-V04’,‘Hyper-V05’,‘Hyper-V06’,‘Hyper-V08’,‘Hyper-V09’ | EXPORT-CSV C:\Current_VM.csv
 
 
 Write-Host "ttyl"
