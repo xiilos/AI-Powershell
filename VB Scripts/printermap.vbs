@@ -33,7 +33,7 @@ strUserName = objNetwork.UserName
 
 strUNCPrinter = "\\DFSFILESERVER\HP LaserJet 4000 Series (Receptionist)"
 strUNCPrinter2 = "\\DFSFILESERVER\HP LaserJet 4000 Series (Accounting)"
-3strUNCPrinter3 = "\\DFSFILESERVER\HP LaserJet P4014/P4015 (Office 1)
+3strUNCPrinter3 = "\\DFSFILESERVER\HP LaserJet P4014/P4015 (Office 1)"
 #'strUNCPrinter4 = "\\DC1\HP LaserJet 4000 (Ted)"
 #'strUNCPrinter5 = "\\SRV1\HPColorL"
 #'strUNCPrinter6 = "\\SRV1\HPLJTC"
