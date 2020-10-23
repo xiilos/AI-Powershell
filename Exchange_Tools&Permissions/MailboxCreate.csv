@@ -1,0 +1,32 @@
+Name,Password,UPN
+"Alex Arbon","!b@tt3ry!","Alex.Arbon@Deva.local"
+"Bryan Boil","!b@tt3ry!","Bryan.Boil@Deva.local"
+"Chris Charlie","!b@tt3ry!","C.Charlie@Deva.local"
+"Daniel Donut","!b@tt3ry!","D.Donut@Deva.local"
+"Ellis Town","!b@tt3ry!","E.Town@Deva.local"
+"Frank Williams","!b@tt3ry!","F.Williams@Deva.local"
+"Gregory Grant","!b@tt3ry!","Greogory.Grant@Deva.local"
+"Heather Lindsy","!b@tt3ry!","H.Lindsy@Deva.local"
+"Ian Tyler","!b@tt3ry!","Ian.Tyler@Deva.local"
+"John Jones","!b@tt3ry!","J.Jones@Deva.local"
+"Kayla Milek","!b@tt3ry!","Kayla.Milek@Deva.local"
+"Lori Greg","!b@tt3ry!","Lori.Greg@Deva.local"
+"Mellisa Morgan","!b@tt3ry!","M.Morgan@Deva.local"
+"Nancy Itola","!b@tt3ry!","Nancy.Itola@Deva.local"
+"Obrian Oscar","!b@tt3ry!","O.Oscar@Deva.local"
+"Peter Townsen","!b@tt3ry!","P.Townsen@Deva.local"
+"Joseph Lotto","!b@tt3ry!","Josepgh.Lotto@Deva.local"
+"Raven Scott","!b@tt3ry!","Raven.Scott@Deva.local"
+"Sylvestor Stallon","!b@tt3ry!","S.Stallon@Deva.local"
+"Tom Tinker","!b@tt3ry!","T.Tinker@Deva.local"
+"Wesley Snipes","!b@tt3ry!","Wesley.Snipes@Deva.local"
+"Vivian Doe","!b@tt3ry!","Vivian.Doe@Deva.local"
+"Wilson Homes","!b@tt3ry!","W.Homes@Deva.local"
+"Mike Bennet","!b@tt3ry!","Mike.Bennet@Deva.local"
+"Tim Stevens","!b@tt3ry!","Tim.Stevens@Deva.local"
+"Zach Casey","!b@tt3ry!","Zach.Casey@Deva.local"
+
+
+
+#Powershell to use: 
+#Import-Csv c:\Mailboxcreate.csv | foreach{new-mailbox -Name $_.name -Password (ConvertTo-SecureString -AsPlainText $_.password -Force) -UserPrincipalName $_.upn -Verbose}
