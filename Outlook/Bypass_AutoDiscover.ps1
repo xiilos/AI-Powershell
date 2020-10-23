@@ -21,7 +21,7 @@ Get-ItemProperty -Path "HKCU:Software\Policies\Microsoft\Office\16.0\Outlook\Aut
 
 
 Do {
-  $confirmation = Read-Host "Do you want to Bypass AutoDiscover for Office 365 [Y/N]"
+  $confirmation = Read-Host "Do you want to Bypass AutoDiscover and connect directly to Office 365 [Y/N]"
   if ($confirmation -eq 'Y') {
     Write-Host "Bypassing AutoDiscover for Office 365"
    

@@ -140,6 +140,17 @@ Else {
 
 Write-Host "All Upgrades Have Been Copied Over!!!" -ForegroundColor Green
 
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#Copy Tools to A2O
+
+Write-Host "Copying Setup files to Add2Outlook " -ForegroundColor Green
+
+Copy-Item "\\diditbetter\dev\DevLimAccess\a2e-enterprise\Contrib\Setup.zip" -Destination "\\diditbetter\dev\DevLimAccess\Add2Outlook\contrib\Setup.zip" -Force -verbose
+Copy-Item "\\diditbetter\dev\DevLimAccess\a2e-enterprise\Contrib\Setup.zip" -Destination "\\diditbetter\DFS\FTP\download\A2E-Enterprise\A2E Tools\Setup.zip" -Force -verbose
+
+
+Write-Host "All files Copied Over!!!" -ForegroundColor Green
+
 Pause
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
