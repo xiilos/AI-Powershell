@@ -51,14 +51,22 @@
 ########################################################
 
 #Variables, only Change here
-$Destination="\\SVATHOME002\Backup$\NB BaseIT" #Copy the Files to this Location
-$Destination="C:\Users\seimi\Downloads"
-$Staging="C:\Users\seimi\Downloads\Staging"
+$Destination="C:\zlibrary" #Copy the Files to this Location
+#$Destination="C:\Temp"
+$Staging="C:\Temp"
 $ClearStaging=$true # When $true, Staging Dir will be cleared
-$Versions="5" #How many of the last Backups you want to keep
-$BackupDirs="C:\Users\seimi\OneDrive - Seidl Michael\0-Temp" #What Folders you want to backup
+$Versions="3" #How many of the last Backups you want to keep
+$BackupDirs="C:\Users\zadd2exchange.MBX" #What Folders you want to backup
 
-$ExcludeDirs="C:\Users\seimi\OneDrive - Seidl Michael\0-Temp\Dir1","C:\Users\seimi\OneDrive - Seidl Michael\0-Temp\Dir2" #This list of Directories will not be copied
+
+#This list of Directories will not be copied
+$ExcludeDirs=
+"C:\Users\zadd2exchange.MBX\AppData",
+"C:\Users\zadd2exchange.MBX\MicrosoftEdgeBackups";
+"C:\Users\zadd2exchange.MBX\NTuser.DAT",
+"C:\Users\zadd2exchange.MBX\OneDrive"
+
+
 
 $LogName="Log.txt" #Log Name
 $LoggingLevel="3" #LoggingLevel only for Output in Powershell Window, 1=smart, 3=Heavy
@@ -133,13 +141,13 @@ Function Logging ($State, $Message) {
 #Create Backupdir
 Function Create-Backupdir {
     New-Item -Path $Backupdir -ItemType Directory | Out-Null
-    sleep -Seconds 5
+    Start-Sleep -Seconds 5
     Logging "INFO" "Create Backupdir $Backupdir"
 }
 
 #Delete Backupdir
 Function Delete-Backupdir {
-    $Folder=Get-ChildItem $Destination | where {$_.Attributes -eq "Directory"} | Sort-Object -Property CreationTime -Descending:$false | Select-Object -First 1
+    $Folder=Get-ChildItem $Destination | Where-Object {$_.Attributes -eq "Directory"} | Sort-Object -Property CreationTime -Descending:$false | Select-Object -First 1
 
     Logging "INFO" "Remove Dir: $Folder"
     
@@ -149,7 +157,7 @@ Function Delete-Backupdir {
 
 #Delete Zip
 Function Delete-Zip {
-    $Zip=Get-ChildItem $Destination | where {$_.Attributes -eq "Archive" -and $_.Extension -eq ".zip"} |  Sort-Object -Property CreationTime -Descending:$false |  Select-Object -First 1
+    $Zip=Get-ChildItem $Destination | Where-Object {$_.Attributes -eq "Archive" -and $_.Extension -eq ".zip"} |  Sort-Object -Property CreationTime -Descending:$false |  Select-Object -First 1
 
     Logging "INFO" "Remove Zip: $Zip"
     
@@ -194,7 +202,7 @@ Function Make-Backup {
     foreach ($Backup in $BackupDirs) {
         $Index=$Backup.LastIndexOf("\")
         $SplitBackup=$Backup.substring(0,$Index)
-        $Files = Get-ChildItem $Backup -Recurse  | select * | Where-Object {$_.mode -notmatch "h" -and $_.fullname -notmatch $exclude} | select fullname #$_.mode -notmatch "h" -and 
+        $Files = Get-ChildItem $Backup -Recurse  | Select-Object * | Where-Object {$_.mode -notmatch "h" -and $_.fullname -notmatch $exclude} | Select-Object fullname #$_.mode -notmatch "h" -and 
 
         foreach ($File in $Files) {
             $restpath = $file.fullname.replace($SplitBackup,"")
@@ -241,7 +249,7 @@ Logging "INFO" "----------------------"
 Logging "INFO" "Start the Script"
 
 #Check if Backupdir needs to be cleaned and create Backupdir
-$Count=(Get-ChildItem $Destination | where {$_.Attributes -eq "Directory"}).count
+$Count=(Get-ChildItem $Destination | Where-Object {$_.Attributes -eq "Directory"}).count
 Logging "INFO" "Check if there are more than $Versions Directories in the Backupdir"
 
 if ($count -gt $Versions) 
@@ -251,7 +259,7 @@ if ($count -gt $Versions)
 }
 
 
-$CountZip=(Get-ChildItem $Destination | where {$_.Attributes -eq "Archive" -and $_.Extension -eq ".zip"}).count
+$CountZip=(Get-ChildItem $Destination | Where-Object {$_.Attributes -eq "Archive" -and $_.Extension -eq ".zip"}).count
 Logging "INFO" "Check if there are more than $Versions Zip in the Backupdir"
 
 if ($CountZip -gt $Versions) {
