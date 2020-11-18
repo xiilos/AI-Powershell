@@ -9,8 +9,36 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
+#Variables
+$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue #Current Add2Exchange Installation Path
+$Staging = $Install + 'Database\Temp' #Temporary Staging area for SQL backup files
+$BackupDirs = $Install + 'Database\A2E_SQL_Backup'
+$Date = (Get-Date -format yyyy-MM-dd)
+
 
 # Script #
+
+#Check and Create DB Backup Locations
+
+$TestPath1 = "$Install\Database\A2E_SQL_Backup"
+if ( $(Try { Test-Path $TestPath1.trim() } Catch { $false }) ) {
+
+    Write-Host "Add2Exchange Backup Directory Exists...Resuming"
+}
+Else {
+    New-Item -ItemType directory -Path "$Install\Database\A2E_SQL_Backup"
+}
+
+$TestPath2 = "$Install\Database\Temp"
+if ( $(Try { Test-Path $TestPath2.trim() } Catch { $false }) ) {
+
+    Write-Host "Add2Exchange Temp Directory Exists...Resuming"
+}
+Else {
+    New-Item -ItemType directory -Path "$Install\Database\Temp"
+}
+
+
 
 #Shutting Down Services
 Write-Host "Stopping Add2Exchange Service"
@@ -32,27 +60,39 @@ if ($Agent) {
 }
 Write-Host "Stopping Add2Exchange SQL Service"
 Stop-Service -Name "SQL Server (A2ESQLSERVER)"
-Start-Sleep -s 2
+Start-Sleep -s 5
 Write-Host "Done"
+
 
 #Backing Up SQL Files
 Write-Host "Backinp Up Add2Exchange SQL Files"
-$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
-Push-Location $Install
-Copy-Item ".\Database\A2E.mdf" -Destination "C:\zlibrary\A2E_SQL_Backup" -ErrorAction SilentlyContinue -ErrorVariable DB1
+
+Copy-Item "$Install\Database\A2E.mdf" -Destination "$Staging" -Recurse -ErrorAction SilentlyContinue -ErrorVariable DB1
 If ($DB1) {
-    Write-Host "Error.....Cannot Find A2E.mdf Database. Please Copy it Manually into the C:\zLibrary\A2E_Backup Folder"
+    Write-Host "Error.....Cannot Find A2E.mdf Database."
     Pause
 }
-Copy-Item ".\Database\A2E_log.LDF" -Destination "C:\zlibrary\A2E_Backup" -ErrorAction SilentlyContinue -ErrorVariable DB2
+Copy-Item "$Install\Database\A2E_log.LDF" -Destination "$Staging" -Recurse -ErrorAction SilentlyContinue -ErrorVariable DB2
 If ($DB2) {
-    Write-Host "Error.....Cannot Find A2E_Log.LDF Database. Please Copy it Manually into the C:\zLibrary\A2E_Backup Folder"
+    Write-Host "Error.....Cannot Find A2E_Log.LDF Database."
     Pause
 }
 
+Write-Host "Starting Add2Exchange SQL Service"
+Start-Service -Name "SQL Server (A2ESQLSERVER)"
+Start-Sleep -s 5
 
+Write-Host "Creating A2E SQL Archive $Date"
 
+Compress-Archive -LiteralPath "$Staging\A2E.mdf","$Staging\A2E_log.LDF" -DestinationPath ($BackupDirs+"\" + (Get-Date -format yyyy-MM-dd) +"-"+(Get-Random -Maximum 900000) + ".zip") -CompressionLevel Optimal -Force
 
+Start-Sleep -s 5
+
+Get-Childitem -Path $Staging -Recurse -Force | Remove-Item -Confirm:$false -Recurse
+
+Write-Host "All Add2Exchange SQL Backups are stored in $Backupdirs"
+Write-Host "Backup Complete..."
+Pause
 
 
 Write-Host "ttyl"

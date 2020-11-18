@@ -12,12 +12,12 @@ Else {
 #Check for MS Online Module
 
 $error.clear()
-        Import-Module "MSonline" -ErrorAction SilentlyContinue
+        Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
         If ($error) {
-            
+            Write-Host "Adding EXO-V2 module"
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-            Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
+            Install-Module –Name ExchangeOnlineManagement -WarningAction "Inquire"
         } 
         
 
@@ -66,7 +66,7 @@ $Create_Task.Font                = 'Microsoft Sans Serif,10,style=Bold'
 $Create_Task.ForeColor           = "#417505"
 
 $O365_GA_Label                   = New-Object system.Windows.Forms.Label
-$O365_GA_Label.text              = "Global Admin Account Name"
+$O365_GA_Label.text              = "O365 Exchange Admin Account Name"
 $O365_GA_Label.AutoSize          = $true
 $O365_GA_Label.width             = 25
 $O365_GA_Label.height            = 10
@@ -240,7 +240,7 @@ $EX_Pass.location                = New-Object System.Drawing.Point(270,87)
 $EX_Pass.Font                    = 'Microsoft Sans Serif,10,style=Bold,Italic'
 
 $GB_Admin_Pass                   = New-Object system.Windows.Forms.Button
-$GB_Admin_Pass.text              = "Global Admin Password"
+$GB_Admin_Pass.text              = "O365 Admin Password"
 $GB_Admin_Pass.width             = 195
 $GB_Admin_Pass.height            = 30
 $GB_Admin_Pass.location          = New-Object System.Drawing.Point(270,144)

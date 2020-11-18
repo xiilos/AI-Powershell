@@ -316,7 +316,7 @@ $CreateSupporttext.location      = New-Object System.Drawing.Point(255,413)
 $CreateSupporttext.Font          = 'Microsoft Sans Serif,9'
 
 $Revision                        = New-Object system.Windows.Forms.Label
-$Revision.text                   = "Rev. 4.2.20"
+$Revision.text                   = "Rev. 4.11.17"
 $Revision.AutoSize               = $true
 $Revision.width                  = 25
 $Revision.height                 = 10
@@ -455,6 +455,14 @@ $Outlook_Tools_Menu.height       = 10
 $Outlook_Tools_Menu.location     = New-Object System.Drawing.Point(255,443)
 $Outlook_Tools_Menu.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
+$A2ESQLBackUp                    = New-Object system.Windows.Forms.Label
+$A2ESQLBackUp.text               = "Backup Add2Exchange SQL DB"
+$A2ESQLBackUp.AutoSize           = $true
+$A2ESQLBackUp.width              = 150
+$A2ESQLBackUp.height             = 10
+$A2ESQLBackUp.location           = New-Object System.Drawing.Point(255,458)
+$A2ESQLBackUp.Font               = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
+
 
 $ToolTip1.SetToolTip($Add2ExchangeUpgrade,'This will Upgrade your Current Version of Add2Exchange Enterprise to the Latest Version')
 $ToolTip1.SetToolTip($UpgradeRMM,'This will Upgrade your Current Version of Recovery and Migration Manager to the Latest Version')
@@ -491,14 +499,13 @@ $ToolTip1.SetToolTip($RegistryEditor,'Open the registry editor')
 $ToolTip1.SetToolTip($DIBDirectory,'Opens the DIB Directory')
 $ToolTip1.SetToolTip($TaskScheduler,'Opens Task Scheduler')
 $ToolTip1.SetToolTip($WindowsDefender,'This tool will add the proper Exclusions to Windows Defender')
+$ToolTip1.SetToolTip($A2ESQLBackUp,'Backup the Add2Exchange SQL Database')
 
-
-$DidItBetterSupportMenu.controls.AddRange(@($Upgrades, $Add2ExchangeUpgrade, $UpgradeRMM, $Permissions, $O365ExchangePermissions, $A2OPermissions, $AutoPermissions, $Downloads, $DownloadAdd2Exchange,
-        $DownloadToolKit, $DownloadSQL, $FTPDownloads, $GetSupport, $GetHelp, $SearchDidItBetter, $QuickStartGuide, $Tools, $AutoLogon, $DirSync, $DisableUAC, $GroupPolicyResults, $CheckPowerShell, $DisableOSC,
-        $AddRegistryFavorites, $Reset_A2E_Passwords, $SyncScenarios, $GALSync, $PrivatetoPrivate, $PublictoPublic, $PrivatetoPublic, $PublictoPrivate, $TemplateCreation, $MigrateA2E, $ExhangeMigration, $DidItBetterLogo,
-        $UpgradeToolkit, $A2EDiags, $CreateSupporttext, $Revision, $UpgradeAdd2Outlook, $AD_Photos, $MSExchangeDelegate, $ExchangeShell, $CommandsList, $A2E_Migration_Wizard, $Configuration, $FixesEvents, $ModernAuth,
-        $Shortcuts,$DIBMMC,$RegistryEditor,$DIBDirectory,$TaskScheduler,$WindowsDefender,$Outlook_Tools_Menu))
-
+$DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$Permissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,
+$DownloadToolKit,$DownloadSQL,$FTPDownloads,$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$DisableOSC,
+$AddRegistryFavorites,$Reset_A2E_Passwords,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,
+$UpgradeToolkit,$A2EDiags,$CreateSupporttext,$Revision,$UpgradeAdd2Outlook,$AD_Photos,$MSExchangeDelegate,$ExchangeShell,$CommandsList,$A2E_Migration_Wizard,$Configuration,$FixesEvents,$ModernAuth,
+$Shortcuts,$DIBMMC,$RegistryEditor,$DIBDirectory,$TaskScheduler,$WindowsDefender,$Outlook_Tools_Menu,$A2ESQLBackUp))
 
 $Add2ExchangeUpgrade.Add_Click( { Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1 })
 $UpgradeRMM.Add_Click( { Start-Process Powershell .\Auto_Upgrade_RMM.ps1 })
@@ -558,6 +565,7 @@ $TaskScheduler.Add_Click({Start-Process taskschd.msc})
 
 $WindowsDefender.Add_Click({Start-Process Powershell .\Windows_Defender_Exclusions.ps1})
 $Outlook_Tools_Menu.Add_Click({Start-Process Powershell .\Outlook_Tools_Menu.ps1})
+$A2ESQLBackUp.Add_Click({Start-Process Powershell .\A2E_SQL_Backup.ps1})
 
 
 
