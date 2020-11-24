@@ -19,6 +19,8 @@ $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange
 $DynamicDG1 = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_Name.txt"
 $StaticDG1 = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_Name.txt"
 
+Try{
+
 $Cred = New-Object -typename System.Management.Automation.PSCredential `
     -Argumentlist $Username, $Password
 
@@ -57,7 +59,16 @@ for ($i = 0; $i -lt $DynamicDG.Length; $i++) {
     }
 }
 
+}
+  
+Catch {
 
+  Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10001 -EntryType FailureAudit -Message "$_.Exception.Message"
+  Get-PSSession | Remove-PSSession
+  Exit
+}
+
+  Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10000 -EntryType SuccessAudit -Message "Add2Exchange PowerShell Added Permissions to a Dynamic Distribution List On-Premise Succesfully."
 
 Get-PSSession | Remove-PSSession
 Exit

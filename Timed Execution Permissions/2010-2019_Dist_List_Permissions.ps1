@@ -19,6 +19,8 @@ $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange
 $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
 $DistributionGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
 
+Try {
+
 $Cred = New-Object -typename System.Management.Automation.PSCredential `
     -Argumentlist $Username, $Password
 
@@ -32,6 +34,17 @@ ForEach ($Member in $DistributionGroupName) {
     Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
 }
 
+
+}
+  
+Catch {
+
+  Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10001 -EntryType FailureAudit -Message "$_.Exception.Message"
+  Get-PSSession | Remove-PSSession
+  Exit
+}
+
+  Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10000 -EntryType SuccessAudit -Message "Add2Exchange PowerShell Added Permissions to a Distribution List On-Premise Succesfully."
 
 Get-PSSession | Remove-PSSession
 Exit

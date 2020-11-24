@@ -547,22 +547,10 @@ $ExchangeShell.Add_Click( { Start-Process Powershell .\Shell.ps1 })
 $CommandsList.Add_Click( { Invoke-Item .\A2E_Permissions_Commands.rtf })
 $A2E_Migration_Wizard.Add_Click( { Start-Process Powershell .\A2E_Auto_Migration.ps1 })
 $ModernAuth.Add_Click( { Start-Process Powershell .\Disable_Modern_Authentication.ps1 })
-
-$DIBMMC.Add_Click({
-        $MMC = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
-        Push-Location $MMC
-        Start-Process ".\Console\DidItBetter MMC.msc"
-})
-
+$DIBMMC.Add_Click({Start-Process Powershell .\A2E_MMC.ps1})
 $RegistryEditor.Add_Click({Start-Process Regedit})
-
-$DIBDirectory.Add_Click({
-        $Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
-        Start-Process $Install
-})
-
+$DIBDirectory.Add_Click({Start-Process Powershell .\A2E_Directory.ps1})
 $TaskScheduler.Add_Click({Start-Process taskschd.msc})
-
 $WindowsDefender.Add_Click({Start-Process Powershell .\Windows_Defender_Exclusions.ps1})
 $Outlook_Tools_Menu.Add_Click({Start-Process Powershell .\Outlook_Tools_Menu.ps1})
 $A2ESQLBackUp.Add_Click({Start-Process Powershell .\A2E_SQL_Backup.ps1})

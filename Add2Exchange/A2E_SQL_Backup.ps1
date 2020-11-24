@@ -1,8 +1,7 @@
-if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-  # Relaunch as an elevated process:
-  Start-Process powershell.exe "-File",('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-  exit
+if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    # Relaunch as an elevated process:
+    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+    exit
 }
 
 #Execution Policy
@@ -14,6 +13,7 @@ $Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Soft
 $Staging = $Install + 'Database\Temp' #Temporary Staging area for SQL backup files
 $BackupDirs = $Install + 'Database\A2E_SQL_Backup'
 $Date = (Get-Date -format yyyy-MM-dd)
+$Retention = "5" #Backup Retention set to 5 Versions by default
 
 
 # Script #
@@ -65,7 +65,7 @@ Write-Host "Done"
 
 
 #Backing Up SQL Files
-Write-Host "Backinp Up Add2Exchange SQL Files"
+Write-Host "Backing Up Add2Exchange SQL Files"
 
 Copy-Item "$Install\Database\A2E.mdf" -Destination "$Staging" -Recurse -ErrorAction SilentlyContinue -ErrorVariable DB1
 If ($DB1) {
@@ -84,16 +84,36 @@ Start-Sleep -s 5
 
 Write-Host "Creating A2E SQL Archive $Date"
 
-Compress-Archive -LiteralPath "$Staging\A2E.mdf","$Staging\A2E_log.LDF" -DestinationPath ($BackupDirs+"\" + (Get-Date -format yyyy-MM-dd) +"-"+(Get-Random -Maximum 900000) + ".zip") -CompressionLevel Optimal -Force
+Compress-Archive -LiteralPath "$Staging\A2E.mdf", "$Staging\A2E_log.LDF" -DestinationPath ($BackupDirs + "\" + (Get-Date -format yyyy-MM-dd) + "-" + (Get-Random -Maximum 900000) + ".zip") -CompressionLevel Fastest -Force
 
 Start-Sleep -s 5
 
+#Cleanup Temp Folder
+Write-Host "Cleaning up the Temp Folder..."
 Get-Childitem -Path $Staging -Recurse -Force | Remove-Item -Confirm:$false -Recurse
 
-Write-Host "All Add2Exchange SQL Backups are stored in $Backupdirs"
-Write-Host "Backup Complete..."
-Pause
+#Backup Retention Cleanup
+Write-Host "Following Retention Schedule and Cleaning up..."
+Function Delete_SQLzip {
+    $Zip = Get-ChildItem $BackupDirs | Where-Object {$_.Attributes -eq "Archive" -and $_.Extension -eq ".zip"} | Sort-Object -Property CreationTime -Descending:$false | Select-Object -First 1
+    
+    $Zip.FullName | Remove-Item -Recurse -Force 
+}
 
+$SQLzip = (Get-ChildItem $BackupDirs | Where-Object {$_.Attributes -eq "Archive" -and $_.Extension -eq ".zip"}).count
+
+If ($SQLzip -gt $Retention) {
+
+    Delete_SQLzip
+
+}
+
+$wshell = New-Object -ComObject Wscript.Shell
+$answer = $wshell.Popup("All Add2Exchange SQL Backups are stored in $Backupdirs", 0, "Backup Complete", 0x1)
+if ($answer -eq 2) { 
+Write-Host "ttyl"
+Get-PSSession | Remove-PSSession
+Exit }
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession

@@ -186,7 +186,7 @@ if ($answer -eq 2) { Break }
 
 
 #Stop Menu Process
-Stop-Process -Name "DidItBetterSupportMenu" -Force -ErrorAction SilentlyContinue
+Stop-Process -Name "DidItBetter Support Menu" -Force -ErrorAction SilentlyContinue
 
 #Test for FTP
 

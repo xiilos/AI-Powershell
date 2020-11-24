@@ -18,6 +18,8 @@ $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange
 $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
 $DistributionGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
 
+Try {
+
 $Cred = New-Object -typename System.Management.Automation.PSCredential `
     -Argumentlist $Username, $Password
 
@@ -33,7 +35,19 @@ ForEach ($Member in $DistributionGroupName) {
 }
 
 
-Get-PSSession | Remove-PSSession
-Exit
+}
+
+Catch {
+  
+    Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10001 -EntryType FailureAudit -Message "$_.Exception.Message"
+    Get-PSSession | Remove-PSSession
+    Exit
+  }
+  
+    Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10000 -EntryType SuccessAudit -Message "Add2Exchange PowerShell Added Permissions to a Distribution List On Office 365 Succesfully."
+  
+  Get-PSSession | Remove-PSSession
+  Exit
+
 
 # End Scripting

@@ -37,7 +37,7 @@ If ($LoginError) {
 
 Write-Host "Shutting Down SBS 2011"
 Start-Process Powershell .\Stop-SBS.bat
-Start-Sleep -S 60
+Start-Sleep -S 10
 
 Write-Host "Shutting Down SCO-UNIX"
 
@@ -46,12 +46,12 @@ Invoke-sshcommand -index 0 -command "shutdown -y -i0 -g0"
 
 Start-Process Powershell .\Stop-SCO-UNIX.bat
 Remove-SSHSession -Index 0 -Verbose
-Start-Sleep -S 60
+Start-Sleep -S 10
 
 
 Write-Host "Shutting Down VMware Workstation"
-Write-Host "Waiting 900 seconds for Virtual Machines to Power Off.........."
-Start-Sleep -S 900
+Write-Host "Waiting 550 seconds for Virtual Machines to Power Off.........."
+Start-Sleep -S 550
 Stop-Process -Name vmware
 
 
@@ -75,7 +75,7 @@ Start-Sleep -S 10
 Write-Host "Starting Up Virtual Machines"
 
 Start-Process Powershell .\Start-SCO-UNIX.bat
-Start-Sleep -S 20
+Start-Sleep -S 10
 Start-Process Powershell .\Start-SBS.bat
 
 

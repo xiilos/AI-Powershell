@@ -38,12 +38,12 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   
   Catch {
   
-    $_.Exception.Message | Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 8001 -EntryType FailureAudit -Message "$_.Exception.Message"
+    Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10001 -EntryType FailureAudit -Message "$_.Exception.Message"
     Get-PSSession | Remove-PSSession
     Exit
   }
   
-    Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 8000 -EntryType SuccessAudit -Message "Add2Exchange PowerShell Added Permissions to All Users Succesfully."
+    Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10000 -EntryType SuccessAudit -Message "Add2Exchange PowerShell Added Permissions to All Users On-Premise Succesfully."
   
   Get-PSSession | Remove-PSSession
   Exit
