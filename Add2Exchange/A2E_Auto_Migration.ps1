@@ -253,6 +253,22 @@ Do {
             Push-Location $InstallLocation
             Copy-Item ".\Setup\Post_A2E_Migration.ps1" -Destination "C:\zlibrary\A2E_Backup" -Recurse -ErrorAction SilentlyContinue
 
+            #Creating Next Steps File
+
+            #Variables
+
+            $NewA2E = Read-Host "What is the Name of your New Add2Exchange Appliance?"
+            
+            Write-Host "Creating Next Steps File"
+            New-Item "C:\zLibrary\A2E_Backup\Next Steps.txt"
+            "Next Steps....
+            Step 1. Log Into your New Appliance as $env:UserName Account if remaining on the domain
+            Step 2. Ensure that $env:UserName is a Local Admin of the new appliance
+            Step 3. Copy over the A2E_Backup folder found in C:\zlibrary to $NewA2E
+            Step 4. Run the PowerShell File Called Post_A2E_Migration.ps1 in the A2E_Backup Folder on the new Machine" | Out-File -FilePath "C:\zLibrary\A2E_Backup\Next Steps.txt" -Append
+
+            Invoke-Item -Path "C:\zLibrary\A2E_Backup\Next Steps.txt"
+
             $wshell = New-Object -ComObject Wscript.Shell
             $answer = $wshell.Popup("All Files are now Backed up and ready for you to Move them over to the New Add2Exchange Appliance", 0, "Migration Wizard", 0x1)
             if ($answer -eq 2) { Break }
