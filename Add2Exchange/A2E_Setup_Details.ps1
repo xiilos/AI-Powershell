@@ -258,44 +258,10 @@ LogWrite "License Key T Date= $LicenseKeyTExpiry" -ErrorAction SilentlyContinue
 LogWrite "..............Information and Notes.............."
 
 LogWrite "
-Contact Info:
-DidITBetter Support
-813-977-5739 
-
---------Current Situation--------
-
-
-
---------Current Issues--------
-
-
-
---------Settings Sync Intervals--------
-
-Add2Exchange GAL Manager – 
-
-Add2Exchange Rel Manager – making and removing relationships - run at least once a day
-
-Sync for Calendars – specified sleep time between syncs
-
-Sync for Contacts – specified sleep time between syncs 
-
-Sync for Tasks – specified sleep time between syncs 
-
---------Current Results--------
-
-GAL:
-RELMAN:
-Add2Exchange Calendar Synchronization (Add2Agent):
-Add2Exchange Contacts Synchronization (Add2Agent): 
-Add2Exchange Tasks Synchronization (Add2Agent): 
-Add2Exchange Posts Synchronization (Add2Agent): 
-Add2Exchange Notes Synchronization (Add2Agent): 
-
 
 --------Onboarding--------
 
-Run Diditbetter_Support_Menu.ps1 as PowerShell file from desktop 
+Run DidTtbetter Support Menu.ps1 as PowerShell file from desktop 
 
 FIRST: If using Relationship Group Manager, add the users to the distribution list and then immediately give permissions.
 
@@ -308,23 +274,22 @@ If you are on Premise, Select *not on Exchange server* for permissions to an On-
 If on premise and not on Exchange Server, enter the netbios name of an Exchange server. [This may not run through your load balancer for Kerberos authentication or if PS Remote is not enabled]  If it fails, you can copy this file to the Exchange Server and run as your Organizational Administrator.
 File Default Location:  C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\PermissionsOnPremOrO365Combined.ps1
 
-Log in as Organization or Global admin or Exchange Organizational Administrator.
+Log in as Global admin or Exchange Organizational Administrator.
 
-Tip for Automatic Permissions
+Tip for Automatic Permissions:
 Consider giving your Sync Service account this desired membership and you can set up Timed Automatic Permissions and give permissions with this account automatically
 
 Global Admin or Exchange Organizational Administrator login Credentials:
 
-
-When asked for service account, use your sync service account, default to ZADD2EXCHANGE
+When asked for service account, use your sync service account, default is ZADD2EXCHANGE
 
 Select how to give permissions
-Select option 0 to give to all, or option 3 to apply to only members of a distribution list 
+Select option 0 to give to all, or option 3 to apply to only members of a distribution list
 
 Distribution list names:
 Do again until all are done
 
-Again, consider using the automatic scheduled permissions option from Diditbetter_Support_Menu
+Again, consider using the automatic scheduled permissions option from the Diditbetter Support Menu
 
 --------Off boarding--------
 
@@ -390,7 +355,9 @@ Antivirus Exclusions from active file scanning
 (These are default locations) 
 C:\Program Files\OpenDoor Software®\
 -	note the *Circle r* in the directory name. Copy and paste to antivirus program
+C:\Program Files (x86)\DidItBetterSoftware
 C:\Program Files\Microsoft SQL Server\
+C:\Users\zAdd2Exchange\AppData
 C:\Zlibrary 
 "
 
@@ -408,6 +375,7 @@ Rename-Item -Path "$Home\Desktop\Support.txt" -NewName "Old_Support.txt" -ErrorA
 Rename-Item -Path "C:\zLibrary\Support.txt" -NewName "Old_Support.txt" -ErrorAction SilentlyContinue
 
 Start-Sleep -Seconds 2
+
 #Shortcut
 $WshShell = New-Object -comObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut("$Home\Desktop\Support.lnk")

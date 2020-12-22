@@ -9,7 +9,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-
 # Script #
 
 #Send Mail Settings
@@ -28,11 +27,19 @@ if ($SendEmail -eq $true) {
   Logging "INFO" "Sending e-mail to $EmailTo from $EmailFrom (SMTPServer = $EmailSMTP) "
   ### the attachment is $log 
   Send-MailMessage -To $EmailTo -From $EmailFrom -Subject $EmailSubject -Body $EmailBody -SmtpServer $EmailSMTP -attachment $Log 
-
+}
 
 $Log = "C:\zlibrary\TEMP\Logs\Event_Log.evtx"
 
   Send-MailMessage -To "kouretas.k@gmail.com" -From "dkouretas@diditbetter.com" -Subject "Add2Exchange Logs" -Body "This is just a test for email" -SmtpServer "192.168.0.11" -port 25 -attachment $Log
+
+
+
+  $yesterday = (Get-Date).AddHours(-24)
+  $ErrWarn4App = Get-WinEvent -FilterHashTable @{LogName='Add2Exchange'; Level=2,3; StartTime=$yesterday} -ErrorAction SilentlyContinue | Select-Object TimeCreated,LogName,ProviderName,Id,LevelDisplayName,Message
+  $ErrWarn4App | Sort-Object TimeCreated | Format-Table -AutoSize 
+
+
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession

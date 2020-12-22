@@ -13,11 +13,13 @@ Else {
 
 $error.clear()
         Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
+        Import-Module "MSonline" -ErrorAction SilentlyContinue
         If ($error) {
             Write-Host "Adding EXO-V2 module"
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
             Install-Module –Name ExchangeOnlineManagement -WarningAction "Inquire"
+            Install-Module MSonline -Confirm:$false -WarningAction "Inquire"
         } 
         
 
