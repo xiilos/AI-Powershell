@@ -49,10 +49,10 @@ Remove-SSHSession -Index 0 -Verbose
 Start-Sleep -S 10
 
 
-Write-Host "Shutting Down VMware Workstation"
+#Write-Host "Shutting Down VMware Workstation"
 Write-Host "Waiting 550 seconds for Virtual Machines to Power Off.........."
 Start-Sleep -S 550
-Stop-Process -Name vmware
+#Stop-Process -Name vmware
 
 
 
