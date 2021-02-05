@@ -59,7 +59,22 @@ switch ($input1) {
         if ($val.EnableLUA -ne 0) {
             Set-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA" -value 0
             Write-Host "Done"
-            Write-Host "UAC is now Disabled. Please Reboot and Run this Script Again" -ForegroundColor Red
+
+            $wshell = New-Object -ComObject Wscript.Shell
+
+            $answer = $wshell.Popup("UAC is now Disabled. But before we reboot we can set the AutoLogon feature for this account.
+Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
+Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
+
+            if ($answer -eq 1) {
+                Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
+            }         
+
+            if ($answer -eq 2) { 
+                Write-Host "Skipping AutoLogon"
+            }
+        
+            Write-Host "Please Reboot and Run this Script Again" -ForegroundColor Red
             Pause
             Get-PSSession | Remove-PSSession
             Exit
@@ -289,20 +304,23 @@ Note* Make sure you do not have Cache checked. When this is finished click OK to
         # Step 8-----------------------------------------------------------------------------------------------------------------------------------------------------Step 8
         # Auto Logon
 
-        $wshell = New-Object -ComObject Wscript.Shell
+        $AutoLogon = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "AutoAdminLogon" -ErrorAction SilentlyContinue
+        If ($AutoLogon -eq 0) {
 
-        $answer = $wshell.Popup("Now we can set the AutoLogon feature for this account.
+            $wshell = New-Object -ComObject Wscript.Shell
+
+            $answer = $wshell.Popup("Now we can set the AutoLogon feature for this account.
 Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
 Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
 
-        if ($answer -eq 1) {
-            Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
-        }         
+            if ($answer -eq 1) {
+                Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
+            }         
 
-        if ($answer -eq 2) { 
-            Write-Host "Skipping AutoLogon"
+            if ($answer -eq 2) { 
+                Write-Host "Skipping AutoLogon"
+            }
         }
-
 
         # Step 9-----------------------------------------------------------------------------------------------------------------------------------------------------Step 9
         # Installing the Software
