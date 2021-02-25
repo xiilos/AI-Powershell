@@ -305,10 +305,16 @@ Write-Host "Setting up Add2Exchange Service to Delayed Start"
 sc.exe config "Add2Exchange Service" start= delayed-auto
 Write-Host "Done"
 
-#Starting Add2Exchange Service
-Write-Host "Starting the Add2Exchange Service"
-Start-Service -Name "Add2Exchange Service"
+#Starting Add2Exchange Console
+Write-Host "Starting the Add2Exchange Console"
+$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
+Push-Location $Install
+Start-Process "./Console/Add2Exchange Console.exe"
+
+#Start-Service -Name "Add2Exchange Service"
 Write-Host "Done"
+
+
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
