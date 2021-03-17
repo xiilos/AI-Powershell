@@ -17,7 +17,7 @@ $Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exch
 $ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
 $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
 $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
-$DistributionGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
+$Groups = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
 
 Try {
 
@@ -29,9 +29,10 @@ Import-PSSession $Session -DisableNameChecking
 Set-ADServerSettings -ViewEntireForest $true
 
 #Timed Execution Permissions to Distribution Lists
-$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-ForEach ($Member in $DistributionGroupName) {
-    Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+
+ForEach ($Group in $Groups) {
+  Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+
 }
 
 

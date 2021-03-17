@@ -16,7 +16,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 $ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
 $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Service_Account_Name.txt"
 $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
-$DistributionGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
+$Groups = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
 
 Try {
 
@@ -29,9 +29,10 @@ Import-PSSession $Session -DisableNameChecking
 Import-Module MSOnline
 
 #Timed Execution Permissions to Distribution Lists
-$DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
-ForEach ($Member in $DistributionGroupName) {
-    Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
+
+ForEach ($Group in $Groups) {
+  Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+
 }
 
 
