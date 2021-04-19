@@ -30,13 +30,13 @@ Import-Module MSOnline
 
 #Timed Execution Permissions to Distribution Lists
 
-ForEach ($Group in $Groups) {
-  Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+$Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember $Group}
+
+ForEach ($Member in $Membername) {
+  Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false}
 
 }
 
-
-}
 
 Catch {
   
