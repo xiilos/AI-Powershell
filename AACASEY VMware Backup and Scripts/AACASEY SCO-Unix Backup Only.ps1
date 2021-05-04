@@ -60,9 +60,9 @@ $Path = "Z:\VMware Backups\SCO-Unix"
 $FolderCount = (Get-ChildItem -Path $Path | where-object { $_.PSIsContainer }).Count
 If ($FolderCount -gt 3)
 {
-    $Object = Get-Childitem $Path | Select-object creationtime | Select-Object -last 1
+    $Object = Get-Childitem $Path | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -Last 1
     Write-Host "Removing $Object"
-    Get-Childitem $Path | Select-object creationtime | Select-Object -last 1 | Remove-Item -Recurse -Force
+    Remove-Item $Object -Recurse -Force
     Write-Host "Done"
 }
 

@@ -27,7 +27,7 @@ $Groups = Get-Content -Path "C:\zlibrary\Groupnames.txt"
 
 
 ForEach ($Group in $Groups) {
-  Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User zadd2exchange -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+  Get-Mailbox -Resultsize Unlimited | Remove-MailboxPermission -User zadd2exchange -AccessRights FullAccess -InheritanceType all -confirm:$false
 
 }
 
