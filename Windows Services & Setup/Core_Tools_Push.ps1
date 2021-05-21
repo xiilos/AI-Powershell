@@ -20,6 +20,7 @@ Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-
 Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Windows 10 App Removal.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
 Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Windows 10 New Setup.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
 Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Quick_Clean_v2.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
+Copy-Item '\\fileserv-db1\Work\Advantage International\PowerShell Tools REPO\AI-Powershell\Windows Services & Setup\Windows_Updates.ps1' -Destination '\\fileserv-db1\Sandbox\Port Apps\Documents\Core Tools' -Recurse -Force
 
 Write-Host "Success"
 Pause

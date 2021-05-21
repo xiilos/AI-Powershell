@@ -9,16 +9,16 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Support Directory
-$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
+$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\AD_Photos"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Support Directory Exists...Resuming"
 }
 Else {
-    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
+    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\AD_Photos"
 }
 
-Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
+Push-Location "C:\Program Files (x86)\DidItBetterSoftware\AD_Photos"
 
 # Script #
 
@@ -123,7 +123,7 @@ switch ($input1) {
         
         
         $Name = Get-AzureADUser | Where-Object { $_.mail } | Select-Object Mail
-        $Location = "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
+        $Location = "C:\Program Files (x86)\DidItBetterSoftware\AD_Photos"
         $Users = Get-AzureADUser -All $true
         
         foreach ($user in $users) { Get-AzureADUserThumbnailPhoto -ObjectId $user.ObjectId -FilePath $location -FileName $user.mail }
@@ -139,7 +139,7 @@ switch ($input1) {
 }
 
 Start-Sleep -s 2
-Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
+Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\AD_Photos"
 
 
 $wshell = New-Object -ComObject Wscript.Shell
