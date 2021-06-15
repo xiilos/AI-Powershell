@@ -56,11 +56,12 @@ Start-Sleep -S 120
   
 #Backup Retention (3)
 $Path = "Z:\VMware Backups\SCO-Unix"
+Push-Location $Path
 
 $FolderCount = (Get-ChildItem -Path $Path | where-object { $_.PSIsContainer }).Count
 If ($FolderCount -gt 3)
 {
-    $Object = Get-Childitem $Path | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -Last 1
+    $Object = Get-Childitem -Path $Path | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -Last 1
     Write-Host "Removing $Object"
     Remove-Item $Object -Recurse -Force
     Write-Host "Done"
