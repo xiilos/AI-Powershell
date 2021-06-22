@@ -40,11 +40,6 @@ Do {
 
 } Until ($repeat -eq 'n')
 
-$answer = $wshell.Popup("Please reboot your computer for these changes to take effect! ", 0, "Complete", 0x1)
-if ($answer -eq 2) {
-    Break
-}
-
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
 Exit
