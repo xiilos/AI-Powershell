@@ -143,9 +143,27 @@ If ($Security -eq $false){
 #Outlook Social Connector
 Write-Host "Disabling Outlook Social Connector"
 Start-Process Powershell .\OSC_Disable.bat
-
 Write-Host "Done"
-Pause
+
+#Disable Outlook Updates
+Write-Host "Disabling Outlook Updates"
+
+$Val = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -Name "UpdatesEnabled"
+
+if($val.UpdatesEnabled -eq $True)
+
+{
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -Name "UpdatesEnabled" -value False
+Write-Host "Outlook Updates are now Disabled!"
+
+}
+
+Else {
+
+  Write-Host "Outlook Updates Already Disabled!"
+
+}
+
 } 
 
 #######Outlook V.15#############
@@ -271,9 +289,28 @@ If ($Security -eq $false){
 #Outlook Social Connector
 Write-Host "Disabling Outlook Social Connector"
 Start-Process Powershell .\OSC_Disable.bat
-
 Write-Host "Done"
-Pause
+
+
+#Disable Outlook Updates
+Write-Host "Disabling Outlook Updates"
+
+$Val = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -Name "UpdatesEnabled"
+
+if($val.UpdatesEnabled -eq $True)
+
+{
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -Name "UpdatesEnabled" -value False
+Write-Host "Outlook Updates are now Disabled!"
+
+}
+
+Else {
+
+  Write-Host "Outlook Updates Already Disabled!"
+
+}
+
 } 
 
 #######Outlook Not Supported#############

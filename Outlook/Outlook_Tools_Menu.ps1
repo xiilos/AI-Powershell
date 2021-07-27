@@ -7,7 +7,7 @@ Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $OutlookTools_Menu               = New-Object system.Windows.Forms.Form
-$OutlookTools_Menu.ClientSize    = New-Object System.Drawing.Point(247,300)
+$OutlookTools_Menu.ClientSize    = New-Object System.Drawing.Point(247,344)
 $OutlookTools_Menu.text          = "Outlook Tools"
 $OutlookTools_Menu.TopMost       = $false
 $OutlookTools_Menu.BackColor     = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
@@ -71,10 +71,18 @@ $Bypass_O365.height              = 10
 $Bypass_O365.location            = New-Object System.Drawing.Point(15,195)
 $Bypass_O365.Font                = New-Object System.Drawing.Font('Microsoft Sans Serif',11)
 
+$DisableOutlookUpdates           = New-Object system.Windows.Forms.Label
+$DisableOutlookUpdates.text      = "Disable Outlook Updates"
+$DisableOutlookUpdates.AutoSize  = $true
+$DisableOutlookUpdates.width     = 25
+$DisableOutlookUpdates.height    = 10
+$DisableOutlookUpdates.location  = New-Object System.Drawing.Point(15,225)
+$DisableOutlookUpdates.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif',11)
+
 $DidItBetter_logo                = New-Object system.Windows.Forms.PictureBox
 $DidItBetter_logo.width          = 94
 $DidItBetter_logo.height         = 45
-$DidItBetter_logo.location       = New-Object System.Drawing.Point(16,235)
+$DidItBetter_logo.location       = New-Object System.Drawing.Point(14,277)
 $DidItBetter_logo.imageLocation  = "./Diditbetter_logo.png"
 $DidItBetter_logo.SizeMode       = [System.Windows.Forms.PictureBoxSizeMode]::zoom
 
@@ -85,7 +93,8 @@ $TT.SetToolTip($Outlook_Updates,'Checks and runs Outlook 365 Updates')
 $TT.SetToolTip($Disable_OSC,'Disable Outlook Social Connector Add-In')
 $TT.SetToolTip($Outlook_Profile_Set,'Sets up the Outlook Profile for Add2Exchange')
 $TT.SetToolTip($Bypass_O365,'Bypasses O365 Login for Hybrid Environments')
-$OutlookTools_Menu.controls.AddRange(@($Rearm_Office,$Outlook_Install32,$Install_Outlook64,$Outlook_Updates,$Disable_OSC,$Outlook_Profile_Set,$Bypass_O365,$DidItBetter_logo))
+$TT.SetToolTip($DisableOutlookUpdates,'Disables Automatic Outlook Updates')
+$OutlookTools_Menu.controls.AddRange(@($Rearm_Office,$Outlook_Install32,$Install_Outlook64,$Outlook_Updates,$Disable_OSC,$Outlook_Profile_Set,$Bypass_O365,$DidItBetter_logo,$DisableOutlookUpdates))
 
 
 $Rearm_Office.Add_Click({Start-Process Powershell .\REARM_Office.ps1})
@@ -95,7 +104,7 @@ $Outlook_Updates.Add_Click({Start-Process Powershell .\Office_Updater.ps1})
 $Disable_OSC.Add_Click({Start-Process Powershell .\OSC_Disable.bat})
 $Outlook_Profile_Set.Add_Click({Start-Process Powershell .\Outlook_Profile_Set.ps1})
 $Bypass_O365.Add_Click({Start-Process Powershell .\Bypass_AutoDiscover.ps1})
-
+$DisableOutlookUpdates.Add_Click({Start-Process Powershell .Disable_Outlook_Updates.ps1})
 
 [void]$OutlookTools_Menu.ShowDialog()
 

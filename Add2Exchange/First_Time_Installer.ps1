@@ -52,6 +52,26 @@ switch ($input1) {
         Clear-Host 
         'You chose The Add2Exchange Installation Wizard'
 
+        #Trying AutoLogon with UAC on
+        $AutoLogon = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "AutoAdminLogon" -ErrorAction SilentlyContinue
+        If ($AutoLogon -eq 0) {
+
+            $wshell = New-Object -ComObject Wscript.Shell
+
+            $answer = $wshell.Popup("Now we can set the AutoLogon feature for this account.
+Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
+Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
+
+            if ($answer -eq 1) {
+                Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
+            }         
+
+            if ($answer -eq 2) { 
+                Write-Host "Skipping AutoLogon"
+            }
+        }
+
+        #Checking UAC
         Write-Host "Checking UAC"
 
         $Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
