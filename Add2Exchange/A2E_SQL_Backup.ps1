@@ -11,7 +11,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 #Variables
 $Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue #Current Add2Exchange Installation Path
 $Staging = $Install + 'Database\Temp' #Temporary Staging area for SQL backup files
-$BackupDirs = $Install + 'Database\A2E_SQL_Backup'
+$BackupDirs = $Install + 'Database\A2E_SQL_Backup' #This is were the DB Files are stored
 $Date = (Get-Date -format yyyy-MM-dd)
 $Retention = "5" #Backup Retention set to 5 Versions by default
 
