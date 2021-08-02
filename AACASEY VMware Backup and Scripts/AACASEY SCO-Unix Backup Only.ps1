@@ -55,7 +55,7 @@ Start-Sleep -S 120
 #Stop-Process -Name vmware
   
 #Backup Retention (3)
-$Path = "Z:\VMware Backups\SCO-Unix"
+$Path = "S:\SCO-Unix"
 Push-Location $Path
 
 $FolderCount = (Get-ChildItem -Path $Path | where-object { $_.PSIsContainer }).Count
@@ -70,7 +70,7 @@ If ($FolderCount -gt 3)
   
 #Back Up Files
 Write-Host "Backing up SCO-Unix. Please wait....."
-Copy-Item 'E:\vmware\SCO-Unix' -Destination ('\\SEAGATE-D2\VMware\VMware Backups\SCO-Unix\' + (get-date -Format MM-dd-yyyy)) -Recurse
+Copy-Item 'D:\VMWare_Workstation\SCO-Unix' -Destination ('S:\SCO-Unix' + (get-date -Format MM-dd-yyyy)) -Recurse
   
 #Write-Host "Backing up SBS 2011. Please wait....."
 #Copy-Item 'E:\vmware\SBS2' -Destination ('\\SEAGATE-D2\VMware\VMware Backups\SBS\' + (get-date -Format MM-dd-yyyy)) -Recurse

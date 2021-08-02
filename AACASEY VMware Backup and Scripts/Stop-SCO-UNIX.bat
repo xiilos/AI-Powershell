@@ -1,1 +1,1 @@
-"C:\Program Files (x86)\VMware\VMware Workstation\vmrun" -T ws stop "E:\vmware\SCO-Unix\SCO Unix IST.vmx"
+"C:\Program Files (x86)\VMware\VMware Workstation\vmrun" -T ws stop "D:\VMWare_Workstation\SCO-Unix\SCO Unix IST.vmx"
