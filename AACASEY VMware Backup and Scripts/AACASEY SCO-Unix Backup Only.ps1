@@ -70,7 +70,7 @@ If ($FolderCount -gt 3)
   
 #Back Up Files
 Write-Host "Backing up SCO-Unix. Please wait....."
-Copy-Item 'D:\VMWare_Workstation\SCO-Unix' -Destination ('S:\SCO-Unix' + (get-date -Format MM-dd-yyyy)) -Recurse
+Copy-Item 'D:\VMWare_Workstation\SCO-Unix' -Destination ('S:\SCO-Unix\' + (get-date -Format MM-dd-yyyy)) -Recurse
   
 #Write-Host "Backing up SBS 2011. Please wait....."
 #Copy-Item 'E:\vmware\SBS2' -Destination ('\\SEAGATE-D2\VMware\VMware Backups\SBS\' + (get-date -Format MM-dd-yyyy)) -Recurse
@@ -85,7 +85,7 @@ Start-Sleep -S 10
 #Starting Virtual Machines
   
 Write-Host "Starting Up Virtual Machines"
-  
+Push-Location "D:\zLibrary\VMware Backup Scripts"  
 Start-Process Powershell .\Start-SCO-UNIX.bat
 Start-Sleep -S 10
 #Start-Process Powershell .\Start-SBS.bat
