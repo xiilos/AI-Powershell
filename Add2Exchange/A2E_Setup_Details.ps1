@@ -353,12 +353,12 @@ This PowerShell disables and renames the outlook addins so they are not accident
 
 Antivirus Exclusions from active file scanning
 (These are default locations) 
-C:\Program Files\OpenDoor Software®\
--	note the *Circle r* in the directory name. Copy and paste to antivirus program
+C:\Program Files (x86)\OpenDoor Software®\
+- Note the *Circle r* in the directory name. Copy and paste to antivirus program
 C:\Program Files (x86)\DidItBetterSoftware
 C:\Program Files\Microsoft SQL Server\
-C:\Users\zAdd2Exchange\AppData
-C:\Zlibrary 
+C:\Users\zadd2exchange\AppData
+C:\Zlibrary
 "
 
 #History
