@@ -59,7 +59,7 @@ switch ($input1) {
         Update-Module -Name ExchangeOnlineManagement
         Import-Module –Name ExchangeOnlineManagement
 
-        Write-Host "Sign in to Office365 as Global Admin"
+        Write-Host "Sign in to Office365 as Exchange Admin"
         
         Connect-ExchangeOnline
     
