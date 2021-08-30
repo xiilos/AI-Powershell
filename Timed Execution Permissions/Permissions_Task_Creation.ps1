@@ -34,13 +34,6 @@ $Add2Exchange_Permissions_Menu.text = "DiditBetter Software Auto Permissions Set
 $Add2Exchange_Permissions_Menu.TopMost = $false
 $Add2Exchange_Permissions_Menu.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
 
-$DIB_Logo = New-Object system.Windows.Forms.PictureBox
-$DIB_Logo.width = 149
-$DIB_Logo.height = 50
-$DIB_Logo.location = New-Object System.Drawing.Point(11, 701)
-$DIB_Logo.imageLocation = "./Diditbetter_logo.png"
-$DIB_Logo.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::zoom
-
 $ExchangeServerName_Label = New-Object system.Windows.Forms.Label
 $ExchangeServerName_Label.text = "Exchange Server Name"
 $ExchangeServerName_Label.AutoSize = $true

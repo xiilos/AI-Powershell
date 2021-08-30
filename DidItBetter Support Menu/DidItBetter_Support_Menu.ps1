@@ -284,13 +284,6 @@ $ExhangeMigration.height         = 10
 $ExhangeMigration.location       = New-Object System.Drawing.Point(15,265)
 $ExhangeMigration.Font           = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
-$DidItBetterLogo                 = New-Object system.Windows.Forms.PictureBox
-$DidItBetterLogo.width           = 201
-$DidItBetterLogo.height          = 86
-$DidItBetterLogo.location        = New-Object System.Drawing.Point(22,624)
-$DidItBetterLogo.imageLocation   = "./Diditbetter_logo.png"
-$DidItBetterLogo.SizeMode        = [System.Windows.Forms.PictureBoxSizeMode]::zoom
-
 $UpgradeToolkit                  = New-Object system.Windows.Forms.Label
 $UpgradeToolkit.text             = "Upgrade Add2Outlook ToolKit"
 $UpgradeToolkit.AutoSize         = $true

@@ -79,13 +79,6 @@ $DisableOutlookUpdates.height    = 10
 $DisableOutlookUpdates.location  = New-Object System.Drawing.Point(15,225)
 $DisableOutlookUpdates.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif',11)
 
-$DidItBetter_logo                = New-Object system.Windows.Forms.PictureBox
-$DidItBetter_logo.width          = 94
-$DidItBetter_logo.height         = 45
-$DidItBetter_logo.location       = New-Object System.Drawing.Point(14,277)
-$DidItBetter_logo.imageLocation  = "./Diditbetter_logo.png"
-$DidItBetter_logo.SizeMode       = [System.Windows.Forms.PictureBoxSizeMode]::zoom
-
 $TT.SetToolTip($Rearm_Office,'Re-arms Office Suit Trial Extension')
 $TT.SetToolTip($Outlook_Install32,'Installs Outlook 365 32bit')
 $TT.SetToolTip($Install_Outlook64,'Installs Outlook 365 64bit')
