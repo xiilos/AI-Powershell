@@ -120,7 +120,7 @@ switch ($input1) {
                     'You chose to Add Permissions to a Distribution List'
                     $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Adding Add2Exchange Permissions"
-                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    $DistributionGroupName = Get-DistributionGroupMember -ResultSize Unlimited $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
                         Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
                         Write-Host "Done"
@@ -132,7 +132,7 @@ switch ($input1) {
                     'You chose to Remove Permissions From a Distribution List'
                     $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Removing Add2Exchange Permissions"
-                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    $DistributionGroupName = Get-DistributionGroupMember -ResultSize Unlimited $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
                         Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                         Write-Host "Done"
@@ -325,7 +325,7 @@ switch ($input1) {
                     'You chose to Add Permissions To A Distribution List'
                     $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Adding Add2Exchange Permissions"
-                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    $DistributionGroupName = Get-DistributionGroupMember -ResultSize Unlimited $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
                         Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
                         Write-Host "Done"
@@ -337,7 +337,7 @@ switch ($input1) {
                     'You chose to Remove Permissions From A Distribution List'
                     $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Removing Add2Exchange Permissions"
-                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    $DistributionGroupName = Get-DistributionGroupMember -ResultSize Unlimited $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
                         Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                         Write-Host "Done"
@@ -529,7 +529,7 @@ switch ($input1) {
                     'You chose to Add Permissions To A Distribution List'
                     $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Adding Add2Exchange Permissions"
-                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    $DistributionGroupName = Get-DistributionGroupMember -ResultSize Unlimited $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
                         Add-MailboxPermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false
                         Write-Host "Done"
@@ -541,7 +541,7 @@ switch ($input1) {
                     'You chose to Remove Permissions From A Distribution List'
                     $DistributionGroupName = Read-Host "Enter distribution list name (Display Name)";
                     Write-Host "Removing Add2Exchange Permissions"
-                    $DistributionGroupName = Get-DistributionGroupMember $DistributionGroupName
+                    $DistributionGroupName = Get-DistributionGroupMember -ResultSize Unlimited $DistributionGroupName
                     ForEach ($Member in $DistributionGroupName) {
                         Remove-mailboxpermission -Identity $Member.name -User $User -AccessRights 'FullAccess' -InheritanceType all -Confirm:$false
                         Write-Host "Done"

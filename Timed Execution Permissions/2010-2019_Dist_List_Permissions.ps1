@@ -30,7 +30,7 @@ Set-ADServerSettings -ViewEntireForest $true
 
 #Timed Execution Permissions to Distribution Lists
 
-$Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember $Group}
+$Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
 
 ForEach ($Member in $Membername) {
   Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false}
