@@ -3,7 +3,7 @@ Sub OutlookFolderShowAsOutlookAB()
     Dim strFolderPath As String
     
     On Error Resume Next
-    strFolderPath = "Public Folders - zAdd2Exchange@DevA.Local\All Public Folders\A2E GAL Cache"
+    strFolderPath = "Public Folders - zAdd2Exchange@mbx.Local\All Public Folders\Firm Contacts\Firm Contacts"
     Set olFolder = OutlookGetFolderFromPath(strFolderPath)
     If Not olFolder Is Nothing Then
         If olFolder.DefaultItemType = olContactItem And StrComp(strFolderPath, Mid(olFolder.FolderPath, 3), vbTextCompare) = 0 Then
