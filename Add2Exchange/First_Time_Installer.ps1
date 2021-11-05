@@ -58,8 +58,8 @@ switch ($input1) {
 
             $wshell = New-Object -ComObject Wscript.Shell
 
-            $answer = $wshell.Popup("Now we can set the AutoLogon feature for this account.
-Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
+            $answer = $wshell.Popup("Lets set the AutoLogon feature for this account.
+Note* Please fill in all areas on the next screen to enable Auto logon for this box.
 Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
 
             if ($answer -eq 1) {
@@ -83,7 +83,7 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
             $wshell = New-Object -ComObject Wscript.Shell
 
             $answer = $wshell.Popup("UAC is now Disabled. But before we reboot we can set the AutoLogon feature for this account.
-Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
+Note* Please fill in all areas on the next screen to enable Auto logon for this box.
 Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
 
             if ($answer -eq 1) {
@@ -207,7 +207,7 @@ Log off and back on as the new Sync Service account and run this again before pr
         # Check if .Net 4.5 or above is installed
         # Check Operating Sysetm
 
-        $Confirmation = Read-Host "Check to see if you are on the latest powershell? [Y/N]"
+        $Confirmation = Read-Host "Check for latest powershell modules? [Y/N]"
         if ($confirmation -eq 'y') {
         
             Start-Process Powershell ".\Setup\Legacy_PowerShell.ps1" -wait
@@ -257,20 +257,20 @@ Log off and back on as the new Sync Service account and run this again before pr
         }
         Else {
             Write-host "We need to install Outlook on this machine"
-            $confirmation = Read-Host "Would you like me to Install Outlook 365? [Y/N]"
+            $confirmation = Read-Host "Would you like to Install Outlook 365? [Y/N]"
             if ($confirmation -eq 'y') {
 
-                Write-Host "Please Wait while we install Office 365 Pro Retail"
+                Write-Host "Please Wait while we install Office 365"
                 
                 Push-Location -Path ".\O365Outlook32\Setup Files"
-                .\setup.exe /configure Office365_Pro_Reatilx86_Configuration.xml
+                .\setup.exe /configure Office365_Pro_Retailx86_Configuration.xml
                 Pop-Location
             }
 
             if ($confirmation -eq 'n') {
 
                 $wshell = New-Object -ComObject Wscript.Shell
-                $answer = $wshell.Popup("If you choose to install your own Outlook; ensure that it is Outlook 2016 and above, and 32bit Only.
+                $answer = $wshell.Popup("If you choose to install your own Outlook; ensure that it is Outlook 2016 and above, 32bit Only.
 When Done, click OK", 0, "Outlook Install", 0x1)
                 if ($answer -eq 2) { Break }
 
@@ -284,7 +284,7 @@ When Done, click OK", 0, "Outlook Install", 0x1)
 
         $confirmation = Read-Host "Are you on Office 365 or Exchange on Premise [O/E]"
         if ($confirmation -eq 'O') {
-            Write-host "Make sure to create a mailbox for the sync service account and add an *E* License to it"
+            Write-host "Make sure to create a mailbox for the sync service account and add an *E1 or E3 License to it"
             $wshell = New-Object -ComObject Wscript.Shell
 
             $answer = $wshell.Popup("When this is Done, click OK to Continue", 0, "Create a Mailbox", 0x1)
@@ -304,8 +304,11 @@ When Done, click OK", 0, "Outlook Install", 0x1)
         # Mail Profile
 
         $wshell = New-Object -ComObject Wscript.Shell
-        $answer = $wshell.Popup("The next step is to Create a Profile for your new account. Open Control panel and go to Mail. Create a new profile and follow through the steps that pertain to your Organization. 
-Note* Make sure you do not have Cache checked. When this is finished click OK to Continue", 0, "Creating an Outlook Profile", 0x1)
+        $answer = $wshell.Popup("The next step is to Create an outlook Profile for your new sync account. Open Control panel and go to Mail. 
+        
+        Create a new profile (Using the full email address of the sync account) and follow through the steps that pertain to your Organization. 
+        
+        Note* Make sure you DO NOT have Cache Mode checked. When finished click OK to Continue", 0, "Creating an Outlook Profile", 0x1)
         if ($answer -eq 2) { Break }
 
         # Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
@@ -329,8 +332,8 @@ Note* Make sure you do not have Cache checked. When this is finished click OK to
 
             $wshell = New-Object -ComObject Wscript.Shell
 
-            $answer = $wshell.Popup("Now we can set the AutoLogon feature for this account.
-Note* Please fill in all areas on the next screen to enable Auto logging on to this box.
+            $answer = $wshell.Popup("Lets set the AutoLogon feature for this account.
+            Note* Please fill in all areas on the next screen to enable Auto logon for this box.
 Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
 
             if ($answer -eq 1) {
@@ -354,7 +357,7 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
             Start-Process -FilePath ".\Add2ExchangeSetup.msi" -wait -ErrorAction SilentlyContinue -ErrorVariable InstallError;
 
             If ($InstallError) { 
-                Write-Warning -Message "Something Went Wrong with the Install!"
+                Write-Warning -Message "Something Went Wrong with the Install !!"
                 Write-Host "Trying The Install Again in 2 Seconds"
                 Start-Sleep -S 2
             }
@@ -364,13 +367,13 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
         Start-Process "$Home\Desktop\Add2exchange Console"
         $wshell = New-Object -ComObject Wscript.Shell
 
-        $answer = $wshell.Popup("Once the Install is complete, Click OK to finish the setup", 0, "Finishing Installation", 0x1)
+        $answer = $wshell.Popup("Add2Exchange is now installing SQL Express. Once the Install is complete, Click OK to finish the setup", 0, "Finalizing Installation", 0x1)
         if ($answer -eq 2) { Break }
 
 
         # Step 10-----------------------------------------------------------------------------------------------------------------------------------------------------Step 11
         # Registry Favorites & Shortcuts
-
+        Write-Host "Setting up Registry Favorites"
         Start-Process Powershell ".\Setup\Registry_Favorites.ps1" -wait
 
         # Step 11-----------------------------------------------------------------------------------------------------------------------------------------------------Step 11
@@ -378,11 +381,10 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
 
         #Removing Outlook Social Connector
         Write-Host "Removing Outlook Social Connector"
-    
         Start-Process Powershell ".\Setup\OSC_Disable.bat" -wait
 
         #Creating Setup Details
-    
+        Write-Host "Setting up Install Details"
         Start-Process Powershell ".\Setup\A2E_Setup_Details.ps1" -wait
 
 

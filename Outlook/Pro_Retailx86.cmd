@@ -1,1 +1,1 @@
-setup.exe /configure Office365_Pro_Reatilx86_Configuration.xml
+setup.exe /configure Office365_Pro_Retailx86_Configuration.xml
