@@ -8,31 +8,23 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 # Group Policy Results
-$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
+$TestPath = "C:\zlibrary"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
-    Write-Host "Support Directory Exists...Resuming"
+    Write-Host "zLibrary Directory Exists...Resuming"
 }
 Else {
-    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
+    New-Item -ItemType directory -Path "C:\zlibrary"
 }
 
 
 Do {
     Write-Host "Getting Group Policy Results"
     gpupdate
-    Start-Sleep -s 3
-    gpresult /Scope Computer /v | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt" -ErrorAction SilentlyContinue -ErrorVariable GPError;
-    If ($GPError) { 
-        Write-Warning -Message "(No User Data in RSOP) Updating GPO History...."
-        Start-Sleep -s 3
-        Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Group Policy\History' -Name DCName | out-null
-        Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Group Policy\History' -Name PolicyOverdue | out-null
-        gpresult /Scope Computer /v | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt" -ErrorAction SilentlyContinue
-    }
+    Start-Sleep -s 2
+    gpresult /Scope Computer /h C:\zlibrary\Group_policy_Report.html /f
 
-    Start-Sleep -s 3
-    Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\Group_policy_Report.txt"
+    Invoke-Item "C:\zlibrary\Group_policy_Report.html"
 
     $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 

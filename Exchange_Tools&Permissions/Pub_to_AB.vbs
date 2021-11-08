@@ -3,7 +3,7 @@ Sub OutlookFolderShowAsOutlookAB()
     Dim strFolderPath As String
     
     On Error Resume Next
-    strFolderPath = "Public Folders - zAdd2Exchange@mbx.Local\All Public Folders\Firm Contacts\Firm Contacts"
+    strFolderPath = "Public Folders - zAdd2Exchange@devb.Local\All Public Folders\Contacts\Firm Contacts"
     Set olFolder = OutlookGetFolderFromPath(strFolderPath)
     If Not olFolder Is Nothing Then
         If olFolder.DefaultItemType = olContactItem And StrComp(strFolderPath, Mid(olFolder.FolderPath, 3), vbTextCompare) = 0 Then
@@ -41,3 +41,8 @@ Function OutlookGetFolderFromPath(strFolderPath As String) As Outlook.MAPIFolder
     End If 'Folder Set
     Err.Clear
 End Function
+
+
+'You have to run it as a VB Script contained within the user’s Network Logon Script and where is notes strFolderPath in the Sub Routine, 
+'that’s where you write in the path you are trying to drill down to and set. 
+'You can also probably remove the debug.print, as that was to show confirmed on the DEV A as I tested your A2E GAL Cache setting.
