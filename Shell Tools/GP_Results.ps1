@@ -22,9 +22,11 @@ Do {
     Write-Host "Getting Group Policy Results"
     gpupdate
     Start-Sleep -s 2
-    gpresult /Scope Computer /h C:\zlibrary\Group_policy_Report.html /f
+    gpresult /Scope Computer /h C:\zlibrary\Computer_Group_policy_Report.html /f
+    gpresult /Scope User /h C:\zlibrary\User_Group_policy_Report.html /f
 
-    Invoke-Item "C:\zlibrary\Group_policy_Report.html"
+    Invoke-Item "C:\zlibrary\Computer_Group_policy_Report.html"
+    Invoke-Item "C:\zlibrary\User_Group_policy_Report.html"
 
     $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 

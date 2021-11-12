@@ -60,7 +60,7 @@ switch ($input1) {
 
             $answer = $wshell.Popup("Lets set the AutoLogon feature for this account.
 Note* Please fill in all areas on the next screen to enable Auto logon for this box.
-Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
+Click OK to Continue or Cancel to Skip", 0, "AutoLogon", 0x1)
 
             if ($answer -eq 1) {
                 Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
@@ -84,7 +84,7 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
 
             $answer = $wshell.Popup("UAC is now Disabled. But before we reboot we can set the AutoLogon feature for this account.
 Note* Please fill in all areas on the next screen to enable Auto logon for this box.
-Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
+Click OK to Continue or Cancel to Skip", 0, "AutoLogon", 0x1)
 
             if ($answer -eq 1) {
                 Start-Process -FilePath ".\Setup\AutoLogon.exe" -wait
