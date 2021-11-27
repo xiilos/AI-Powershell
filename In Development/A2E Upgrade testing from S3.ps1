@@ -11,11 +11,42 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Downloading Add2Exchange
 
+(Invoke-WebRequest -Uri "https://s3.amazonaws.com/dl.diditbetter.com" -UseBasicParsing).Links.Href
+
+
+$URL = "https://s3.amazonaws.com/dl.diditbetter.com" | Where-Object { $_.name -like "* a2e_enterprise_upgrade*"} | Select-Object
+$Output = "c:\zlibrary\a2e-enterprise_upgrade.exe"
+$Start_Time = Get-Date
+
+(New-Object System.Net.WebClient).DownloadFile($URL, $Output)
+
+Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+
+
+
+
+$Response = Invoke-WebRequest -URI https://s3.amazonaws.com/dl.diditbetter.com/ | Where-Object { $_.name -like "* a2e_enterprise_upgrade*"} -outfile "C:\zlibrary\a2e-enterprise_upgrade.exe"
+$Response.InputFields | Where-Object {
+    $_.name -like "* a2e_enterprise_upgrade*"
+} | Select-Object Name, Value
+
+
+
+
+
+
+Invoke-Webrequest "https://s3.amazonaws.com/dl.diditbetter.com/" | Where-Object {$_.Name -Match '2299.exe._$'} | outfile "C:\zlibrary\a2e-enterprise_upgrade.exe"
+
+
+
+
+
+
 Write-Host "Downloading Add2Exchange"
 Write-Host "Please Wait......"
 
 $ProgressPreference = 'SilentlyContinue'
-Invoke-Webrequest "http://dl.diditbetter.com/a2e-enterprise.22.5.3089.1863.exe" -outfile "C:\zlibrary\Add2Exchange Upgrades\a2e-enterprise_upgrade.exe"
+Invoke-Webrequest "http://dl.diditbetter.com/a2e-enterprise.22.5.3089.1863.exe" -outfile "C:\zlibrary\a2e-enterprise_upgrade.exe"
 
 
 
