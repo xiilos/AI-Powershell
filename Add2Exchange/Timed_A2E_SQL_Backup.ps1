@@ -11,28 +11,11 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 #Variables
 $Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue #Current Add2Exchange Installation Path
 $CurrentDB = $Install + 'Database\' #Current Database Location
-#$BackupDirs = $Install + 'Database Backup\' #This is were the default Backup DB Files are stored
+$BackupDirs = = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_DB_Backup.txt" -ErrorAction SilentlyContinue #This is were the default Backup DB Files are stored
 
 
 
 # Script #
-
-#Folder path for Backups
-Write-Host "Pick a destination for your backups"
-Add-Type -AssemblyName System.Windows.Forms
-$FolderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
-[void]$FolderBrowser.ShowDialog()
-$BackupDirs = $FolderBrowser.SelectedPath #This is were the chosen Backup DB Files are stored
-
-#Check and Create Default DB Backup Locations
-$TestPath1 = "$Install\Database Backup"
-if ( $(Try { Test-Path $TestPath1.trim() } Catch { $false }) ) {
-
-    Write-Host "Add2Exchange Backup Directory Exists...Resuming"
-}
-Else {
-    New-Item -ItemType directory -Path "$Install\Database Backup"
-}
 
 #Check if Console Open
 $Console = Get-Process "Add2Exchange Console" -ErrorAction SilentlyContinue
@@ -42,7 +25,6 @@ if ($Console) {
     Exit
 
 }
-
 
 
 #Shutting Down Services
@@ -107,51 +89,6 @@ Start-Sleep -s 5
 #Write to Event Log
 Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10002 -EntryType SuccessAudit -Message "Add2Exchange Succesfully Backed up Database."
 
-
-#Creating the Task
-$wshell = New-Object -ComObject Wscript.Shell
-$answer = $wshell.Popup("Would you like to make this into an Automated Task?", 0, "Backup Complete", 0x1)
-if ($answer -eq 1) { 
-    #Checking to see if task is already in use
-    if (Get-ScheduledTask "Add2Exchange Database Backup" -ErrorAction SilentlyContinue) {
-        Unregister-ScheduledTask -TaskName "Add2Exchange Database Backup" -Confirm:$false
-    }
-
-    Write-Host "Pick a destination for your backups"
-    Add-Type -AssemblyName System.Windows.Forms
-    $FolderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
-    [void]$FolderBrowser.ShowDialog()
-    $BackupDirs = $FolderBrowser.SelectedPath #This is were the chosen Backup DB Files are stored
-    Write-Host "Creating A2E Backup Task"
-    $Backupdirs | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_DB_Backup.txt"
-
-
-    $Location = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange' -Name "InstallLocation").InstallLocation
-    Set-Location $Location
-    $Repeater = (New-TimeSpan -days 7)
-    $Duration = ([timeSpan]::maxvalue)
-    $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-    $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed_A2E_SQL_Backup.ps1"'
-    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange SQL Backup" -Description "Backs up the A2E SQL Database every once a week"
-    Write-Host "Done"
-
-}
-
-if ($answeer -eq 2) {
-    Write-Host "ttyl"
-    Get-PSSession | Remove-PSSession
-    Exit 
-}
-
-
-
-$wshell = New-Object -ComObject Wscript.Shell
-$answer = $wshell.Popup("All Add2Exchange SQL Backups are stored in $Backupdirs", 0, "Backup Complete", 0x1)
-if ($answer -eq 2) { 
-    Write-Host "ttyl"
-    Get-PSSession | Remove-PSSession
-    Exit 
-}
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
