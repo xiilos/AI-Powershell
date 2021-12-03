@@ -11,10 +11,20 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Downloading Add2Exchange
 
+$R = Invoke-WebRequest -URI "http://dl.diditbetter.com"
+$R.AllElements | Where-Object {$_.name -like "* a2e_enterprise_upgrade"} | Select-Object Name
+
+
+
+
+
+
+
+
 (Invoke-WebRequest -Uri "https://s3.amazonaws.com/dl.diditbetter.com" -UseBasicParsing).Links.Href
 
 
-$URL = "https://s3.amazonaws.com/dl.diditbetter.com" | Where-Object { $_.name -like "* a2e_enterprise_upgrade*"} | Select-Object
+$URL = "http://dl.diditbetter.com" | Where-Object { $_.name -like "* a2e_enterprise_upgrade*"} | Select-Object
 $Output = "c:\zlibrary\a2e-enterprise_upgrade.exe"
 $Start_Time = Get-Date
 

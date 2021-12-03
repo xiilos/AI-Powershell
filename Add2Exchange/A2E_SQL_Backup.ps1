@@ -24,6 +24,7 @@ $FolderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
 [void]$FolderBrowser.ShowDialog()
 $BackupDirs = $FolderBrowser.SelectedPath #This is were the chosen Backup DB Files are stored
 
+<#
 #Check and Create Default DB Backup Locations
 $TestPath1 = "$Install\Database Backup"
 if ( $(Try { Test-Path $TestPath1.trim() } Catch { $false }) ) {
@@ -33,6 +34,7 @@ if ( $(Try { Test-Path $TestPath1.trim() } Catch { $false }) ) {
 Else {
     New-Item -ItemType directory -Path "$Install\Database Backup"
 }
+#>
 
 #Check if Console Open
 $Console = Get-Process "Add2Exchange Console" -ErrorAction SilentlyContinue
@@ -87,7 +89,7 @@ If ($FolderCount -gt 5) {
 
   
 #Back Up Files
-Copy-Item $currentDB -Destination ($BackupDirs + (Get-Date -format "dd-MMM-yyyy HH.mm.ss")) -Recurse -ErrorAction SilentlyContinue -ErrorVariable DB1
+Copy-Item $currentDB -Destination ($BackupDirs + "\" + (Get-Date -format "dd-MMM-yyyy HH.mm.ss")) -Recurse -ErrorAction SilentlyContinue -ErrorVariable DB1
 If ($DB1) {
     Write-Host "Error.....Cannot Find A2E Database."
     Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10001 -EntryType FailureAudit -Message "$_.Exception.Message"

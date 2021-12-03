@@ -11,7 +11,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 #Variables
 $Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue #Current Add2Exchange Installation Path
 $CurrentDB = $Install + 'Database\' #Current Database Location
-$BackupDirs = = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_DB_Backup.txt" -ErrorAction SilentlyContinue #This is were the default Backup DB Files are stored
+$BackupDirs = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_DB_Backup.txt" -ErrorAction SilentlyContinue #This is were the default Backup DB Files are stored
 
 
 
@@ -69,7 +69,7 @@ If ($FolderCount -gt 5) {
 
   
 #Back Up Files
-Copy-Item $currentDB -Destination ($BackupDirs + (Get-Date -format "dd-MMM-yyyy HH.mm.ss")) -Recurse -ErrorAction SilentlyContinue -ErrorVariable DB1
+Copy-Item $currentDB -Destination ($BackupDirs + "\" + (Get-Date -format "dd-MMM-yyyy HH.mm.ss")) -Recurse -ErrorAction SilentlyContinue -ErrorVariable DB1
 If ($DB1) {
     Write-Host "Error.....Cannot Find A2E Database."
     Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10001 -EntryType FailureAudit -Message "$_.Exception.Message"
