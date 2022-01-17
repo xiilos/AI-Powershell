@@ -9,15 +9,31 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 
 
+
+$url = 'https://s3.amazonaws.com/dl.diditbetter.com' | Where-Object { $_.DisplayName -like "a2e_enterprise_upgrade*" }
+$targetfolder = "c:\zlibrary"
+Start-BitsTransfer -Source $url -Destination $targetfolder -Asynchronous -Priority Low
+
+
+
+
+
+
+
+
+
 #Downloading Add2Exchange
+
+$URL = "http://dl.diditbetter.com" 
+$result = (((Invoke-WebRequest –Uri $url).Links | Where-Object {$_.href -like “a2e_enterprise_upgrade*”} ) | Select-Object href).href
+
+
+
+
+
 
 $R = Invoke-WebRequest -URI "http://dl.diditbetter.com"
 $R.AllElements | Where-Object {$_.name -like "* a2e_enterprise_upgrade"} | Select-Object Name
-
-
-
-
-
 
 
 
