@@ -10,7 +10,103 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 
 
-$url = 'https://s3.amazonaws.com/dl.diditbetter.com' | Where-Object { $_.DisplayName -like "a2e_enterprise_upgrade*" }
+$sourceBucket = 'dl.diditbetter.com'
+$profile = 'DidItBetter'
+$Folder = 'c:\'
+
+$items = Get-S3Object -BucketName $sourceBucket -ProfileName $profile -Region 'us-east-1'
+Write-Host "$($items.Length) objects to copy"
+$index = 1
+$items | % {
+    Write-Host "$index/$($items.Length): $($_.Key)"
+    $fileName = $Folder + ".\$($_.Key.Replace('/','\'))"
+    Write-Host "$fileName"
+    Read-S3Object -BucketName $sourceBucket -Key $_.Key -File $fileName -ProfileName $profile -Region 'us-east-1' > $null
+    $index += 1
+}
+
+
+
+
+https://support.diditbetter.com/downloads.aspx
+
+
+
+
+
+
+
+
+
+
+
+
+
+$URL = "https://s3.amazonaws.com/dl.diditbetter.com/a2e-enterprise_upgrade.24.3.3398.2377.exe"
+$Output = "c:\a2e-enterprise_upgrade.exe"
+$Start_Time = Get-Date
+
+(New-Object System.Net.WebClient).DownloadFile($URL, $Output)
+
+Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+
+
+
+
+
+
+
+
+
+
+
+$WebResponse = Invoke-WebRequest "http://support.diditbetter.com/downloads.aspx"
+$WebResponse.content
+
+$Response = $WebResponse.content
+get-content $Response | select-string 'a2e-enterprise_upgrade'
+
+$Response = $WebResponse.content
+
+$string = $response
+if ($string -match '(a2e-enterprise_upgrade)'){ $A2EVersion = $Matches.Value}
+
+
+Get-WmiObject -List | Where-Object {$_.name  -Like "*a2e-enterprise_upgrade"}
+
+
+
+$uri = Invoke-WebRequest -Uri "https://s3.amazonaws.com/dl.diditbetter.com/" -ContentType "application/xml" -ErrorAction:Stop -TimeoutSec 60
+$bn = ([xml]$uri.Content).key.lastmodified.ETag
+
+
+<Contents>
+<Key>a2e-enterprise_upgrade.24.3.3398.2377.exe</Key>
+<LastModified>2022-03-10T17:12:49.000Z</LastModified>
+<ETag>"1c2641b93a39f46c8789b4fd5f95374b"</ETag>
+<Size>44214670</Size>
+<StorageClass>REDUCED_REDUNDANCY</StorageClass>
+</Contents>
+
+
+
+$r = Invoke-WebRequest -Uri "$uriP/api/1.0/appliance-management/global/info" -Body $body -Method:Get -Headers $head -ContentType "application/xml" -ErrorAction:Stop -TimeoutSec 60
+$bn = ($r.Content.globalInfo.versionInfo.buildNumber)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$url = 'https://s3.amazonaws.com/dl.diditbetter.com/' | Where-Object { $_.DisplayName -like "a2e-enterprise_upgrade*" } | Select-Object
 $targetfolder = "c:\zlibrary"
 Start-BitsTransfer -Source $url -Destination $targetfolder -Asynchronous -Priority Low
 
