@@ -45,6 +45,14 @@ switch ($input1) {
         Clear-Host 
         'You chose Office 365'
         $error.clear()
+
+        #Variables
+        $User = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Service_Account_Name.txt"
+        $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
+
+
+
         Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
         If ($error) {
             Write-Host "Adding EXO-V2 module"
@@ -59,11 +67,13 @@ switch ($input1) {
         Update-Module -Name ExchangeOnlineManagement
         Import-Module –Name ExchangeOnlineManagement
 
-        Write-Host "Sign in to Office365 as Exchange Admin"
+        Write-Host "Signing in to Office365 as Exchange Admin"
         
-        Connect-ExchangeOnline
+        Connect-ExchangeOnline$Cred = New-Object -typename System.Management.Automation.PSCredential `
+            -Argumentlist $Username, $Password
     
-        $User = Read-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com";
+        Connect-ExchangeOnline -Credential $Cred
+    
     
         Do {
             $Title2 = 'Office 365 Permissions Menu' 
@@ -221,38 +231,19 @@ switch ($input1) {
     '2' {
         Clear-Host 
         'You chose Exchange 2010'
-        $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
-        if ($confirmation -eq 'y') {
-            Add-PSSnapin Microsoft.Exchange.Management.PowerShell.E2010;
-            Set-ADServerSettings -ViewEntireForest $true
-        }
-    
-        if ($confirmation -eq 'n') {
-            Write-Warning -Message "Before Continuing, please remote into your Exchange server.
-            Open Powershell as administrator and Type: *Enable-PSRemoting* without the stars and hit enter.
-            Once Done, click Enter to Continue"
-            Pause
-            
-            $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
-            Do {
-                $UserCredential = Get-Credential
-                If (!$UserCredential) { Exit }
-                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
-                If ($LoginError) { 
-                    Write-Warning -Message "Username or Password is Incorrect!"
-                    Write-Host "Trying Again in 2 Seconds....."
-                    Start-Sleep -S 2
-                }
-            } Until (-not($LoginError))
-            
-        
-            Import-PSSession $Session -DisableNameChecking
-            Set-ADServerSettings -ViewEntireForest $true   
-        }
+        #Variables
+        $Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Name.txt"
+        $User = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
+        $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
   
-        Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
-        $User = Read-Host "Enter Sync Service Account";
-  
+        $Cred = New-Object -typename System.Management.Automation.PSCredential `
+            -Argumentlist $Username, $Password
+
+        $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred
+        Import-PSSession $Session -DisableNameChecking
+        Set-ADServerSettings -ViewEntireForest $true
+
         #Exchange 2010 Thottling Policy Check
         Write-Host "Checking Throttling Policy"
         $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
@@ -425,38 +416,20 @@ switch ($input1) {
     '3' { 
         Clear-Host 
         'You chose Exchange 2013-2019'
-        $confirmation = Read-Host "Are you on the Exchange Server? [Y/N]"
-        if ($confirmation -eq 'y') {
-            Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn;
-            Set-ADServerSettings -ViewEntireForest $true
-        }
-
-        if ($confirmation -eq 'n') {
-            Write-Warning -Message "Before Continuing, please remote into your Exchange server.
-            Open Powershell as administrator and Type: *Enable-PSRemoting* without the stars and hit enter.
-            Once Done, click Enter to Continue"
-            Pause
+        #Variables
+        $Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Name.txt"
+        $User = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
+        $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
+          
+        $Cred = New-Object -typename System.Management.Automation.PSCredential `
+            -Argumentlist $Username, $Password
         
-            $Exchangename = Read-Host "What is your Exchange server name? (FQDN)"
-            Do {
-                $UserCredential = Get-Credential
-                If (!$UserCredential) { Exit }
-                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $UserCredential -ErrorAction SilentlyContinue -ErrorVariable LoginError;
-                If ($LoginError) { 
-                    Write-Warning -Message "Username or Password is Incorrect!"
-                    Write-Host "Trying Again in 2 Seconds....."
-                    Start-Sleep -S 2
-                }
-            } Until (-not($LoginError))
-        
-            Import-PSSession $Session -DisableNameChecking
-            Set-ADServerSettings -ViewEntireForest $true   
-        }
+        $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$Exchangename/PowerShell/ -Authentication Kerberos -Credential $Cred
+        Import-PSSession $Session -DisableNameChecking
+        Set-ADServerSettings -ViewEntireForest $true
 
-
-        Write-Host "Enter Sync Service Account name (Display Name) Example: zAdd2Exchange or zAdd2Exchange@domain.com"
-        $User = Read-Host "Enter Sync Service Account";
-
+                
         #Exchange 2013-2019 Thottling Policy Check
         Write-Host "Checking Throttling Policy"
         $ThrottlePolicy = Get-ThrottlingPolicy -identity A2EPolicy -ErrorAction SilentlyContinue ;
