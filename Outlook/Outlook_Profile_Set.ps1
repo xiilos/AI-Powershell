@@ -164,6 +164,21 @@ Else {
 
 }
 
+#Disable Outlook popups
+
+Write-Host "Disabling Teaching Callouts"
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "AutoSaveTottleOnWord" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "MeetingAllowForwardTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "AutoSaveFirstSaveWord" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "CommingSoonTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "AutocreateTeachingCallout_MoreLocations" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "Search.TopResults" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "UseTighterSpacingTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "SLRToggleReplaceTeachingCalloutID" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "DataVisualizerRibbonTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "ExportToWordProcessTabTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "PreviewPlaceUpdate" -value 0 -ErrorAction SilentlyContinue
+
 } 
 
 #######Outlook V.15#############
@@ -311,7 +326,24 @@ Else {
 
 }
 
-} 
+#Disable Outlook popups
+
+Write-Host "Disabling Teaching Callouts"
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "AutoSaveTottleOnWord" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "MeetingAllowForwardTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "AutoSaveFirstSaveWord" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "CommingSoonTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "AutocreateTeachingCallout_MoreLocations" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "Search.TopResults" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "UseTighterSpacingTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "SLRToggleReplaceTeachingCalloutID" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "DataVisualizerRibbonTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "ExportToWordProcessTabTeachingCallout" -value 0 -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "PreviewPlaceUpdate" -value 0 -ErrorAction SilentlyContinue
+
+
+
+}
 
 #######Outlook Not Supported#############
 
