@@ -18,7 +18,7 @@ Else {
     New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
 }
 
-Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Permissions.txt" -Append
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Permission_Results.txt" -Append
 
 # Script #
 
