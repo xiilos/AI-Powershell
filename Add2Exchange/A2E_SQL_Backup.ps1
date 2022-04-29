@@ -106,6 +106,8 @@ Write-Host "Starting Add2Exchange SQL Service"
 Start-Service -Name "SQL Server (A2ESQLSERVER)"
 Start-Sleep -s 5
 
+Set-Service -Name "Add2Exchange Service" -StartupType Automatic
+
 #Write to Event Log
 Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10002 -EntryType SuccessAudit -Message "Add2Exchange Succesfully Backed up Database."
 
@@ -130,11 +132,14 @@ if ($answer -eq 1) {
 
     $Location = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange' -Name "InstallLocation").InstallLocation
     Set-Location $Location
-    $Repeater = (New-TimeSpan -days 7)
+    $Repeater = (New-TimeSpan -days 3)
     $Duration = ([timeSpan]::maxvalue)
     $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed_A2E_SQL_Backup.ps1"'
-    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange SQL Backup" -Description "Backs up the A2E SQL Database every once a week"
+    $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+    $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
+    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange SQL Backup" -Description "Backs up the A2E SQL Database every once a week" -User $UserID -Password $Password
     Write-Host "Done"
 
 }
