@@ -15,7 +15,7 @@ $CurrentDB = $Install + 'Database\' #Current Database Location
 
 
 
-# Script #
+#Script#
 
 #Folder path for Backups
 Write-Host "Pick a destination for your backups"
