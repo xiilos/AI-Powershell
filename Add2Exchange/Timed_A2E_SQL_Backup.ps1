@@ -86,6 +86,8 @@ Write-Host "Starting Add2Exchange SQL Service"
 Start-Service -Name "SQL Server (A2ESQLSERVER)"
 Start-Sleep -s 5
 
+Set-Service -Name "Add2Exchange Service" -StartupType Automatic
+
 #Write to Event Log
 Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10002 -EntryType SuccessAudit -Message "Add2Exchange Succesfully Backed up Database."
 
