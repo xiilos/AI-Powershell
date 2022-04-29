@@ -18,7 +18,7 @@ Else {
     New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
 }
 
-Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Permissions.txt" -Append
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Permission_Results.txt" -Append
 
 # Script #
 
@@ -50,13 +50,13 @@ switch ($input1) {
             Write-Host "Adding EXO-V2 module"
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-            Install-Module –Name ExchangeOnlineManagement -WarningAction "Inquire"
+            Install-Module –Name ExchangeOnlineManagement -Force
         }
      
         Else { Write-Host 'Module is installed' }
 
         Write-Host "Updating EXO-V2 Module Please Wait..."
-        Update-Module -Name ExchangeOnlineManagement
+        Install-Module –Name ExchangeOnlineManagement -Force
         Import-Module –Name ExchangeOnlineManagement
 
         Write-Host "Sign in to Office365 as Global Admin"
