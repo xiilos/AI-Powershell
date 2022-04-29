@@ -36,7 +36,7 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Outlook\Profiles\$P
 0x00,0x00,0x00,0x00,0x01,0x00,0x00,0x2f,0x00))
 
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Outlook\Profiles\$Profile\0a0d020000000000c000000000000046" -Name "000b3d1c" -value ([byte[]](0x00,0x00))
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Outlook\Profiles\$Profile\0a0d020000000000c000000000000046" -Name "00033d1b" -value ([byte[]](0x00,0x00,0x00,0x00))
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Outlook\Profiles\$Profile\0a0d020000000000c000000000000046" -Name "00033d1b" -value ([byte[]](0x01,0x00,0x00,0x00))
 
 #Trust Center
 $Privacy = Test-Path "HKCU:\Software\Microsoft\Office\16.0\Common\Privacy"
@@ -197,7 +197,7 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Outlook\Profiles\$P
 0x00,0x00,0x00,0x00,0x01,0x00,0x00,0x2f,0x00))
 
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Outlook\Profiles\$Profile\0a0d020000000000c000000000000046" -Name "000b3d1c" -value ([byte[]](0x00,0x00))
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Outlook\Profiles\$Profile\0a0d020000000000c000000000000046" -Name "00033d1b" -value ([byte[]](0x00,0x00,0x00,0x00))
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Outlook\Profiles\$Profile\0a0d020000000000c000000000000046" -Name "00033d1b" -value ([byte[]](0x01,0x00,0x00,0x00))
 
 #Trust Center
 $Privacy = Test-Path "HKCU:\Software\Microsoft\Office\15.0\Common\Privacy"
