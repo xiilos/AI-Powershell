@@ -1,3 +1,6 @@
+#Logging
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
+
 #Pathing
 
 $TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"

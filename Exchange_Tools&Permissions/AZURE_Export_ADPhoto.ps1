@@ -8,6 +8,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Logging
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
+
 #Support Directory
 $TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
