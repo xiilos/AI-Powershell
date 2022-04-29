@@ -309,7 +309,7 @@ $CreateSupporttext.location      = New-Object System.Drawing.Point(255,413)
 $CreateSupporttext.Font          = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $Revision                        = New-Object system.Windows.Forms.Label
-$Revision.text                   = "Rev. 4.27.7"
+$Revision.text                   = "Rev. 4.29.1"
 $Revision.AutoSize               = $true
 $Revision.width                  = 25
 $Revision.height                 = 10
@@ -464,6 +464,14 @@ $SQLUpgrade.height               = 10
 $SQLUpgrade.location             = New-Object System.Drawing.Point(255,473)
 $SQLUpgrade.Font                 = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
+$PowerShell_Logs                 = New-Object system.Windows.Forms.Label
+$PowerShell_Logs.text            = "A2E PowerShell Logs"
+$PowerShell_Logs.AutoSize        = $true
+$PowerShell_Logs.width           = 25
+$PowerShell_Logs.height          = 10
+$PowerShell_Logs.location        = New-Object System.Drawing.Point(15,588)
+$PowerShell_Logs.Font            = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
+
 
 $ToolTip1.SetToolTip($Add2ExchangeUpgrade,'This will Upgrade your Current Version of Add2Exchange Enterprise to the Latest Version')
 $ToolTip1.SetToolTip($UpgradeRMM,'This will Upgrade your Current Version of Recovery and Migration Manager to the Latest Version')
@@ -502,12 +510,13 @@ $ToolTip1.SetToolTip($TaskScheduler,'Opens Task Scheduler')
 $ToolTip1.SetToolTip($WindowsDefender,'This tool will add the proper Exclusions to Windows Defender')
 $ToolTip1.SetToolTip($A2ESQLBackUp,'Backup the Add2Exchange SQL Database')
 $ToolTip1.SetToolTip($SQLUpgrade,'Upgrade SQL Database from 2008-2008R2 to 2012')
+$ToolTip1.SetToolTip($PowerShell_Logs,'Logs for PowerShell Files')
 
 $DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$Permissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,
 $DownloadToolKit,$DownloadSQL,$FTPDownloads,$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$DisableOSC,
 $AddRegistryFavorites,$Reset_A2E_Passwords,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,
 $UpgradeToolkit,$A2EDiags,$CreateSupporttext,$Revision,$UpgradeAdd2Outlook,$AD_Photos,$MSExchangeDelegate,$ExchangeShell,$CommandsList,$A2E_Migration_Wizard,$Configuration,$FixesEvents,$ModernAuth,
-$Shortcuts,$DIBMMC,$RegistryEditor,$DIBDirectory,$TaskScheduler,$WindowsDefender,$Outlook_Tools_Menu,$A2ESQLBackUp,$SQLUpgrade))
+$Shortcuts,$DIBMMC,$RegistryEditor,$DIBDirectory,$TaskScheduler,$WindowsDefender,$Outlook_Tools_Menu,$A2ESQLBackUp,$SQLUpgrade,$PowerShell_Logs))
 
 $Add2ExchangeUpgrade.Add_Click( { Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1 })
 $UpgradeRMM.Add_Click( { Start-Process Powershell .\Auto_Upgrade_RMM.ps1 })
@@ -557,6 +566,7 @@ $WindowsDefender.Add_Click({Start-Process Powershell .\Windows_Defender_Exclusio
 $Outlook_Tools_Menu.Add_Click({Start-Process Powershell .\Outlook_Tools_Menu.ps1})
 $A2ESQLBackUp.Add_Click({Start-Process Powershell .\A2E_SQL_Backup.ps1})
 $SQLUpgrade.Add_Click({Start-Process Powershell .\Upgrade_SQL_2008.ps1})
+$PowerShell_Logs.Add_Click({Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt"})
 
 
 
