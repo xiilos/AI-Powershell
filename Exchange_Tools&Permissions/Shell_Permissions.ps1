@@ -51,25 +51,21 @@ switch ($input1) {
         $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Service_Account_Name.txt"
         $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
 
+        #Check for MS Online Module
+        Write-Host "Adding/Updating EXO-V2 module"
+        Install-Module –Name ExchangeOnlineManagement -Force -ErrorVariable Error
 
-
-        Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
-        If ($error) {
-            Write-Host "Adding EXO-V2 module"
+        If ($Error) {
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
             Install-Module –Name ExchangeOnlineManagement -Force
-        }
-         
-        Else { Write-Host 'Module is installed' }
-
-        Write-Host "Updating EXO-V2 Module Please Wait..."
-        Install-Module –Name ExchangeOnlineManagement -Force
-        Import-Module –Name ExchangeOnlineManagement
+        } 
+        
+        Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
         Write-Host "Signing in to Office365 as Exchange Admin"
         
-        Connect-ExchangeOnline$Cred = New-Object -typename System.Management.Automation.PSCredential `
+        $Cred = New-Object -typename System.Management.Automation.PSCredential `
             -Argumentlist $Username, $Password
     
         Connect-ExchangeOnline -Credential $Cred
