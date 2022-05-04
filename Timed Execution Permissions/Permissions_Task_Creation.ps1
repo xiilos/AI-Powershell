@@ -13,18 +13,16 @@ Else {
 }
 
 #Check for MS Online Module
+Write-Host "Adding/Updating EXO-V2 module"
+Install-Module –Name ExchangeOnlineManagement -Force -ErrorVariable Error
 
-$error.clear()
-Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
-Import-Module "MSonline" -ErrorAction SilentlyContinue
-If ($error) {
-    Write-Host "Adding/Updating EXO-V2 module"
+If ($Error) {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Set-PSRepository -Name psgallery -InstallationPolicy Trusted
     Install-Module –Name ExchangeOnlineManagement -Force
-    Install-Module MSonline -Confirm:$false -ErrorAction SilentlyContinue
 } 
         
+Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
 #Start Script
 
@@ -371,7 +369,7 @@ $UpdateCreds.Add_Click( {
         $ExAdmin_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
         $GB_Admin_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Service_Account_Name.txt"
         $Sync_Accoun_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
-        $Dist_Name_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
+        $Dist_Name_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt" -encoding utf8
         $Dynamic_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_Name.txt"
         $Static_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_Name.txt"
 
