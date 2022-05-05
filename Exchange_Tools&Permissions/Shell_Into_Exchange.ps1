@@ -44,22 +44,19 @@ switch ($input1) {
     '1' { 
         Clear-Host 
         'You chose Office 365'
-        $error.clear()
-        Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
-        If ($error) {
-            Write-Host "Adding EXO-V2 module"
+        #Check for MS Online Module
+        Write-Host "Adding/Updating EXO-V2 module"
+        Install-Module –Name ExchangeOnlineManagement -Force -ErrorVariable Error
+
+        If ($Error) {
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
             Install-Module –Name ExchangeOnlineManagement -Force
-        }
-         
-        Else { Write-Host 'Module is installed' }
+        } 
+        
+        Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
-        Write-Host "Updating EXO-V2 Module Please Wait..."
-        Install-Module –Name ExchangeOnlineManagement -Force
-        Import-Module –Name ExchangeOnlineManagement
-
-        Write-Host "Sign in to Office365 as Global Admin"
+        Write-Host "Sign in to Office365 as Exchange Admin"
         
         Connect-ExchangeOnline
     
