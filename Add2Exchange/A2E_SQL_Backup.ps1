@@ -107,6 +107,8 @@ Start-Service -Name "SQL Server (A2ESQLSERVER)"
 Start-Sleep -s 5
 
 Set-Service -Name "Add2Exchange Service" -StartupType Automatic
+Start-Sleep -s 5
+Start-Service -Name "Add2Exchange Service"
 
 #Write to Event Log
 Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10002 -EntryType SuccessAudit -Message "Add2Exchange Succesfully Backed up Database."
@@ -139,7 +141,7 @@ if ($answer -eq 1) {
     $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
     $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
     $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
-    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange SQL Backup" -Description "Backs up the A2E SQL Database every once a week" -User $UserID -Password $Password
+    Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "Add2Exchange SQL Backup" -Description "Backs up the A2E SQL Database every 3 Days" -User $UserID -Password $Password
     Write-Host "Done"
 
 }
