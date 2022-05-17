@@ -45,14 +45,34 @@ switch ($input1) {
         Clear-Host 
         'You chose Office 365'
         #Check for MS Online Module
-        Write-Host "Adding/Updating EXO-V2 module"
-        Install-Module –Name ExchangeOnlineManagement -Force -ErrorVariable Error
+        Write-Host "Checking for Exhange Online Module"
 
-        If ($Error) {
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-            Install-Module –Name ExchangeOnlineManagement -Force
+        IF (Get-Module -ListAvailable -Name ExchangeOnlineManagement) {
+            Write-Host "Exchange Online Module Exists"
+    
+            $InstalledEXOv2 = ((Get-Module -Name ExchangeOnlineManagement -ListAvailable).Version | Sort-Object -Descending | Select-Object -First 1).ToString()
+
+            $LatestEXOv2 = (Find-Module -Name ExchangeOnlineManagement).Version.ToString()
+    
+            [PSCustomObject]@{
+                Match = If ($InstalledEXOv2 -eq $LatestEXOv2) { Write-Host "You are on the latest Version" } 
+        
+                Else {
+                    Write-Host "Upgrading Modules..."
+                    Update-Module -Name ExchangeOnlineManagement -Force
+                    Write-Host "Success"
+                }
+
+            }
+
+
         } 
+        Else {
+            Write-Host "Module Does Not Exist"
+            Write-Host "Downloading Exchange Online Management..."
+            Install-Module –Name ExchangeOnlineManagement -Force
+            Write-Host "Success"
+        }
         
         Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
