@@ -53,6 +53,7 @@ switch ($input1) {
 
         #Check for MS Online Module
         Write-Host "Checking for Exhange Online Module"
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
         IF (Get-Module -ListAvailable -Name ExchangeOnlineManagement) {
             Write-Host "Exchange Online Module Exists"

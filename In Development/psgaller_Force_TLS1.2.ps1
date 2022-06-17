@@ -14,9 +14,11 @@ Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_P
 
 # Script #
 
-[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+
 
 
 
