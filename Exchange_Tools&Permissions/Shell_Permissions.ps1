@@ -89,7 +89,13 @@ switch ($input1) {
         $Cred = New-Object -typename System.Management.Automation.PSCredential `
             -Argumentlist $Username, $Password
     
-        Connect-ExchangeOnline -Credential $Cred
+            Do {Connect-ExchangeOnline -Credential $Cred -ErrorAction SilentlyContinue -ErrorVariable ConnectError;
+                If ($ConnectError)
+                {Write-Host "Could not pass credentials. Trying manually..." 
+                Connect-Exchangeonline}
+                
+                
+                } Until (-not($ConnectError))
     
     
         Do {
