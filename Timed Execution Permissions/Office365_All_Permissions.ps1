@@ -8,6 +8,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 # Script #
 
@@ -23,9 +24,6 @@ $Cred = New-Object -typename System.Management.Automation.PSCredential `
     -Argumentlist $Username, $Password
 
     Connect-ExchangeOnline -Credential $Cred
-    #$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
-    #Import-PSSession $Session -DisableNameChecking
-    #Import-Module MSOnline
 
 #Timed Execution Permissions to All Users
 Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
