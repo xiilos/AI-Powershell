@@ -50,24 +50,24 @@ if ($Console) {
 #Shutting Down Services
 Write-Host "Stopping Add2Exchange Service"
 Stop-Service -Name "Add2Exchange Service"
-Start-Sleep -s 2
+Start-Sleep -s 10
 Write-Host "Done"
 Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service –StartupType Disabled
 
 #Stop The Add2Exchange Agent
 Write-Host "Stopping the Agent. Please Wait."
-Start-Sleep -s 5
+Start-Sleep -s 10
 $Agent = Get-Process "Add2Exchange Agent" -ErrorAction SilentlyContinue
 if ($Agent) {
     Write-Host "Waiting for Agent to Exit"
-    Start-Sleep -s 5
+    Start-Sleep -s 10
     if (!$Agent.HasExited) {
         $Agent | Stop-Process -Force
     }
 }
 Write-Host "Stopping Add2Exchange SQL Service"
 Stop-Service -Name "SQL Server (A2ESQLSERVER)"
-Start-Sleep -s 5
+Start-Sleep -s 10
 Write-Host "Done"
 
 
@@ -93,7 +93,17 @@ Copy-Item $currentDB -Destination ($BackupDirs + "\" + (Get-Date -format "dd-MMM
 If ($DB1) {
     Write-Host "Error.....Cannot Find A2E Database."
     Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10001 -EntryType FailureAudit -Message "$_.Exception.Message"
-    Pause
+    Write-Host "Starting Services..."
+    Start-Sleep -S 2
+    Start-Service -Name "SQL Server (A2ESQLSERVER)"
+    Start-Sleep -s 5
+    Set-Service -Name "Add2Exchange Service" -StartupType Automatic
+    Start-Sleep -s 5
+    Start-Service -Name "Add2Exchange Service"
+    Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10004 -EntryType Information -Message "Add2Exchange did not succesfully backup the DB. Starting up services."
+    Write-Host "ttyl"
+    Get-PSSession | Remove-PSSession
+    Exit
 }
 
 

@@ -9,6 +9,8 @@ Logging Errors:
 
 -EventID 10003 -EntryType FailureAudit -Message "Add2Exchange Console is Open and cannot backup the A2E SQL Databse $_.Exception.Message"
 
+-EventID 10004 -EntryType Information -Message "Add2Exchange did not succesfully backup the DB. Starting up services."
+
 
 Try {
 }
