@@ -8,15 +8,16 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 # Script #
 
 #Variables
-
-$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Service_Account_Name.txt"
-$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
-$DynamicGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_Name.txt"
-$StaticGroupName = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_Name.txt"
+cd..
+$Username = Get-Content ".\Add2Exchange Creds\GA_Service_Account_Name.txt"
+$Password = Get-Content ".\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
+$DynamicGroupName = Get-Content ".\Add2Exchange Creds\Dynamic_Name.txt"
+$StaticGroupName = Get-Content ".\Add2Exchange Creds\Static_Name.txt"
 
 Try {
 
@@ -24,9 +25,7 @@ $Cred = New-Object -typename System.Management.Automation.PSCredential `
     -Argumentlist $Username, $Password
 
     Connect-ExchangeOnline -Credential $Cred
-    #$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "https://outlook.office365.com/powershell-liveid/" -Credential $Cred -Authentication "Basic" -AllowRedirection
-    #Import-PSSession $Session -DisableNameChecking
-    #Import-Module MSOnline
+
 
 #Timed Execution Permissions to Distribution Lists
 for ($i = 0; $i -lt $DynamicGroupName.Length; $i++) {

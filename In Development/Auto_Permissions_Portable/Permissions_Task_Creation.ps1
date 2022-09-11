@@ -1,15 +1,15 @@
 #Logging
-Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
+Start-Transcript -Path ".\A2E_PowerShell_log.txt" -Append
 
 #Pathing
 
-$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"
+$TestPath = ".\Add2Exchange Creds"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
     
 }
 Else {
     
-    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"
+    New-Item -ItemType directory -Path ".\Add2Exchange Creds"
 }
 
 #Check for MS Online Module
@@ -331,65 +331,61 @@ $Add2Exchange_Permissions_Menu.controls.AddRange(@($DIB_Logo, $ExchangeServerNam
 
 #Shell into Exchange or O365 Auto with Options
 
-$Shell_Permissions.Add_Click( { 
-        Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup"
-        Start-Process Powershell .\Shell_Permissions.ps1 })
+$Shell_Permissions.Add_Click( { Start-Process Powershell ".\Scripts\Shell_Permissions.ps1" })
 
 
 #Update Credentials Variables
 
-Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"
-
 #Rename Old Files
 
-Rename-Item -Path ".\ServerUser.txt" -NewName "Exchange_Server_Admin.txt" -ErrorAction SilentlyContinue
-Rename-Item -Path ".\ServerPass.txt" -NewName "Exchange_Server_Pass.txt" -ErrorAction SilentlyContinue
-Rename-Item -Path ".\ExchangeName.txt" -NewName "Exchange_Server_Name.txt" -ErrorAction SilentlyContinue
-Rename-Item -Path ".\Dynamic_DistributionName.txt" -NewName "Dynamic_Name.txt" -ErrorAction SilentlyContinue
-Rename-Item -Path ".\Static_DistributionName.txt" -NewName "Static_Name.txt" -ErrorAction SilentlyContinue
-Rename-Item -Path ".\ServiceAccount.txt" -NewName "Sync_Account_Name.txt" -ErrorAction SilentlyContinue
-Rename-Item -Path ".\DistributionName.txt" -NewName "Dist_List_Name.txt" -ErrorAction SilentlyContinue
+Rename-Item -Path ".\Add2Exchange Creds\ServerUser.txt" -NewName "Exchange_Server_Admin.txt" -ErrorAction SilentlyContinue
+Rename-Item -Path ".\Add2Exchange Creds\ServerPass.txt" -NewName "Exchange_Server_Pass.txt" -ErrorAction SilentlyContinue
+Rename-Item -Path ".\Add2Exchange Creds\ExchangeName.txt" -NewName "Exchange_Server_Name.txt" -ErrorAction SilentlyContinue
+Rename-Item -Path ".\Add2Exchange Creds\Dynamic_DistributionName.txt" -NewName "Dynamic_Name.txt" -ErrorAction SilentlyContinue
+Rename-Item -Path ".\Add2Exchange Creds\Static_DistributionName.txt" -NewName "Static_Name.txt" -ErrorAction SilentlyContinue
+Rename-Item -Path ".\Add2Exchange Creds\ServiceAccount.txt" -NewName "Sync_Account_Name.txt" -ErrorAction SilentlyContinue
+Rename-Item -Path ".\Add2Exchange Creds\DistributionName.txt" -NewName "Dist_List_Name.txt" -ErrorAction SilentlyContinue
 
 #Text Field Get Content
 
-[System.Security.Principal.WindowsIdentity]::GetCurrent().Name | Out-File ".\Local_Account_Name.txt"
+[System.Security.Principal.WindowsIdentity]::GetCurrent().Name | Out-File ".\Add2Exchange Creds\Local_Account_Name.txt"
 
-$ExServ_Name_txt.text = get-content ".\Exchange_Server_Name.txt" -ErrorAction SilentlyContinue
-$ExAdmin_txt.text = get-content ".\Exchange_Server_Admin.txt" -ErrorAction SilentlyContinue
-$GB_Admin_txt.text = get-content ".\GA_Service_Account_Name.txt" -ErrorAction SilentlyContinue
-$Sync_Accoun_txt.text = get-content ".\Sync_Account_Name.txt" -ErrorAction SilentlyContinue
-$Dist_Name_txt.text = get-content -Raw ".\Dist_List_Name.txt" -ErrorAction SilentlyContinue
-$Dynamic_txt.text = get-content ".\Dynamic_Name.txt" -ErrorAction SilentlyContinue
-$Static_txt.text = get-content ".\Static_Name.txt" -ErrorAction SilentlyContinue
-$Localacctname.text = get-content ".\Local_Account_Name.txt" -ErrorAction SilentlyContinue
+$ExServ_Name_txt.text = get-content ".\Add2Exchange Creds\Exchange_Server_Name.txt" -ErrorAction SilentlyContinue
+$ExAdmin_txt.text = get-content ".\Add2Exchange Creds\Exchange_Server_Admin.txt" -ErrorAction SilentlyContinue
+$GB_Admin_txt.text = get-content ".\Add2Exchange Creds\GA_Service_Account_Name.txt" -ErrorAction SilentlyContinue
+$Sync_Accoun_txt.text = get-content ".\Add2Exchange Creds\Sync_Account_Name.txt" -ErrorAction SilentlyContinue
+$Dist_Name_txt.text = get-content -Raw ".\Add2Exchange Creds\Dist_List_Name.txt" -ErrorAction SilentlyContinue
+$Dynamic_txt.text = get-content ".\Add2Exchange Creds\Dynamic_Name.txt" -ErrorAction SilentlyContinue
+$Static_txt.text = get-content ".\Add2Exchange Creds\Static_Name.txt" -ErrorAction SilentlyContinue
+$Localacctname.text = get-content ".\Add2Exchange Creds\Local_Account_Name.txt" -ErrorAction SilentlyContinue
 
 #Password Update Time
 
-$Exchange_Admin_Password_Update.text = Get-Item ".\Exchange_Server_Pass.txt"  -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
-$Global_Admin_Password_Update.text = Get-Item ".\GA_Admin_Pass.txt" -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
-$LocalPassUpdate.text = Get-Item ".\Local_Account_Pass.txt" -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
+$Exchange_Admin_Password_Update.text = Get-Item ".\Add2Exchange Creds\Exchange_Server_Pass.txt"  -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
+$Global_Admin_Password_Update.text = Get-Item ".\Add2Exchange Creds\GA_Admin_Pass.txt" -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
+$LocalPassUpdate.text = Get-Item ".\Add2Exchange Creds\Local_Account_Pass.txt" -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
 
 #Password Input Give
 
-$EX_Pass.Add_Click( { Read-Host "Exchange Admin Password" -assecurestring | convertfrom-securestring | out-file "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" })
-$GB_Admin_Pass.Add_Click( { Read-Host "Office 365 Admin Password" -assecurestring | convertfrom-securestring | out-file "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Admin_Pass.txt" })
-$LocalPassword.Add_Click( { Read-Host "Local Account Password" -assecurestring | convertfrom-securestring | out-file "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" })
+$EX_Pass.Add_Click( { Read-Host "Exchange Admin Password" -assecurestring | convertfrom-securestring | out-file ".\Add2Exchange Creds\Exchange_Server_Pass.txt" })
+$GB_Admin_Pass.Add_Click( { Read-Host "Office 365 Admin Password" -assecurestring | convertfrom-securestring | out-file ".\Add2Exchange Creds\GA_Admin_Pass.txt" })
+$LocalPassword.Add_Click( { Read-Host "Local Account Password" -assecurestring | convertfrom-securestring | out-file ".\Add2Exchange Creds\Local_Account_Pass.txt" })
 
 #Click to Open Dist. Lists Text
 
-$Dist_List_Label.Add_Click( { Start-Process "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt" })
+$Dist_List_Label.Add_Click( { Start-Process ".\Add2Exchange Creds\Dist_List_Name.txt" })
 
 #Update Credentials
 
 $UpdateCreds.Add_Click( { 
     
-        $ExServ_Name_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Name.txt"
-        $ExAdmin_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
-        $GB_Admin_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Service_Account_Name.txt"
-        $Sync_Accoun_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
-        $Dist_Name_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt" -encoding utf8
-        $Dynamic_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dynamic_Name.txt"
-        $Static_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Static_Name.txt"
+        $ExServ_Name_txt.text | Out-File ".\Add2Exchange Creds\Exchange_Server_Name.txt"
+        $ExAdmin_txt.text | Out-File ".\Add2Exchange Creds\Exchange_Server_Admin.txt"
+        $GB_Admin_txt.text | Out-File ".\Add2Exchange Creds\GA_Service_Account_Name.txt"
+        $Sync_Accoun_txt.text | Out-File ".\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Dist_Name_txt.text | Out-File ".\Add2Exchange Creds\Dist_List_Name.txt" -encoding utf8
+        $Dynamic_txt.text | Out-File ".\Add2Exchange Creds\Dynamic_Name.txt"
+        $Static_txt.text | Out-File ".\Add2Exchange Creds\Static_Name.txt"
 
         $wshell = New-Object -ComObject Wscript.Shell
         $answer = $wshell.Popup("Updated Credentials Successfully.", 0, "Permissions Creator", 0x1)
@@ -470,9 +466,7 @@ $DualPermissions.Add_CheckStateChanged( {
 
 
 #Check for Powershell File Paths
-
-$Location = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange' -Name "InstallLocation").InstallLocation
-Set-Location $Location
+$Location = Get-Location
 
 
 #Creating the Task
@@ -498,9 +492,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_All_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\Office365_All_Permissions.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Permissions to All O365" -Description "Add Permissions to All Users in Office 365" -User $UserID -Password $Password
             Write-Host "Done"
@@ -528,9 +522,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_Dist_List_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\Office365_Dist_List_Permissions.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Permissions to Distribution List O365" -Description "Adds Add2Exchange Permissions Automatically to a Distribution List" -User $UserID -Password $Password
             Write-Host "Done" 
@@ -558,9 +552,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 720)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_Dynamic_Distribution.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\Office365_Dynamic_Distribution.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Permissions to Dynamic List O365" -Description "Exports a Dynamic Distribution List of Users into a Static List of Users" -User $UserID -Password $Password
             Write-Host "Done"
@@ -592,9 +586,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_All_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\Office365_All_Permissions.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Dual O365 Permissions to All" -Description "Add Permissions to All Users in Office 365 and On-Premise" -User $UserID -Password $Password
             Write-Host "Done"
@@ -603,9 +597,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010-2019_All_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\2010-2019_All_Permissions.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Dual On-Premise Permissions to All" -Description "Add Permissions to All Users in Office 365 and On-Premise" -User $UserID -Password $Password
             Write-Host "Done"
@@ -637,9 +631,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\Office365_Dist_List_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\Office365_Dist_List_Permissions.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Dual O365 Permissions to a Distribution List" -Description "Adds Add2Exchange Permissions Automatically to a Distribution List" -User $UserID -Password $Password
             Write-Host "Done" 
@@ -649,9 +643,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010-2019_Dist_List_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\2010-2019_Dist_List_Permissions.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Dual On-Premise Permissions to a Distribution List" -Description "Adds Add2Exchange Permissions Automatically to a Distribution List" -User $UserID -Password $Password
             Write-Host "Done"
@@ -677,9 +671,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010-2019_All_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\2010-2019_All_Permissions.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Permissions to All on Premise Exchange" -Description "Add Permissions to All Users on Premise Exchange" -User $UserID -Password $Password
             Write-Host "Done"
@@ -707,9 +701,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010-2019_Dist_List_Permissions.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\2010-2019_Dist_List_Permissions.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Permissions to Distribution List on Premise Exchange" -Description "Adds Add2Exchange Permissions Automatically to a Distribution List" -User $UserID -Password $Password
             Write-Host "Done" 
@@ -737,9 +731,9 @@ $Create_Task.Add_Click( {
             $Repeater = (New-TimeSpan -Minutes 360)
             $Duration = ([timeSpan]::maxvalue)
             $Trigger = New-JobTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval $Repeater -RepetitionDuration $Duration
-            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Setup\Timed Permissions\2010-2019_Dynamic_Distribution.ps1"'
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -WorkingDirectory $Location -Argument '-NoProfile -WindowStyle Hidden -Executionpolicy Bypass -file ".\Scripts\2010-2019_Dynamic_Distribution.ps1"'
             $UserID = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-            $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
+            $Password = Get-Content ".\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
             $Password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
             Register-ScheduledTask -Action $Action -RunLevel Highest -Trigger $Trigger -TaskName "A2E Permissions to Dynamic Distribution List on Premise Exchange" -Description "Adds Add2Exchange Permissions Automatically to a Dynamic Distribution List" -User $UserID -Password $Password
             Write-Host "Done" 

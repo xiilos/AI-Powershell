@@ -8,13 +8,14 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   #Execution Policy
   
   Set-ExecutionPolicy -ExecutionPolicy Bypass
+  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
   
   #Variables
-  
-  $Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Name.txt"
-  $ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
-  $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
-  $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
+  cd..
+  $Exchangename = Get-Content ".\Add2Exchange Creds\Exchange_Server_Name.txt"
+  $ServiceAccount = Get-Content ".\Add2Exchange Creds\Sync_Account_Name.txt"
+  $Username = Get-Content ".\Add2Exchange Creds\Exchange_Server_Admin.txt"
+  $Password = Get-Content ".\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
   
   # Script #
   
@@ -27,9 +28,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     Import-PSSession $Session -DisableNameChecking
     Set-ADServerSettings -ViewEntireForest $true
   
-    #Timed Execution Permissions to All Users
-    #Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-    #Get-Mailbox -Resultsize Unlimited | Where-Object {$_.WhenCreated -ge ((Get-Date).Adddays(-1))} | Add-MailboxPermission -User $ServiceAccount -AccessRights 'FullAccess' -InheritanceType all -AutoMapping:$false -Confirm:$false
   
   
     Get-Mailbox -Resultsize Unlimited | Add-MailboxPermission -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
