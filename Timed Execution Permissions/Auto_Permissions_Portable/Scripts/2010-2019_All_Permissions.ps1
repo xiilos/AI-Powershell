@@ -11,7 +11,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
   
   #Variables
-  cd..
   $Exchangename = Get-Content ".\Add2Exchange Creds\Exchange_Server_Name.txt"
   $ServiceAccount = Get-Content ".\Add2Exchange Creds\Sync_Account_Name.txt"
   $Username = Get-Content ".\Add2Exchange Creds\Exchange_Server_Admin.txt"

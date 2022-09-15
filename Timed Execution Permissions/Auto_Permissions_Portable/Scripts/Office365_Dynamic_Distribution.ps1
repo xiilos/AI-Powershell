@@ -13,7 +13,6 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 # Script #
 
 #Variables
-cd..
 $Username = Get-Content ".\Add2Exchange Creds\GA_Service_Account_Name.txt"
 $Password = Get-Content ".\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
 $DynamicGroupName = Get-Content ".\Add2Exchange Creds\Dynamic_Name.txt"
