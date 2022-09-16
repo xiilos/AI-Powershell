@@ -22,6 +22,23 @@ Else {
     New-Item -ItemType directory -Path "C:\zlibrary\SQL Upgrade"
 }
 
+
+#Test for FTP
+
+try {
+    $FTP = New-Object System.Net.Sockets.TcpClient("ftp.diditbetter.com", 21)
+    $FTP.Close()
+    Write-Host "Connectivity OK."
+}
+catch {
+    $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+    $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+    Start-Process "https://www.microsoft.com/en-us/download/confirmation.aspx?id=55994"
+    Write-Host "Quitting"
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+
 #Downloading SQL Express 2012
 
 Write-Host "Downloading SQL Express 2012"
