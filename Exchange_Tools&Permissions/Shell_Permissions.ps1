@@ -155,22 +155,22 @@ switch ($input1) {
                 '4' { 
                     Clear-Host 
                     'You chose to Add Permissions to a Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                      Write-Host "Done"
+                        Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 5: Office 365-Remove Permissions within a dist. list
                 '5' { 
                     Clear-Host 
                     'You chose to Remove Permissions From a Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                      Write-Host "Done"
+                        Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 6: Office 365-Add Permissions to single user
@@ -341,22 +341,22 @@ switch ($input1) {
                 '4' {
                     Clear-Host 
                     'You chose to Add Permissions To A Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                      Write-Host "Done"
+                        Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 5: Exchange 2010 on Premise-Removing dist. list permissions
                 '5' {
                     Clear-Host 
                     'You chose to Remove Permissions From A Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                      Write-Host "Done"
+                        Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 6: Exchange 2010 on Premise-Adding permissions to single user
@@ -528,22 +528,22 @@ switch ($input1) {
                 '4' {
                     Clear-Host 
                     'You chose to Add Permissions To A Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                    Write-host "Done"
+                        Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-host "Done"
                     }
                 }
                 # Option 5: Exchange 2013-2019 on Premise-Removing dist. list permissions
                 '5' {
                     Clear-Host 
                     'You chose to Remove Permissions From A Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                    Write-Host "Done"
+                        Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 6: Exchange 2013-2019 on Premise-Adding permissions to single user

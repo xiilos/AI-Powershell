@@ -9,16 +9,17 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Logging
-$TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support"
+
+$TestPath = ".\Support"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 
     Write-Host "Support Directory Exists...Resuming"
 }
 Else {
-    New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
+    New-Item -ItemType directory -Path ".\Support"
 }
 
-Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Permission_Results.txt" -Append
+Start-Transcript -Path ".\Support\A2E_Permission_Results.txt" -Append
 
 # Script #
 
@@ -47,11 +48,11 @@ switch ($input1) {
         $error.clear()
 
         #Variables
-        $ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
-        $User = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
-        $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Service_Account_Name.txt"
-        $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
-        $Groups = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
+        $User = Get-Content ".\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Username = Get-Content ".\Add2Exchange Creds\GA_Service_Account_Name.txt"
+        $Password = Get-Content ".\Add2Exchange Creds\GA_Admin_Pass.txt" | convertto-securestring
+        $ServiceAccount = Get-Content ".\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Groups = Get-Content ".\Add2Exchange Creds\Dist_List_Name.txt"
 
         #Check for MS Online Module
         Write-Host "Checking for Exhange Online Module"
@@ -155,22 +156,22 @@ switch ($input1) {
                 '4' { 
                     Clear-Host 
                     'You chose to Add Permissions to a Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                      Write-Host "Done"
+                        Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 5: Office 365-Remove Permissions within a dist. list
                 '5' { 
                     Clear-Host 
                     'You chose to Remove Permissions From a Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                      Write-Host "Done"
+                        Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 6: Office 365-Add Permissions to single user
@@ -257,12 +258,12 @@ switch ($input1) {
         Clear-Host 
         'You chose Exchange 2010'
         #Variables
-        $Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Name.txt"
-        $User = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
-        $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
-        $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
-        $Groups = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
-        $ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Exchangename = Get-Content ".\Add2Exchange Creds\Exchange_Server_Name.txt"
+        $User = Get-Content ".\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Username = Get-Content ".\Add2Exchange Creds\Exchange_Server_Admin.txt"
+        $Password = Get-Content ".\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
+        $Groups = Get-Content ".\Add2Exchange Creds\Dist_List_Name.txt"
+        $ServiceAccount = Get-Content ".\Add2Exchange Creds\Sync_Account_Name.txt"
   
         $Cred = New-Object -typename System.Management.Automation.PSCredential `
             -Argumentlist $Username, $Password
@@ -341,22 +342,22 @@ switch ($input1) {
                 '4' {
                     Clear-Host 
                     'You chose to Add Permissions To A Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                      Write-Host "Done"
+                        Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 5: Exchange 2010 on Premise-Removing dist. list permissions
                 '5' {
                     Clear-Host 
                     'You chose to Remove Permissions From A Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                      Write-Host "Done"
+                        Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 6: Exchange 2010 on Premise-Adding permissions to single user
@@ -442,13 +443,12 @@ switch ($input1) {
         Clear-Host 
         'You chose Exchange 2013-2019'
         #Variables
-        $Exchangename = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Name.txt"
-        $User = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
-        $Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
-        $Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
+        $Exchangename = Get-Content ".\Add2Exchange Creds\Exchange_Server_Name.txt"
+        $User = Get-Content ".\Add2Exchange Creds\Sync_Account_Name.txt"
+        $Username = Get-Content ".\Add2Exchange Creds\Exchange_Server_Admin.txt"
+        $Password = Get-Content ".\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
         $Groups = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt"
         $ServiceAccount = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
-
           
         $Cred = New-Object -typename System.Management.Automation.PSCredential `
             -Argumentlist $Username, $Password
@@ -528,22 +528,22 @@ switch ($input1) {
                 '4' {
                     Clear-Host 
                     'You chose to Add Permissions To A Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                    Write-host "Done"
+                        Add-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-host "Done"
                     }
                 }
                 # Option 5: Exchange 2013-2019 on Premise-Removing dist. list permissions
                 '5' {
                     Clear-Host 
                     'You chose to Remove Permissions From A Distribution List(s)'
-                    $Membername = ForEach ($Group in $Groups) {Get-Distributiongroupmember -ResultSize Unlimited $Group}
+                    $Membername = ForEach ($Group in $Groups) { Get-Distributiongroupmember -ResultSize Unlimited $Group }
 
                     ForEach ($Member in $Membername) {
-                      Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
-                    Write-Host "Done"
+                        Remove-MailboxPermission -Identity $Member.name -User $ServiceAccount -AccessRights FullAccess -InheritanceType all -AutoMapping:$false -confirm:$false
+                        Write-Host "Done"
                     }
                 }
                 # Option 6: Exchange 2013-2019 on Premise-Adding permissions to single user
