@@ -33,7 +33,7 @@ try {
 catch {
     $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
     $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
-    Start-Process "https://www.microsoft.com/en-us/download/confirmation.aspx?id=55994"
+    Start-Process "https://download.microsoft.com/download/F/6/7/F673709C-D371-4A64-8BF9-C1DD73F60990/ENU/x86/SQLEXPR_x86_ENU.exe"
     Write-Host "Quitting"
     Get-PSSession | Remove-PSSession
     Exit

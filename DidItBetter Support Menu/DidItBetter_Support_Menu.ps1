@@ -73,7 +73,7 @@ $Downloads.text                  = "Downloads"
 $Downloads.AutoSize              = $true
 $Downloads.width                 = 150
 $Downloads.height                = 10
-$Downloads.location              = New-Object System.Drawing.Point(15,363)
+$Downloads.location              = New-Object System.Drawing.Point(15,389)
 $Downloads.Font                  = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold -bor [System.Drawing.FontStyle]::Underline))
 
 $DownloadAdd2Exchange            = New-Object system.Windows.Forms.Label
@@ -81,7 +81,7 @@ $DownloadAdd2Exchange.text       = "Download Add2Exchange"
 $DownloadAdd2Exchange.AutoSize   = $true
 $DownloadAdd2Exchange.width      = 150
 $DownloadAdd2Exchange.height     = 10
-$DownloadAdd2Exchange.location   = New-Object System.Drawing.Point(15,383)
+$DownloadAdd2Exchange.location   = New-Object System.Drawing.Point(15,409)
 $DownloadAdd2Exchange.Font       = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $DownloadToolKit                 = New-Object system.Windows.Forms.Label
@@ -89,7 +89,7 @@ $DownloadToolKit.text            = "Download ToolKit"
 $DownloadToolKit.AutoSize        = $true
 $DownloadToolKit.width           = 150
 $DownloadToolKit.height          = 10
-$DownloadToolKit.location        = New-Object System.Drawing.Point(15,398)
+$DownloadToolKit.location        = New-Object System.Drawing.Point(15,424)
 $DownloadToolKit.Font            = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $DownloadSQL                     = New-Object system.Windows.Forms.Label
@@ -97,7 +97,7 @@ $DownloadSQL.text                = "Download SQL Studio"
 $DownloadSQL.AutoSize            = $true
 $DownloadSQL.width               = 150
 $DownloadSQL.height              = 10
-$DownloadSQL.location            = New-Object System.Drawing.Point(15,413)
+$DownloadSQL.location            = New-Object System.Drawing.Point(15,439)
 $DownloadSQL.Font                = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $FTPDownloads                    = New-Object system.Windows.Forms.Label
@@ -105,7 +105,7 @@ $FTPDownloads.text               = "FTP Downloads"
 $FTPDownloads.AutoSize           = $true
 $FTPDownloads.width              = 150
 $FTPDownloads.height             = 10
-$FTPDownloads.location           = New-Object System.Drawing.Point(15,443)
+$FTPDownloads.location           = New-Object System.Drawing.Point(15,469)
 $FTPDownloads.Font               = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $GetSupport                      = New-Object system.Windows.Forms.Label
@@ -145,7 +145,7 @@ $Tools.text                      = "Tools"
 $Tools.AutoSize                  = $true
 $Tools.width                     = 150
 $Tools.height                    = 10
-$Tools.location                  = New-Object System.Drawing.Point(255,363)
+$Tools.location                  = New-Object System.Drawing.Point(255,389)
 $Tools.Font                      = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold -bor [System.Drawing.FontStyle]::Underline))
 
 $AutoLogon                       = New-Object system.Windows.Forms.Label
@@ -153,7 +153,7 @@ $AutoLogon.text                  = "Auto Logon Encrypted"
 $AutoLogon.AutoSize              = $true
 $AutoLogon.width                 = 150
 $AutoLogon.height                = 10
-$AutoLogon.location              = New-Object System.Drawing.Point(255,220)
+$AutoLogon.location              = New-Object System.Drawing.Point(255,330)
 $AutoLogon.Font                  = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $DirSync                         = New-Object system.Windows.Forms.Label
@@ -161,7 +161,7 @@ $DirSync.text                    = "Azure Directory Sync"
 $DirSync.AutoSize                = $true
 $DirSync.width                   = 150
 $DirSync.height                  = 10
-$DirSync.location                = New-Object System.Drawing.Point(255,428)
+$DirSync.location                = New-Object System.Drawing.Point(255,454)
 $DirSync.Font                    = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $DisableUAC                      = New-Object system.Windows.Forms.Label
@@ -169,7 +169,7 @@ $DisableUAC.text                 = "Test and Disable User Account Control"
 $DisableUAC.AutoSize             = $true
 $DisableUAC.width                = 150
 $DisableUAC.height               = 10
-$DisableUAC.location             = New-Object System.Drawing.Point(255,558)
+$DisableUAC.location             = New-Object System.Drawing.Point(255,584)
 $DisableUAC.Font                 = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $GroupPolicyResults              = New-Object system.Windows.Forms.Label
@@ -177,7 +177,7 @@ $GroupPolicyResults.text         = "Group Policy Results"
 $GroupPolicyResults.AutoSize     = $true
 $GroupPolicyResults.width        = 150
 $GroupPolicyResults.height       = 10
-$GroupPolicyResults.location     = New-Object System.Drawing.Point(255,398)
+$GroupPolicyResults.location     = New-Object System.Drawing.Point(255,424)
 $GroupPolicyResults.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $CheckPowerShell                 = New-Object system.Windows.Forms.Label
@@ -185,7 +185,7 @@ $CheckPowerShell.text            = "Check and Upgrade PowerShell"
 $CheckPowerShell.AutoSize        = $true
 $CheckPowerShell.width           = 150
 $CheckPowerShell.height          = 10
-$CheckPowerShell.location        = New-Object System.Drawing.Point(255,573)
+$CheckPowerShell.location        = New-Object System.Drawing.Point(255,599)
 $CheckPowerShell.Font            = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $DisableOSC                      = New-Object system.Windows.Forms.Label
@@ -201,7 +201,7 @@ $AddRegistryFavorites.text       = "Add Registry Favorites"
 $AddRegistryFavorites.AutoSize   = $true
 $AddRegistryFavorites.width      = 150
 $AddRegistryFavorites.height     = 10
-$AddRegistryFavorites.location   = New-Object System.Drawing.Point(255,235)
+$AddRegistryFavorites.location   = New-Object System.Drawing.Point(255,345)
 $AddRegistryFavorites.Font       = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $Reset_A2E_Passwords             = New-Object system.Windows.Forms.Label
@@ -297,7 +297,7 @@ $A2EDiags.text                   = "Get A2E Diags"
 $A2EDiags.AutoSize               = $true
 $A2EDiags.width                  = 150
 $A2EDiags.height                 = 10
-$A2EDiags.location               = New-Object System.Drawing.Point(15,428)
+$A2EDiags.location               = New-Object System.Drawing.Point(15,454)
 $A2EDiags.Font                   = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $CreateSupporttext               = New-Object system.Windows.Forms.Label
@@ -305,11 +305,11 @@ $CreateSupporttext.text          = "Create Support Setup Details"
 $CreateSupporttext.AutoSize      = $true
 $CreateSupporttext.width         = 150
 $CreateSupporttext.height        = 10
-$CreateSupporttext.location      = New-Object System.Drawing.Point(255,413)
+$CreateSupporttext.location      = New-Object System.Drawing.Point(255,439)
 $CreateSupporttext.Font          = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $Revision                        = New-Object system.Windows.Forms.Label
-$Revision.text                   = "Rev. 4.29.1"
+$Revision.text                   = "Rev. 4.9.16"
 $Revision.AutoSize               = $true
 $Revision.width                  = 25
 $Revision.height                 = 10
@@ -341,7 +341,7 @@ $MSExchangeDelegate.text         = "MSExchange Delegate Automapping Fix"
 $MSExchangeDelegate.AutoSize     = $true
 $MSExchangeDelegate.width        = 25
 $MSExchangeDelegate.height       = 10
-$MSExchangeDelegate.location     = New-Object System.Drawing.Point(255,543)
+$MSExchangeDelegate.location     = New-Object System.Drawing.Point(255,569)
 $MSExchangeDelegate.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $ExchangeShell                   = New-Object system.Windows.Forms.Label
@@ -349,7 +349,7 @@ $ExchangeShell.text              = "Shell Into Exchange or Office 365"
 $ExchangeShell.AutoSize          = $true
 $ExchangeShell.width             = 150
 $ExchangeShell.height            = 10
-$ExchangeShell.location          = New-Object System.Drawing.Point(255,383)
+$ExchangeShell.location          = New-Object System.Drawing.Point(255,409)
 $ExchangeShell.Font              = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $CommandsList                    = New-Object system.Windows.Forms.Label
@@ -365,7 +365,7 @@ $A2E_Migration_Wizard.text       = "Add2Exchange Migration Wizard"
 $A2E_Migration_Wizard.AutoSize   = $true
 $A2E_Migration_Wizard.width      = 150
 $A2E_Migration_Wizard.height     = 10
-$A2E_Migration_Wizard.location   = New-Object System.Drawing.Point(255,588)
+$A2E_Migration_Wizard.location   = New-Object System.Drawing.Point(255,614)
 $A2E_Migration_Wizard.Font       = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $Configuration                   = New-Object system.Windows.Forms.Label
@@ -381,7 +381,7 @@ $FixesEvents.text                = "Fixes and Events"
 $FixesEvents.AutoSize            = $true
 $FixesEvents.width               = 25
 $FixesEvents.height              = 10
-$FixesEvents.location            = New-Object System.Drawing.Point(255,508)
+$FixesEvents.location            = New-Object System.Drawing.Point(255,534)
 $FixesEvents.Font                = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold -bor [System.Drawing.FontStyle]::Underline))
 
 $ModernAuth                      = New-Object system.Windows.Forms.Label
@@ -389,7 +389,7 @@ $ModernAuth.text                 = "Disable Modern Authentication"
 $ModernAuth.AutoSize             = $true
 $ModernAuth.width                = 25
 $ModernAuth.height               = 10
-$ModernAuth.location             = New-Object System.Drawing.Point(255,528)
+$ModernAuth.location             = New-Object System.Drawing.Point(255,554)
 $ModernAuth.Font                 = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $Shortcuts                       = New-Object system.Windows.Forms.Label
@@ -397,7 +397,7 @@ $Shortcuts.text                  = "Shortcuts"
 $Shortcuts.AutoSize              = $true
 $Shortcuts.width                 = 25
 $Shortcuts.height                = 10
-$Shortcuts.location              = New-Object System.Drawing.Point(15,508)
+$Shortcuts.location              = New-Object System.Drawing.Point(15,534)
 $Shortcuts.Font                  = New-Object System.Drawing.Font('Microsoft Sans Serif',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold -bor [System.Drawing.FontStyle]::Underline))
 
 $DIBMMC                          = New-Object system.Windows.Forms.Label
@@ -405,7 +405,7 @@ $DIBMMC.text                     = "DidItBetter MMC"
 $DIBMMC.AutoSize                 = $true
 $DIBMMC.width                    = 25
 $DIBMMC.height                   = 10
-$DIBMMC.location                 = New-Object System.Drawing.Point(15,528)
+$DIBMMC.location                 = New-Object System.Drawing.Point(15,554)
 $DIBMMC.Font                     = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $RegistryEditor                  = New-Object system.Windows.Forms.Label
@@ -413,7 +413,7 @@ $RegistryEditor.text             = "Registry Editor"
 $RegistryEditor.AutoSize         = $true
 $RegistryEditor.width            = 25
 $RegistryEditor.height           = 10
-$RegistryEditor.location         = New-Object System.Drawing.Point(15,543)
+$RegistryEditor.location         = New-Object System.Drawing.Point(15,569)
 $RegistryEditor.Font             = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $DIBDirectory                    = New-Object system.Windows.Forms.Label
@@ -421,7 +421,7 @@ $DIBDirectory.text               = "DidItBetter Directory"
 $DIBDirectory.AutoSize           = $true
 $DIBDirectory.width              = 25
 $DIBDirectory.height             = 10
-$DIBDirectory.location           = New-Object System.Drawing.Point(15,558)
+$DIBDirectory.location           = New-Object System.Drawing.Point(15,584)
 $DIBDirectory.Font               = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $TaskScheduler                   = New-Object system.Windows.Forms.Label
@@ -429,7 +429,7 @@ $TaskScheduler.text              = "Task Scheduler"
 $TaskScheduler.AutoSize          = $true
 $TaskScheduler.width             = 25
 $TaskScheduler.height            = 10
-$TaskScheduler.location          = New-Object System.Drawing.Point(15,573)
+$TaskScheduler.location          = New-Object System.Drawing.Point(15,599)
 $TaskScheduler.Font              = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $WindowsDefender                 = New-Object system.Windows.Forms.Label
@@ -445,7 +445,7 @@ $Outlook_Tools_Menu.text         = "Outlook Tools"
 $Outlook_Tools_Menu.AutoSize     = $true
 $Outlook_Tools_Menu.width        = 150
 $Outlook_Tools_Menu.height       = 10
-$Outlook_Tools_Menu.location     = New-Object System.Drawing.Point(255,443)
+$Outlook_Tools_Menu.location     = New-Object System.Drawing.Point(255,469)
 $Outlook_Tools_Menu.Font         = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $A2ESQLBackUp                    = New-Object system.Windows.Forms.Label
@@ -453,15 +453,15 @@ $A2ESQLBackUp.text               = "Backup Add2Exchange SQL DB"
 $A2ESQLBackUp.AutoSize           = $true
 $A2ESQLBackUp.width              = 150
 $A2ESQLBackUp.height             = 10
-$A2ESQLBackUp.location           = New-Object System.Drawing.Point(255,458)
+$A2ESQLBackUp.location           = New-Object System.Drawing.Point(255,484)
 $A2ESQLBackUp.Font               = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $SQLUpgrade                      = New-Object system.Windows.Forms.Label
-$SQLUpgrade.text                 = "Upgrade SQL 2008 to 2012"
+$SQLUpgrade.text                 = "Upgrade Legacy A2E SQL DB"
 $SQLUpgrade.AutoSize             = $true
 $SQLUpgrade.width                = 25
 $SQLUpgrade.height               = 10
-$SQLUpgrade.location             = New-Object System.Drawing.Point(255,473)
+$SQLUpgrade.location             = New-Object System.Drawing.Point(255,499)
 $SQLUpgrade.Font                 = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 $PowerShell_Logs                 = New-Object system.Windows.Forms.Label
@@ -469,8 +469,16 @@ $PowerShell_Logs.text            = "A2E PowerShell Logs"
 $PowerShell_Logs.AutoSize        = $true
 $PowerShell_Logs.width           = 25
 $PowerShell_Logs.height          = 10
-$PowerShell_Logs.location        = New-Object System.Drawing.Point(15,588)
+$PowerShell_Logs.location        = New-Object System.Drawing.Point(15,614)
 $PowerShell_Logs.Font            = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
+
+$A2E_Auto_Shell_Permissions      = New-Object system.Windows.Forms.Label
+$A2E_Auto_Shell_Permissions.text  = "Auto Shell Permissions"
+$A2E_Auto_Shell_Permissions.AutoSize  = $true
+$A2E_Auto_Shell_Permissions.width  = 150
+$A2E_Auto_Shell_Permissions.height  = 10
+$A2E_Auto_Shell_Permissions.location  = New-Object System.Drawing.Point(255,220)
+$A2E_Auto_Shell_Permissions.Font  = New-Object System.Drawing.Font('Microsoft Sans Serif',9)
 
 
 $ToolTip1.SetToolTip($Add2ExchangeUpgrade,'This will Upgrade your Current Version of Add2Exchange Enterprise to the Latest Version')
@@ -511,12 +519,13 @@ $ToolTip1.SetToolTip($WindowsDefender,'This tool will add the proper Exclusions 
 $ToolTip1.SetToolTip($A2ESQLBackUp,'Backup the Add2Exchange SQL Database')
 $ToolTip1.SetToolTip($SQLUpgrade,'Upgrade SQL Database from 2008-2008R2 to 2012')
 $ToolTip1.SetToolTip($PowerShell_Logs,'Logs for PowerShell Files')
+$ToolTip1.SetToolTip($A2E_Auto_Shell_Permissions,'Automatically runs Add2Exchange Permissions that have already been setup ')
 
 $DidItBetterSupportMenu.controls.AddRange(@($Upgrades,$Add2ExchangeUpgrade,$UpgradeRMM,$Permissions,$O365ExchangePermissions,$A2OPermissions,$AutoPermissions,$Downloads,$DownloadAdd2Exchange,
 $DownloadToolKit,$DownloadSQL,$FTPDownloads,$GetSupport,$GetHelp,$SearchDidItBetter,$QuickStartGuide,$Tools,$AutoLogon,$DirSync,$DisableUAC,$GroupPolicyResults,$CheckPowerShell,$DisableOSC,
 $AddRegistryFavorites,$Reset_A2E_Passwords,$SyncScenarios,$GALSync,$PrivatetoPrivate,$PublictoPublic,$PrivatetoPublic,$PublictoPrivate,$TemplateCreation,$MigrateA2E,$ExhangeMigration,$DidItBetterLogo,
 $UpgradeToolkit,$A2EDiags,$CreateSupporttext,$Revision,$UpgradeAdd2Outlook,$AD_Photos,$MSExchangeDelegate,$ExchangeShell,$CommandsList,$A2E_Migration_Wizard,$Configuration,$FixesEvents,$ModernAuth,
-$Shortcuts,$DIBMMC,$RegistryEditor,$DIBDirectory,$TaskScheduler,$WindowsDefender,$Outlook_Tools_Menu,$A2ESQLBackUp,$SQLUpgrade,$PowerShell_Logs))
+$Shortcuts,$DIBMMC,$RegistryEditor,$DIBDirectory,$TaskScheduler,$WindowsDefender,$Outlook_Tools_Menu,$A2ESQLBackUp,$SQLUpgrade,$PowerShell_Logs,$A2E_Auto_Shell_Permissions))
 
 $Add2ExchangeUpgrade.Add_Click( { Start-Process Powershell .\Auto_Upgrade_Add2Exchange.ps1 })
 $UpgradeRMM.Add_Click( { Start-Process Powershell .\Auto_Upgrade_RMM.ps1 })
@@ -567,6 +576,7 @@ $Outlook_Tools_Menu.Add_Click({Start-Process Powershell .\Outlook_Tools_Menu.ps1
 $A2ESQLBackUp.Add_Click({Start-Process Powershell .\A2E_SQL_Backup.ps1})
 $SQLUpgrade.Add_Click({Start-Process Powershell .\Upgrade_SQL_2008.ps1})
 $PowerShell_Logs.Add_Click({Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt"})
+$A2E_Auto_Shell_Permissions.Add_Click({Start-Process Powershell .\Shell_Permissions.ps1})
 
 
 
