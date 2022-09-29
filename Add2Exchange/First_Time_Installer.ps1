@@ -21,11 +21,12 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 #Step 4: Install Outlook and Setup Profile
 #Step 5: Mailbox Creation
 #Step 6: Create a Mail Profile
-#Step 7: Add Permissions
+#Step 7: Add Permissions (moved to step 11a)
 #Step 8: Add Public Folder Permissions
 #Step 9: Enable AutoLogon
 #Step 10: Install Add2Exchange
 #Step 11: Add Registry Favs
+#Step 11a: Setup Timed Permissions
 #Step 12: Cleanup
 
 #Check for UAC First
@@ -314,7 +315,7 @@ When Done, click OK", 0, "Outlook Install", 0x1)
         # Step 7-----------------------------------------------------------------------------------------------------------------------------------------------------Step 7
 
         #Adding Permissions
-        $Confirmation = Read-Host "Do We need to run through Add2Exchange permissions? [Y/N]"
+        <#$Confirmation = Read-Host "Do We need to run through Add2Exchange permissions? [Y/N]"
         if ($confirmation -eq 'y') {
         
             Start-Process Powershell ".\Setup\PermissionsOnPremOrO365Combined.ps1" -wait
@@ -322,7 +323,7 @@ When Done, click OK", 0, "Outlook Install", 0x1)
         }
         if ($confirmation -eq 'n') {
             Write-Host "Skipping"
-        }
+        }#>
 
         # Step 8-----------------------------------------------------------------------------------------------------------------------------------------------------Step 8
         # Auto Logon
@@ -386,6 +387,20 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogin", 0x1)
         #Creating Setup Details
         Write-Host "Setting up Install Details"
         Start-Process Powershell ".\Setup\A2E_Setup_Details.ps1" -wait
+
+        
+        # Step 11a-----------------------------------------------------------------------------------------------------------------------------------------------------Step 11a
+
+        #Adding Permissions
+        $Confirmation = Read-Host "Do We need to run through Add2Exchange permissions? [Y/N]"
+        if ($confirmation -eq 'y') {
+            Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup"
+            Start-Process Powershell ".\Timed Permissions\Permissions_Task_Creation.ps1" -wait
+            
+        }
+        if ($confirmation -eq 'n') {
+            Write-Host "Skipping"
+        }
 
 
         $wshell = New-Object -ComObject Wscript.Shell

@@ -14,21 +14,23 @@ Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_P
 
 # Script #
 
-$Val = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -Name "UpdatesEnabled"
+Do {
+  $confirmation = Read-Host "Would you like to Disable or Enable Outlook Updates [D/E]"
+  if ($confirmation -eq 'D') {
+    Write-Host "Disabling Outlook Updates"
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -Name "UpdatesEnabled" -value False
+    Write-Host "Done"
+  }
 
-if($val.UpdatesEnabled -eq $True)
+    
+  if ($confirmation -eq 'E') {
+    Write-Host "Enabling Outlook Updates"
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -Name "UpdatesEnabled" -value True
+    Write-Host "Done"
+  }
+  $repeat = Read-Host 'Do you want to run it again? [Y/N]'
 
-{
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration" -Name "UpdatesEnabled" -value False
-Write-Host "Outlook Updates are now Disabled!"
-
-}
-
-Else {
-
-  Write-Host "Outlook Updates Already Disabled!"
-
-}
+} Until ($repeat -eq 'n')
 
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
