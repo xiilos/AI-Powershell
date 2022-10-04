@@ -105,7 +105,7 @@ switch ($input1) {
             Write-Host "Adding Azure AD and EXO V2 module"
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-            Install-Module –Name ExchangeOnlineManagement -WarningAction "Inquire"
+            Install-Module –Name ExchangeOnlineManagement - Force -WarningAction "Inquire"
             Install-Module –Name AzureAD -WarningAction "Inquire"
         }
  
