@@ -33,7 +33,20 @@ https://support.diditbetter.com/downloads.aspx
 
 
 
-
+$WebPath = "https://s3.amazonaws.com/dl.diditbetter.com"
+$request = [System.Net.WebRequest]::Create( $WebPath ) 
+$headers = $request.GetResponse().Headers 
+# Content-disposition includes a name-value pair for filename:
+$cd = $headers.GetValues("Content-Disposition")
+$cd_array = $cd.split(";")
+foreach ($item in $cd_array) { 
+  if ($item.StartsWith("a2e-enterprise_upgrade")) {
+      # Get string after equal sign
+      $filename = $item.Substring($item.IndexOf("=")+1)
+      # Remove quotation marks, if any
+      $filename = $filename.Replace('"','')
+  }
+}
 
 
 
