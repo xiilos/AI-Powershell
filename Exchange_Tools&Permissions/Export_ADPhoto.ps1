@@ -102,7 +102,7 @@ switch ($input1) {
         Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
         Import-Module –Name AzureAD -ErrorAction SilentlyContinue
         If ($error) {
-            Write-Host "Adding Azure AD and EXO V2 module"
+            Write-Host "Adding Azure AD and EXO V3 module"
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             Set-PSRepository -Name psgallery -InstallationPolicy Trusted
             Install-Module –Name ExchangeOnlineManagement - Force -WarningAction "Inquire"
@@ -111,7 +111,7 @@ switch ($input1) {
  
         Else { Write-Host 'Modules are installed' }
 
-        Write-Host "Updating Azure AD and EXO V2 Modules Please Wait..."
+        Write-Host "Updating Azure AD and EXO V3 Modules Please Wait..."
         Update-Module -Name ExchangeOnlineManagement
         Import-Module –Name ExchangeOnlineManagement
         Update-Module -Name AzureAD

@@ -7,6 +7,61 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+(Invoke-RestMethod -Uri https://s3.amazonaws.com/dl.diditbetter.com).OuterXml
+
+
+
+
+
+
+$version = (Invoke-RestMethod -Uri https://s3.amazonaws.com/dl.diditbetter.com).OuterXml | Where-Object {$_.Name -like "a2e-standard_upgrade*"} | Select-object -ExpandProperty
+
+
+
+
+
+| Where-Object {$_.Name -eq 'DefaultEnvironmentId'} | Select-object -ExpandProperty 'Value' | Select-object -ExpandProperty 'Value'
+
+$string = $web.DownloadString("https://s3.amazonaws.com/dl.diditbetter.com")
+if ($string -like "a2e-standard_upgrade*") {
+    Write-Host "A2E Standard Exists"
+} else {
+    Write-Host "A2E Standard not here"
+}
+
+
+
+
+version_mojoportal.py move release-candidate upgrade %[upgrade_id] %[upgrade_name] %[version] %_date "%@filesize[%[upgrade_name], M] MB"
+
+https://s3.amazonaws.com/dl.diditbetter.com/a2e-standard_upgrade.19.7.185.229.exe
+https://s3.amazonaws.com/dl.diditbetter.com/a2e-standard_upgrade.19.7.185.229.exe
+
+
+
+
+# import module
+Import-Module AWSPowerShell.NetCore
+
+# Set variable
+# To get a list of bucket names use 
+Get-S3Bucket -Region us-east-1 # specify the region where your bucket is created
+
+$bucket = "dl.diditbetter.com"
+
+# Get the key of the object you want to query
+# For this example I am using the first object returned
+$obj = (Get-S3Object -BucketName $bucket)[0].Key
+
+
+
+$url = "https://s3.amazonaws.com/dl.diditbetter.com"
+Invoke-RestMethod -Method Post -Uri $url -Body $body -ContentType 'application/xml'
+
+$entries = Invoke-RestMethod -Uri "https://s3.amazonaws.com/dl.diditbetter.com"
+$entries.title
+
+
 
 
 
