@@ -7,6 +7,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Logging
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
+
 #Stop Menu Process
 Stop-Process -Name "DidItBetterSupportMenu" -Force -ErrorAction SilentlyContinue
 

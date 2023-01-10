@@ -18,7 +18,7 @@ Else {
     New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support"
 }
 
-Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Permissions.txt" -Append
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_Permission_Results.txt" -Append
 
 # Script #
 
@@ -44,22 +44,40 @@ switch ($input1) {
     '1' { 
         Clear-Host 
         'You chose Office 365'
-        $error.clear()
+        #Check for MS Online Module
+        Write-Host "Checking for Exhange Online Module"
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+        IF (Get-Module -ListAvailable -Name ExchangeOnlineManagement) {
+            Write-Host "Exchange Online Module Exists"
+    
+            $InstalledEXOv2 = ((Get-Module -Name ExchangeOnlineManagement -ListAvailable).Version | Sort-Object -Descending | Select-Object -First 1).ToString()
+
+            $LatestEXOv2 = (Find-Module -Name ExchangeOnlineManagement).Version.ToString()
+    
+            [PSCustomObject]@{
+                Match = If ($InstalledEXOv2 -eq $LatestEXOv2) { Write-Host "You are on the latest Version" } 
+        
+                Else {
+                    Write-Host "Upgrading Modules..."
+                    Update-Module -Name ExchangeOnlineManagement -Force
+                    Write-Host "Success"
+                }
+
+            }
+
+
+        } 
+        Else {
+            Write-Host "Module Does Not Exist"
+            Write-Host "Downloading Exchange Online Management..."
+            Install-Module –Name ExchangeOnlineManagement -Force
+            Write-Host "Success"
+        } 
+        
         Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
-        If ($error) {
-            Write-Host "Adding EXO-V2 module"
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-            Install-Module –Name ExchangeOnlineManagement -WarningAction "Inquire"
-        }
-         
-        Else { Write-Host 'Module is installed' }
 
-        Write-Host "Updating EXO-V2 Module Please Wait..."
-        Update-Module -Name ExchangeOnlineManagement
-        Import-Module –Name ExchangeOnlineManagement
-
-        Write-Host "Sign in to Office365 as Global Admin"
+        Write-Host "Sign in to Office365 as Exchange Admin"
         
         Connect-ExchangeOnline
     

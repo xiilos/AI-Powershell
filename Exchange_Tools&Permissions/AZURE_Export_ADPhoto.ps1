@@ -8,6 +8,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Logging
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
+
 #Support Directory
 $TestPath = "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
@@ -18,25 +21,54 @@ Else {
     New-Item -ItemType directory -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
 }
 
-Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
+        #Check for MS Online Module
+        Write-Host "Checking for Exhange Online Module"
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        
+        IF (Get-Module -ListAvailable -Name ExchangeOnlineManagement) {
+            Write-Host "Exchange Online Module Exists"
+    
+            $InstalledEXOv2 = ((Get-Module -Name ExchangeOnlineManagement -ListAvailable).Version | Sort-Object -Descending | Select-Object -First 1).ToString()
+
+            $LatestEXOv2 = (Find-Module -Name ExchangeOnlineManagement).Version.ToString()
+    
+            [PSCustomObject]@{
+                Match = If ($InstalledEXOv2 -eq $LatestEXOv2) { Write-Host "You are on the latest Version" } 
+        
+                Else {
+                    Write-Host "Upgrading Modules..."
+                    Update-Module -Name ExchangeOnlineManagement -Force
+                    Write-Host "Success"
+                }
+
+            }
+
+
+        } 
+        Else {
+            Write-Host "Module Does Not Exist"
+            Write-Host "Downloading Exchange Online Management..."
+            Install-Module –Name ExchangeOnlineManagement -Force
+            Write-Host "Success"
+        }
+
 
 # Script #
+
+Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Support\AD_Photos"
 
 Import-Module –Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 Import-Module –Name AzureAD -ErrorAction SilentlyContinue
 If ($error) {
-    Write-Host "Adding Azure AD and EXO V2 module"
+    Write-Host "Adding Azure AD module"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Set-PSRepository -Name psgallery -InstallationPolicy Trusted
-    Install-Module –Name ExchangeOnlineManagement -WarningAction "Inquire"
     Install-Module –Name AzureAD -WarningAction "Inquire"
 }
  
 Else { Write-Host 'Modules are installed' }
 
-Write-Host "Updating Azure AD and EXO V2 Modules Please Wait..."
-Update-Module -Name ExchangeOnlineManagement
-Import-Module –Name ExchangeOnlineManagement
+Write-Host "Updating Azure AD Modules Please Wait..."
 Update-Module -Name AzureAD
 Import-Module –Name AzureAD
 

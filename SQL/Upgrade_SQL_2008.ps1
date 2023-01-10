@@ -7,6 +7,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Logging
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
+
 #Create zLibrary\A2E SQL Upgrade Directory
 
 Write-Host "Creating Landing Zone"
@@ -17,6 +20,23 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 }
 Else {
     New-Item -ItemType directory -Path "C:\zlibrary\SQL Upgrade"
+}
+
+
+#Test for FTP
+
+try {
+    $FTP = New-Object System.Net.Sockets.TcpClient("ftp.diditbetter.com", 21)
+    $FTP.Close()
+    Write-Host "Connectivity OK."
+}
+catch {
+    $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+    $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+    Start-Process "https://download.microsoft.com/download/F/6/7/F673709C-D371-4A64-8BF9-C1DD73F60990/ENU/x86/SQLEXPR_x86_ENU.exe"
+    Write-Host "Quitting"
+    Get-PSSession | Remove-PSSession
+    Exit
 }
 
 #Downloading SQL Express 2012

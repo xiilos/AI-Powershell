@@ -7,6 +7,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Logging
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
+
 #Test for Upgrade Eligibility
 $LicenseKeyAExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyAExpiry" -ErrorAction SilentlyContinue
 $LicenseKeyCExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyCExpiry" -ErrorAction SilentlyContinue
@@ -183,8 +186,6 @@ Also, if the service account can receive email, after you purchase, the keys wil
 if ($answer -eq 2) { Break }
 
 
-
-
 #Stop Menu Process
 Stop-Process -Name "DidItBetter Support Menu" -Force -ErrorAction SilentlyContinue
 
@@ -269,11 +270,15 @@ Start-Process "c:\zlibrary\Add2Exchange Upgrades\a2e-enterprise_upgrade.exe" -wa
 Start-Sleep -Seconds 2
 Write-Host "Done"
 
+
+
 #Installing Add2Exchange
 Do {
     Write-Host "Installing Add2Exchange"
     $Location = Get-ChildItem -Path $root | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     Push-Location $Location
+    $CurrentVersionDB = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "CurrentVersionDB" -ErrorAction SilentlyContinue
+    Write-Host "You are now upgrading Add2Exchange Enterprise from Version $CurrentVersionDB to $Location" -ForegroundColor Green
     Start-Process msiexec.exe -Wait -ArgumentList '/I "Add2Exchange_Upgrade.msi" /quiet' -ErrorAction Inquire -ErrorVariable InstallError;
     Write-Host "Finished...Upgrade Complete"
 

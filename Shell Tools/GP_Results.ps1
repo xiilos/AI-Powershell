@@ -7,6 +7,9 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+#Logging
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
+
 # Group Policy Results
 $TestPath = "C:\zlibrary"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {

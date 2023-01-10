@@ -71,13 +71,13 @@ $Bypass_O365.height              = 10
 $Bypass_O365.location            = New-Object System.Drawing.Point(15,195)
 $Bypass_O365.Font                = New-Object System.Drawing.Font('Microsoft Sans Serif',11)
 
-$DisableOutlookUpdates           = New-Object system.Windows.Forms.Label
-$DisableOutlookUpdates.text      = "Disable Outlook Updates"
-$DisableOutlookUpdates.AutoSize  = $true
-$DisableOutlookUpdates.width     = 25
-$DisableOutlookUpdates.height    = 10
-$DisableOutlookUpdates.location  = New-Object System.Drawing.Point(15,225)
-$DisableOutlookUpdates.Font      = New-Object System.Drawing.Font('Microsoft Sans Serif',11)
+$Disable_EnableOutlookUpdates    = New-Object system.Windows.Forms.Label
+$Disable_EnableOutlookUpdates.text  = "Disable/Enable Outlook Updates"
+$Disable_EnableOutlookUpdates.AutoSize  = $true
+$Disable_EnableOutlookUpdates.width  = 25
+$Disable_EnableOutlookUpdates.height  = 10
+$Disable_EnableOutlookUpdates.location  = New-Object System.Drawing.Point(15,225)
+$Disable_EnableOutlookUpdates.Font  = New-Object System.Drawing.Font('Microsoft Sans Serif',11)
 
 $TT.SetToolTip($Rearm_Office,'Re-arms Office Suit Trial Extension')
 $TT.SetToolTip($Outlook_Install32,'Installs Outlook 365 32bit')
@@ -86,8 +86,8 @@ $TT.SetToolTip($Outlook_Updates,'Checks and runs Outlook 365 Updates')
 $TT.SetToolTip($Disable_OSC,'Disable Outlook Social Connector Add-In')
 $TT.SetToolTip($Outlook_Profile_Set,'Sets up the Outlook Profile for Add2Exchange')
 $TT.SetToolTip($Bypass_O365,'Bypasses O365 Login for Hybrid Environments')
-$TT.SetToolTip($DisableOutlookUpdates,'Disables Automatic Outlook Updates')
-$OutlookTools_Menu.controls.AddRange(@($Rearm_Office,$Outlook_Install32,$Install_Outlook64,$Outlook_Updates,$Disable_OSC,$Outlook_Profile_Set,$Bypass_O365,$DidItBetter_logo,$DisableOutlookUpdates))
+$TT.SetToolTip($Disable_EnableOutlookUpdates,'Disables/Enables Outlook Updates')
+$OutlookTools_Menu.controls.AddRange(@($Rearm_Office,$Outlook_Install32,$Install_Outlook64,$Outlook_Updates,$Disable_OSC,$Outlook_Profile_Set,$Bypass_O365,$DidItBetter_logo,$Disable_EnableOutlookUpdates))
 
 
 $Rearm_Office.Add_Click({Start-Process Powershell .\REARM_Office.ps1})
@@ -97,7 +97,7 @@ $Outlook_Updates.Add_Click({Start-Process Powershell .\Office_Updater.ps1})
 $Disable_OSC.Add_Click({Start-Process Powershell .\OSC_Disable.bat})
 $Outlook_Profile_Set.Add_Click({Start-Process Powershell .\Outlook_Profile_Set.ps1})
 $Bypass_O365.Add_Click({Start-Process Powershell .\Bypass_AutoDiscover.ps1})
-$DisableOutlookUpdates.Add_Click({Start-Process Powershell .Disable_Outlook_Updates.ps1})
+$Disable_EnableOutlookUpdates.Add_Click({Start-Process Powershell .\Disable_Outlook_Updates.ps1})
 
 [void]$OutlookTools_Menu.ShowDialog()
 
