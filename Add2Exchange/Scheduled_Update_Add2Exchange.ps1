@@ -4,7 +4,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
-
+#To run in CMD for first time | powershell -file 'C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\Scheduled_Update_Add2Exchange.ps1'
 #To run this as a command open CMD prompt and type in: schtasks /run /tn "Scheduled Update Add2Exchange" 
 
 
