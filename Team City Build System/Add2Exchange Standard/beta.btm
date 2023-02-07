@@ -1,0 +1,156 @@
+@echo off
+rem This is a TCC/LE batch file (.btm).  TCC/LE is a command processor
+rem substitute for cmd.exe.  It is freely available from http://www.jpsoft.com/.
+rem It is 100% backwards compatible with cmd.exe's batch language and offers an
+rem extended command set necessary to accomplish some of the important parts
+rem of this build script.
+
+rem Prevent all of the variables set in the script from remaining in the
+rem environment once it is done.
+setlocal
+
+rem Create a /q switch that causes the script to run quietly.
+iff %1 == /q then
+    set quiet=/q
+    set output=^> NUL
+    set noerr=2^>&1
+else
+    set vblog=/out vb6.log
+endiff
+
+rem Import settings from the variables.txt file in the local directory
+set /r variables.txt
+
+echo Cleaning...
+del /e %[quiet] vb6.log
+rd /q /s dist package artifacts %[output] %[noerr]
+
+echo Setting version...
+record-version.py artifacts\version.txt "http://redmine/projects/%[project_name]/repository/revisions.atom?key=574eaca55166a093501420e85fbed95cf290fa1a" %[year]
+if errorlevel neq 0 (echo Error encountered & quit 1)
+set /r artifacts\version.txt
+echo ##teamcity[buildNumber '%[version]']
+
+set major=%@field[".",0,%[version]]
+set minor=%@field[".",1,%[version]]
+set revision=%@field[".",2,%[version]]
+set build=%@field[".",3,%[version]]
+
+set build_name=%[project_name].%[version]
+set full_name=%[build_name].exe
+set upgrade_name=%[project_name]_upgrade.%[version].exe
+
+echo Versioning project files...
+fart.exe -r *.vbp "MajorVer=9999" "MajorVer=%[major]" %[output] 2>NUL
+if errorlevel eq 0 (gosub ERROR & quit 1)
+fart.exe -r *.vbp "MinorVer=9999" "MinorVer=%[minor]" %[output] 2>NUL
+if errorlevel eq 0 (gosub ERROR & quit 1)
+fart.exe -r *.vbp "RevisionVer=9999" "RevisionVer=%[revision]" %[output] 2>NUL
+if errorlevel eq 0 (gosub ERROR & quit 1)
+on break (echo Break encountered. & gosub CLEANUP & quit 1)
+
+rem Update the licensing info in the build
+rem create-date copies from template file since regular one isn't in the checkout
+echo Updating modDynamic.bas...
+create-date.py Modules\modDynamic.bas.template Modules\modDynamic.bas
+if errorlevel neq 0 (gosub ERROR & quit 1)
+
+rem Compile the VB6 project group file
+echo Compiling project...
+vb6.exe %[vblog] /make %[project_name].vbg
+if errorlevel neq 0 (type vb6.log & gosub ERROR & quit 1)
+
+rem Compile the Visual Studio Setup and Deployment solutions
+echo Versioning assemblies...
+fart.exe -r AssemblyInfo.vb "9999.9999.9999.9999" "%[version]" %[output] 2>NUL
+
+echo Building solution packages...
+cd Setup
+devenv.com "Add2Exchange Setup.sln" /build Release %[output]
+if errorlevel neq 0 (cd .. & gosub ERROR & quit 1)
+cd ..\Setup_Upgrade
+devenv.com "Add2Exchange UpgradeSetup.sln" /build Release %[output]
+if errorlevel neq 0 (cd .. & gosub ERROR & quit 1)
+cd ..
+
+rem Update the msi configuration file with the version number for the installer
+echo Updating MSI sql...
+fart.exe msi.sql "9999.9999.9999.9999" "%[version]" %[output] 2>NUL
+
+rem Update the msi with a number of options not set in the S&D projects
+echo Fixing MSI...
+msifixer.exe package\Add2ExchangeSetup.msi msi.sql %[output]
+if errorlevel neq 0 (gosub ERROR & quit 1)
+msifixer.exe package\Add2Exchange_Upgrade.msi msi.sql %[output]
+if errorlevel neq 0 (gosub ERROR & quit 1)
+
+rem Now that the versioned files have been used by the build, revert them so 
+rem the special replacement tag (9999.9999.9999.9999) is available for the
+rem find and replace in the next build.
+gosub CLEANUP
+
+echo Staging files...
+cd artifacts
+md %[build_name]
+ren %[quiet] ..\package\Add2ExchangeSetup.msi %[build_name]\
+copy %[quiet] /s %[dev_dir]\%[project_name]\contrib\*.* %[build_name]\
+copy %[quiet] /s %[dev_dir]\%[project_name]\guide\*.pdf %[build_name]\
+
+echo Zipping package...
+7z.exe a -r -sfx %[full_name] %[build_name]\* %[output]
+ren %[quiet] %[build_name]\Add2ExchangeSetup.msi ..\package\
+ren %[quiet] ..\package\Add2Exchange_Upgrade.msi %[build_name]\
+7z.exe a -r -sfx %[upgrade_name] %[build_name]\* %[output]
+ren %[quiet] %[build_name]\Add2Exchange_Upgrade.msi ..\package\
+ren %[quiet] %[build_name] ..\dist
+
+echo Copying to ftp and beta...
+copy %[quiet] %[full_name] %[shared_dir]\betas\%[project_name]\RC_%[full_name]
+copy %[quiet] %[upgrade_name] %[shared_dir]\betas\%[project_name]\RC_%[upgrade_name]
+copy %[quiet] %[full_name] %[ftp_dir]\%[project_name]\RC_%[full_name]
+copy %[quiet] %[upgrade_name] %[ftp_dir]\%[project_name]\RC_%[upgrade_name]
+
+echo Copying to S3...
+s3.exe put dl.diditbetter.com %[full_name] /nogui /acl:public-read /storageclass:REDUCED_REDUNDANCY %[output] %[noerr]
+s3.exe put dl.diditbetter.com %[upgrade_name] /nogui /acl:public-read /storageclass:REDUCED_REDUNDANCY %[output] %[noerr]
+
+cd ..
+
+echo Copying artifacts...
+copy %[quiet] variables.txt artifacts\
+
+echo Updating license key database...
+lkgAddRow.py "\\diditbetter\dfs\fileserver\license key generator\database\License Key Generator.mdb" %[project_name] %[version] msbuilder
+
+echo Updating versions on download site...
+version_mojoportal.py add release-candidate %[id] %[full_name] %[version] %_date "%@filesize[artifacts\%[full_name], M] MB"
+version_mojoportal.py add release-candidate %[upgrade_id] %[upgrade_name] %[version] %_date "%@filesize[artifacts\%[upgrade_name], M] MB"
+
+echo Posting news...
+postNews.py %[project_name] %[dev_dir]\%[project_name]\beta.txt %[version] 3 redmine
+
+echo Sending notification email...
+bmail.exe -f noreply@diditbetter.com -t dibsupport@diditbetter.com -s dibex10.diditbetter.com -a "Beta %[long_name] %[version] posted" -b "Go to http://redmine/projects/%[project_name]/news for details." %[output]
+
+echo Done.
+quit 0
+
+:CANCEL
+echo User canceled.
+return
+
+:ERROR
+echo Error encountered.
+gosub CLEANUP
+return
+
+:CLEANUP
+rem Disable keyboard break
+on break rem
+echo Cleaning up...
+fart.exe -r AssemblyInfo.vb "%[version]" "9999.9999.9999.9999" %[output] 2>NUL
+fart.exe -r *.vbp "MajorVer=%[major]" "MajorVer=9999" %[output] 2>NUL
+fart.exe -r *.vbp "MinorVer=%[minor]" "MinorVer=9999" %[output] 2>NUL
+fart.exe -r *.vbp "RevisionVer=%[revision]" "RevisionVer=9999" %[output] 2>NUL
+fart.exe msi.sql "%[version]" "9999.9999.9999.9999" %[output] 2>NUL
+return

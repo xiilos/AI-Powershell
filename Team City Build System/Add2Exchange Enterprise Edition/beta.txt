@@ -1,0 +1,8 @@
+Title:
+Beta Add2Exchange Enterprise %(version)s posted
+Summary:
+New build avialable on web and ftp
+Description:
+Beta Add2Exchange Enterprise %(version)s is available at http://www.diditbetter.com/downloads.aspx and ftp://ftp.diditbetter.com/a2e-enterprise.
+
+Use this version for all new beta installs.  Please notify current beta customers of the availability of the upgrade.

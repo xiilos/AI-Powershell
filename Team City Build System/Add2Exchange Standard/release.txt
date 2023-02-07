@@ -1,0 +1,10 @@
+Title:
+Add2Exchange Standard %(version)s released
+Summary:
+New release available on web
+Description:
+Add2Exchange Standard %(version)s is available at http://www.diditbetter.com/downloads.aspx.
+
+Use this version for all new installs.  Please notify current beta customers of the availability of the upgrade.
+
+Action: PAD file has been updated, but the PAD submitter application must be run manually.

@@ -117,10 +117,8 @@ switch ($input1) {
         Update-Module -Name AzureAD
         Import-Module –Name AzureAD
 
-        Write-Host "Log in as a Global Administrator"
+        Write-Host "Log in as an Exchange Administrator"
         Connect-AzureAD
-
-        
         
         $Name = Get-AzureADUser | Where-Object { $_.mail } | Select-Object Mail
         $Location = "C:\Program Files (x86)\DidItBetterSoftware\AD_Photos"

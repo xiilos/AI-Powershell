@@ -1,0 +1,9 @@
+[paths]
+default = http://hg/a2e-standard
+
+
+[tortoisehg]
+ciexclude = msi.sql,Service\AssemblyInfo.vb,SetupInitialize\AssemblyInfo.vb,Service Restart\Add2Exchange Service Restart.vbp,Service Restart\Add2Exchange Service Start.vbp,Service Restart\Add2Exchange Service Stop.vbp,A2EQuickLicense\A2EQuickLicense.vbp,A2ETokenGenerator\A2ETokenGenerator.vbp,AgentDirector\A2E Director.vbp,Console\Add2Exchange Console.vbp,FolderMatic_SRC\FolderMatic.vbp,Registry Security\Exchange Registry Security.vbp,Trial Restart\Add2Exchange Trial Restart.vbp,A2EToolKit\A2EToolBox.vbp,Agent\A2ESP.vbp,Registry Security\Add2Exchange Registry Security.vbp
+
+[hooks]
+commit = alpha.cmd /h > alpha.log 2>&1

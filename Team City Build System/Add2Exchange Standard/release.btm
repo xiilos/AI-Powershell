@@ -1,0 +1,61 @@
+@echo off
+rem This is a TCC/LE batch file (.btm).  TCC/LE is a command processor
+rem substitute for cmd.exe.  It is freely available from http://www.jpsoft.com/.
+rem It is 100% backwards compatible with cmd.exe's batch language and offers an
+rem extended command set necessary to accomplish some of the important parts
+rem of this build script.
+
+setlocal
+iff %1 == /q then
+    set quiet=/q
+    set output=^> NUL
+    set noerr=2^>&1
+endiff
+
+rem Import settings from the variables.txt file in the local directory
+if not exist variables.txt echo Variables.txt missing & quit 1
+if not exist version.txt echo Version.txt missing & quit 1
+set /r variables.txt
+
+echo Setting version...
+set /r version.txt
+echo ##teamcity[buildNumber '%[version]']
+
+set full_name=%[project_name].%[version].exe
+if not exist %[full_name] echo %[full_name] missing & quit 1
+set upgrade_name=%[project_name]_upgrade.%[version].exe
+if not exist %[upgrade_name] echo %[upgrade_name] missing & quit 1
+
+echo Deleting old releases...
+set deletes=%@execstr[s3list.py dl.diditbetter.com/%[project_name]* %[project_name]*.%[version].exe]
+for %key in (%[deletes]) s3.exe delete dl.diditbetter.com/%[key] /nogui %[output] %[noerr]
+
+echo Renaming files...
+ren %[quiet] %[ftp_dir]\%[project_name]\RC_%[full_name] %[full_name]
+ren %[quiet] %[ftp_dir]\%[project_name]\RC_%[upgrade_name] %[upgrade_name]
+ren %[quiet] %[shared_dir]\betas\%[project_name]\RC_%[full_name] %[shared_dir]\releases\%[project_name]\%[full_name]
+ren %[quiet] %[shared_dir]\betas\%[project_name]\RC_%[upgrade_name] %[shared_dir]\releases\%[project_name]\%[upgrade_name]
+
+echo Deleting old betas...
+del /e %[quiet] %[ftp_dir]\%[project_name]\RC_%[project_name]*.exe
+del /e %[quiet] %[shared_dir]\betas\%[project_name]\RC_%[project_name]*.exe
+
+echo Archiving release...
+copy %[quiet] %[full_name] %[archive_dir]\%[project_name]\
+
+echo Updating versions on download site...
+version_mojoportal.py move release-candidate full %[id] %[full_name] %[version] %_date "%@filesize[%[full_name], M] MB"
+version_mojoportal.py move release-candidate upgrade %[upgrade_id] %[upgrade_name] %[version] %_date "%@filesize[%[upgrade_name], M] MB"
+version_mojoportal.py add legacy %[id] %[full_name] %[version] %_date "%@filesize[%[full_name], M] MB"
+
+echo Updating PAD file...
+version_pad.py A2Epad_file.xml %[version] %_date %@filesize[%[full_name]]
+
+echo Posting news...
+postNews.py %[project_name] %[dev_dir]\%[project_name]\release.txt %[version] 3 redmine
+
+echo Sending notification email...
+bmail.exe -f noreply@diditbetter.com -t dibsupport@diditbetter.com -s ex10.diditbetter.com -a "%[full_name] %[version] released" -b "Go to http://redmine/projects/%[project_name]/news for details." %[output]
+
+echo Done.
+quit 0

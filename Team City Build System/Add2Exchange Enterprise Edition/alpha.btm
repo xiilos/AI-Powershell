@@ -1,0 +1,201 @@
+@echo off
+rem This is a TCC/LE batch file (.btm).  TCC/LE is a command processor
+rem substitute for cmd.exe.  It is freely available from http://www.jpsoft.com/.
+rem It is 100% backwards compatible with cmd.exe's batch language and offers an
+rem extended command set necessary to accomplish some of the important parts
+rem of this build script.
+
+setlocal
+
+rem Create a /q switch that causes the script to run quietly.
+iff %1 == /q then
+    set quiet=/q
+    set output=^> NUL
+    set noerr=2^>&1
+else
+    set vblog=/out vb6.log
+endiff
+
+rem Import settings from the variables.txt file in the local directory
+set /r variables.txt
+
+rem Find the name of the parent of this directory for use in naming the final
+rem output directory.  Helps identify the source code the build was made with.
+set parent=%@altname[..]
+
+rem Create a /h switch that tells the script whether to use GUI or command-line
+rem output.  This is important because when called as a hook from TortoiseHg,
+rem command-line output is lost, meaning all prompts must be done through
+rem MessageBoxes.
+iff %1 == /h then
+    msgbox YESNO Build alpha?
+    if %_? == 11 (gosub CANCEL & quit 0)
+endiff
+
+rem Some files have changes that are byproducts of the IDE and shouldn't be
+rem checked into version control.  For example, vbp files commonly contain
+rem remappings of library identifiers, which are done automatically and aren't
+rem substantive changes to the code.  To get rid of such version control noise,
+rem those files are marked to be ignored by TortoiseHg.  However, those files
+rem may contain other relevant changes by the developer.  If the developer has
+rem made such changes, then they should deliberately mark the file for checkin 
+rem and commit it.  Otherwise, the files should be reverted, which this script
+rem will do automatically.  However, to prevent loss of work, the script warns
+rem the developer before doing the revert.
+echo Checking template files...
+set exclude=%@iniread[.\.hg\hgrc,tortoisehg,ciexclude]
+set exclude="%@replace[,," ",%[exclude]]"
+set check=%@execstr[hg.exe status %[exclude]]
+iff DEFINED check then
+    iff %1 == /h then
+        msgbox CONTINUEABORT There are uncommitted changes to the template files.  Changes in these files are usually side-effects of the IDE or a canceled build.  You don't want to keep such side-effects, so if that is the case, the files should be reverted.  Otherwise, they are intended changes to the templates, in which case they will be ERADICATED by the build process if you don't commit them now.   In either case, you should cancel this process and take the appropriate action (revert or commit) before building again.  You can see the affected files in the commit dialog.  Do you want to continue anyway or abort so you can deal with the uncommitted changes? (The changes which were committed when you pressed the button to kick off this process are still committed and not affected by the abort.)
+        if %_? == 17 (gosub CANCEL & quit 0)
+    
+    else
+        echo There are uncommitted changes to the template files.  Changes in these
+        echo files are usually side-effects of the IDE.  You don't want to keep such
+        echo side-effects, so if that is the case, the files should be reverted.
+        echo ``
+        echo Otherwise, they are intended changes to the templates, in which case
+        echo they will be ERADICATED by the build process if you don't commit them now.
+        echo ``
+        echo In either case, you should cancel this process and take the appropriate
+        echo action (revert or commit) before building again.  You can see the affected
+        echo files by opening the commit dialog.
+        echo ``
+        echo Do you want to continue anyway or abort so you can deal with the uncommitted
+        echo changes?
+        echo ``
+        inkey /K"YN" /w10 Continue anyway (Y/N)?  %%continue
+        if %[continue] != Y (gosub CANCEL & quit 0)
+    endiff
+endiff
+
+iff %1 == /h then
+    start logexpert.exe alpha.log
+endiff
+
+gosub CLEANUP
+
+rem Get rid of the results of the last build before making a new one.
+echo Cleaning...
+del /e %[quiet] vb6.log
+rd /q /s package %[output] %[noerr]
+
+rem Set the version by evaluating the major based on year, the minor based on
+rem month, the revision based on the local Hg number (this is a non-global number!),
+rem the build number based on a hash of the parent directory name plus a counter,
+rem and the branch name from the repository.  Revision, build and branch are
+rem all required to uniquely identify the source code this was built from.
+echo Determining version...
+set major=%@eval[%@year[%_date]-%[year]]
+set minor=%@month[%_date]
+set revision=%@execstr[hg.exe parent --template {rev}]
+set count=%@eval[%@iniread[.\count.txt,count,count] + 1]
+echo %@iniwrite[.\count.txt,count,count,%[count]] %[output]
+set build=%@eval[0x%@right[3,%@md5[s,%[parent]]]+%[count]]
+set version=%[major].%[minor].%[revision].%[build]
+set branch=%@execstr[hg.exe branch]
+
+rem Now that we know the version, build it into the executables by doing a
+rem find and replace on the Visual Studio files for both .NET and VB6.
+echo Versioning assemblies...
+fart.exe -r AssemblyInfo.vb "9999.9999.9999.9999" "%[version]" %[output] 2>NUL
+if errorlevel eq 0 (gosub ERROR & quit 1)
+
+echo Versioning project files...
+fart.exe -r *.vbp "MajorVer=9999" "MajorVer=%[major]" %[output] 2>NUL
+if errorlevel eq 0 (gosub ERROR & quit 1)
+fart.exe -r *.vbp "MinorVer=9999" "MinorVer=%[minor]" %[output] 2>NUL
+if errorlevel eq 0 (gosub ERROR & quit 1)
+fart.exe -r *.vbp "RevisionVer=9999" "RevisionVer=%[revision]" %[output] 2>NUL
+if errorlevel eq 0 (gosub ERROR & quit 1)
+on break (echo Break encountered. & gosub CLEANUP & quit 1)
+
+rem Update the licensing info in the build
+echo Updating modDynamic.bas...
+create-date.py Modules\modDynamic.bas.template Modules\modDynamic.bas
+if errorlevel neq 0 (gosub ERROR & quit 1)
+
+rem Compile the VB6 project group file
+echo Compiling project...
+vb6.exe %[vblog] /make %[project_name].vbg
+if errorlevel neq 0 (type vb6.log & gosub ERROR & quit 1)
+
+rem Compile the Visual Studio Setup and Deployment solutions
+echo Building solution packages...
+cd Setup
+devenv.com "Add2Exchange Setup.sln" /build Release %[output]
+if errorlevel neq 0 (cd .. & gosub ERROR & quit 1)
+cd ..\Setup_Upgrade
+devenv.com "Add2Exchange UpgradeSetup.sln" /build Release %[output]
+if errorlevel neq 0 (cd .. & gosub ERROR & quit 1)
+cd ..
+
+rem Update the msi configuration file with the version number for the installer
+echo Updating MSI sql...
+fart.exe msi.sql "9999.9999.9999.9999" "%[version]" %[output] 2>NUL
+
+rem Update the msi with a number of options not set in the S&D projects
+echo Fixing MSI...
+msifixer.exe package\Add2ExchangeSetup.msi msi.sql %[output]
+if errorlevel neq 0 (gosub ERROR & quit 1)
+msifixer.exe package\Add2Exchange_Upgrade.msi msi.sql %[output]
+if errorlevel neq 0 (gosub ERROR & quit 1)
+
+rem Now that the versioned files have been used by the build, revert them so 
+rem the special replacement tag (9999.9999.9999.9999) is available for the
+rem find and replace in the next build.
+gosub CLEANUP
+iff %1 != /h then
+    echo Done.
+    echo ``
+    echo IMPORTANT: The changes in this build still need to be pushed before a beta can be built.
+    quit
+endiff
+
+rem Copy the resulting files to netdrive and ftp
+echo Copying files to alpha...
+iff not isdir %[shared_dir]\alphas\%[project_name]_%[branch]\%[parent].%[version] then
+    md /s %[shared_dir]\alphas\%[project_name]_%[branch]\%[parent].%[version]
+endiff
+copy %[quiet] package\Add2ExchangeSetup.msi package\Add2Exchange_Upgrade.msi %[shared_dir]\alphas\%[project_name]_%[branch]\%[parent].%[version]\
+
+iff not isdir %[shared_dir2]\beta1\%[project_name]_%[branch]\%[parent].%[version] then
+    md /s %[shared_dir2]\beta1\%[project_name]_%[branch]\%[parent].%[version]
+endiff
+copy %[quiet] package\Add2ExchangeSetup.msi package\Add2Exchange_Upgrade.msi %[shared_dir2]\beta1\%[project_name]_%[branch]\%[parent].%[version]\
+
+rem Email everyone that the build is done.
+echo Sending notice...
+bmail.exe -f noreply@diditbetter.com -t tlilley@diditbetter.com,tc@diditbetter.com,nadams@diditbetter.com -s ex10.diditbetter.com -a "Alpha %[full_name] at %[shared_dir]\alphas\%[project_name]_%[branch]\%[parent].%[version]" -b "%[shared_dir]\alphas\%[project_name]_%[branch]\%[parent].%[version]" %[output]
+
+rem Offer the developer the opportunity to push the changes to the network
+rem repository, now that we know the build was good enough to fully compile.
+echo Starting Repository Explorer for push...
+start hgtk.exe log
+
+echo ``
+echo Files are available in %[shared_dir]\alphas\%[project_name]_%[branch]\%[parent].%[version]
+echo and %[shared_dir2]\beta1\%[project_name]_%[branch]\%[parent].%[version]
+echo ``
+echo IMPORTANT: If you have not committed and pushed the changes in this build, they
+echo will need to be pushed before a beta can be built.
+echo ``
+echo Done.
+quit 0
+
+:CANCEL
+echo User canceled.
+return
+
+:ERROR
+echo Error encountered.
+gosub CLEANUP
+return
+
+:CLEANUP
+on break rem
+echo Reverting versioned files...
+hg.exe revert %[exclude] %[output] %[noerr]
+return
