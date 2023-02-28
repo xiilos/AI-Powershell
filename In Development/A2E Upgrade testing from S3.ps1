@@ -7,6 +7,19 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
+
+
+$web = (Invoke-RestMethod -Uri https://s3.amazonaws.com/dl.diditbetter.com).OuterXml
+$Keywords = $web.links |Where class -match Attributes
+Write-Host $Keywords.outertext
+
+
+
+
+
+
+
+
 (Invoke-RestMethod -Uri https://s3.amazonaws.com/dl.diditbetter.com).OuterXml
 
 
@@ -15,6 +28,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 
 $version = (Invoke-RestMethod -Uri https://s3.amazonaws.com/dl.diditbetter.com).OuterXml | Where-Object {$_.Name -like "a2e-standard_upgrade*"} | Select-object -ExpandProperty
+
 
 
 
@@ -128,7 +142,7 @@ Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
 
 
 
-$WebResponse = Invoke-WebRequest "http://support.diditbetter.com/downloads.aspx"
+$WebResponse = Invoke-WebRequest "https://s3.amazonaws.com/dl.diditbetter.com"
 $WebResponse.content
 
 $Response = $WebResponse.content
