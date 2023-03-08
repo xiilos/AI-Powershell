@@ -9,6 +9,192 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 
 
+
+
+
+
+
+
+
+# Set the S3 bucket URL
+$bucketUrl = "https://s3.amazonaws.com/downloads.diditbetter.com/"
+
+# Get the list of files in the bucket
+$fileList = (Invoke-WebRequest $bucketUrl).Links | Where-Object {$_.href -like "*a2e-enterprise_upgrade*"}
+
+# Get the latest file from the list
+$latestFileUrl = $bucketUrl + ($fileList | Sort-Object LastWriteTime -Descending | Select-Object -First 1).href
+
+# Download the file to the current directory
+Invoke-WebRequest -Uri $latestFileUrl -OutFile (Split-Path -Path $latestFileUrl -Leaf)
+
+
+
+
+
+
+
+# Set the URL of the S3 bucket and the prefix of the file you want to download
+$bucketUrl = "https://s3.amazonaws.com/downloads.diditbetter.com"
+$filePrefix = "a2e-enterprise_upgrade"
+
+# Download the file list from the S3 bucket
+$fileListUrl = "$bucketUrl/$filePrefix"
+$fileList = Invoke-WebRequest -Uri $fileListUrl -UseBasicParsing | ConvertFrom-Json
+
+# Find the first file that matches the prefix
+$file = $fileList.Contents | Where-Object { $_.Key -like "$filePrefix*" } | Select-Object -First 1
+
+# Download the file
+if ($file) {
+    $fileUrl = "$bucketUrl/$($file.Key)"
+    $filePath = Join-Path -Path $env:TEMP -ChildPath $file.Key
+    Invoke-WebRequest -Uri $fileUrl -OutFile $filePath -UseBasicParsing
+    Write-Output "File downloaded to: $filePath"
+} else {
+    Write-Output "No matching files found."
+}
+
+
+
+
+
+
+
+
+
+$BucketName = "downloads.diditbetter.com"
+$Prefix = "a2e-enterprise_upgrade."  # Replace with the prefix of the file name you know
+$DestinationPath = "c:\zlibrary\"
+
+$S3Url = "https://s3.amazonaws.com/$BucketName/$Prefix"
+
+$WebClient = New-Object System.Net.WebClient
+$WebClient.DownloadFile($S3Url, $DestinationPath)
+
+
+
+
+
+
+# Replace <Bucket-Name> and <Partial-File-Name> with the appropriate values
+$bucketName = "downloads.diditbetter.com"
+$partialFileName = "a2e-enterprise_upgrade."
+
+# Construct the S3 URL for the bucket
+$s3Url = "https://s3.amazonaws.com/$bucketName/"
+
+# Get the list of files in the bucket
+#$fileList = Invoke-WebRequest -Uri $s3Url -UseBasicParsing | Select-String -Pattern $partialFileName | ForEach-Object { $_.Matches.Value }
+$fileList = Invoke-WebRequest -Uri $s3Url -UseBasicParsing | Select-String -Pattern $partialFileName
+
+# Download the first file in the list
+$fileUrl = $s3Url + $fileList[0].Matches.Value
+$fileName = $fileList[0].Matches.Value
+Invoke-WebRequest -Uri $fileUrl -OutFile $fileName
+
+
+
+
+
+
+
+# Replace <Bucket-Name> with the appropriate value
+$bucketName = "<Bucket-Name>"
+
+# Construct the S3 URL for the bucket
+$s3Url = "https://s3.amazonaws.com/$bucketName/"
+
+# Get the list of files in the bucket
+$fileList = Invoke-WebRequest -Uri $s3Url -UseBasicParsing | Select-String -Pattern '<a href="([^"]*)">.*</a>' | ForEach-Object { $_.Matches.Groups[1].Value }
+
+# Download the first file in the list
+$fileUrl = $s3Url + $fileList[0]
+$fileName = Split-Path -Leaf $fileUrl
+Invoke-WebRequest -Uri $fileUrl -OutFile $fileName
+
+
+
+
+
+
+# Define the S3 bucket name and partial file name
+$bucketName = "dl.diditbetter.com"
+$partialFileName = "a2e-enterprise_upgrade"
+
+# Create a new S3 client
+$client = New-Object Amazon.S3.AmazonS3Client
+
+# Get a list of objects in the S3 bucket that match the partial file name
+$listRequest = New-Object Amazon.S3.Model.ListObjectsRequest
+$listRequest.BucketName = $bucketName
+$listResponse = $client.ListObjects($listRequest)
+$matchingObjects = $listResponse.S3Objects | Where-Object {$_.Key -like "*$partialFileName*"}
+
+# If there are multiple files matching the partial name, only download the first one
+$objectKey = $matchingObjects[0].Key
+
+# Download the file
+$downloadRequest = New-Object Amazon.S3.Model.GetObjectRequest
+$downloadRequest.BucketName = $bucketName
+$downloadRequest.Key = $objectKey
+$downloadResponse = $client.GetObject($downloadRequest)
+
+# Save the file to disk
+$localFilePath = "C:\zlibrary\a2e-enterprise_upgrade.exe"
+$downloadResponse.WriteResponseStreamToFile($localFilePath)
+
+
+
+
+
+# Set the S3 bucket name and partial file name
+$bucketName = "dl.diditbetter.com"
+$partialName = "a2e-enterprise_upgrade"
+
+# Get the list of objects in the S3 bucket that match the partial name
+$objects = Get-S3Object -BucketName $bucketName | Where-Object {$_.Key -like "*$partialName*"}
+
+# If there are multiple files matching the partial name, only download the first one
+$fileToDownload = $objects[0].Key
+
+# Download the file
+Read-S3Object -BucketName $bucketName -Key $fileToDownload
+
+
+
+
+$partialName = "a2e-enterprise_upgrade"
+$downloadUrl = "https://s3.amazonaws.com/downloads.diditbetter.com/"
+
+# Get all files in the URL that match the partial name
+$files = (Invoke-WebRequest $downloadUrl).Links | Where-Object {$_.innerText -like "*$partialName*"} | Select-Object -ExpandProperty href
+
+# If there are multiple files matching the partial name, only download the first one
+$fileToDownload = $files[0]
+
+# Download the file
+Invoke-WebRequest $downloadUrl$fileToDownload -OutFile $fileToDownload
+
+
+
+
+$bucketName = "dl.diditbetter.com"  # Name of the S3 bucket
+$objectKey = "a2e-enterprise.25.3.3517.2591.exe"                   # Leave this empty for public buckets without keys
+$output = "C:\zlibrary\a2e-enterprise.exe" # Local file path to save the downloaded file
+
+# Download the file from the public S3 bucket and save it locally
+$uri = "https://$bucketName.s3.amazonaws.com/$objectKey"
+Invoke-WebRequest $uri -OutFile $output
+
+
+
+
+
+
+
+
+
 $web = (Invoke-RestMethod -Uri https://s3.amazonaws.com/dl.diditbetter.com).OuterXml
 $Keywords = $web.links |Where class -match Attributes
 Write-Host $Keywords.outertext
