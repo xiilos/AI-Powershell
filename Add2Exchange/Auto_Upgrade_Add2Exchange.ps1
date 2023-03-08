@@ -273,13 +273,7 @@ Else {
 Write-Host "Downloading Add2Exchange"
 Write-Host "Please Wait......"
 
-$URL = "ftp://ftp.diditbetter.com/A2E-Enterprise/Upgrades/a2e-enterprise_upgrade.exe"
-$Output = "c:\zlibrary\Add2Exchange Upgrades\a2e-enterprise_upgrade.exe"
-$Start_Time = Get-Date
-
-(New-Object System.Net.WebClient).DownloadFile($URL, $Output)
-
-Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+Start-Process ./Download_A2E_Upgrade.vbs -wait
 
 Write-Host "Finished Downloading"
 
