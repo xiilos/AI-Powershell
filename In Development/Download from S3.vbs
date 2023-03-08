@@ -2,6 +2,7 @@
 Dim s3Bucket, partialFileName
 s3Bucket = "downloads.diditbetter.com"
 partialFileName = "a2e-enterprise_upgrade"
+downloadedFileName = "a2e-enterprise_upgrade"
 
 ' Set the path where the file will be saved
 savePath = "C:\zlibrary\Add2Exchange Upgrades\"
@@ -47,6 +48,9 @@ If Not matchingNode Is Nothing Then
     fileStream.Type = 1 ' binary
     fileStream.Open
     fileStream.Write xmlhttp.responseBody
-    fileStream.SaveToFile savepath & matchingNode.Text, 2 ' overwrite
+    fileStream.SaveToFile savepath & downloadedFileName, 2 ' overwrite
     fileStream.Close
 End If
+
+
+'fileStream.SaveToFile savepath & matchingNode.Text, 2 ' overwrite
