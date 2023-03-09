@@ -1,3 +1,17 @@
+<#
+        .SYNOPSIS
+        
+
+        .DESCRIPTION
+      
+
+        .NOTES
+        Version:        1.0
+        Author:         DidItBetter Software
+
+    #>
+
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
   # Relaunch as an elevated process:
