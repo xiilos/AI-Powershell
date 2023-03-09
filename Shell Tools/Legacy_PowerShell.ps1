@@ -1,3 +1,19 @@
+<#
+        .SYNOPSIS
+        Powershell script to check and update .net and 
+
+        .DESCRIPTION
+        Will update Powershell to 5.1 if .net is below version 4.5
+        Get Windows Version
+        Get .net version
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -11,7 +27,6 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
 
 # Check if .Net 4.5 or above is installed
-
 $release = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Release -ErrorAction SilentlyContinue -ErrorVariable evRelease).release
 $installed = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\' -Name Install -ErrorAction SilentlyContinue -ErrorVariable evInstalled).install
 
@@ -38,7 +53,6 @@ if (($installed -ne 1) -or ($release -lt 378389)) {
 
 
 #Check Operating Sysetm
-
 $BuildVersion = [System.Environment]::OSVersion.Version
 
 

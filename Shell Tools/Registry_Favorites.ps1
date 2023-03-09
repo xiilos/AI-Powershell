@@ -1,3 +1,17 @@
+<#
+        .SYNOPSIS
+        Powershell script to add Registry favorites
+
+        .DESCRIPTION
+        Adds Reg. Favs to Registry shortcuts
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
 

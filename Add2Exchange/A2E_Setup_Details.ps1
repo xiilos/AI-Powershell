@@ -1,3 +1,24 @@
+<#
+        .SYNOPSIS
+        Powershell script to include Add2Exchange setup details in .txt
+
+        .DESCRIPTION
+        Checks registry for A2E setup details and prints to .txt file
+        Get licensing info
+        Get install paths
+        Get local account for Add2Exchange
+        Get PS Version
+        Get Windows Version
+        Get DB Version
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs

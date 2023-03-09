@@ -1,3 +1,22 @@
+<#
+        .SYNOPSIS
+        Step 1 of 2
+        Run Post_A2E_Migration.ps1 after this
+        Automatically Migrates Add2Exchange to a new server
+
+        .DESCRIPTION
+        Check for current files and locations
+        copy reg. files for Add2Exchange and backup
+        Backup A2E SQL DB and move to landing zone
+        Download from S3 latest build of Add2Exchange and upgrade prior to move
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -5,14 +24,14 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Execution Policy
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Logging
 Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
 
 #Variables
-$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue #Current Add2Exchange Installation Path
+#Current Add2Exchange Installation Path
+$Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue 
 $BackupDirs = $Install + 'Database\A2E_SQL_Backup'
 
 # Script #
@@ -71,20 +90,19 @@ Do {
                 Write-Host "Resuming...."
             } 
 
-            #Shutting Down Services
+            #Stop Add2Exchange Service
             Write-Host "Stopping Add2Exchange Service"
             Stop-Service -Name "Add2Exchange Service"
-            Start-Sleep -s 2
+            Start-Sleep -s 5
             Write-Host "Done"
-            Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service –StartupType Disabled
 
             #Stop The Add2Exchange Agent
             Write-Host "Stopping the Agent. Please Wait."
-            Start-Sleep -s 5
+            Start-Sleep -s 10
             $Agent = Get-Process "Add2Exchange Agent" -ErrorAction SilentlyContinue
             if ($Agent) {
                 Write-Host "Waiting for Agent to Exit"
-                Start-Sleep -s 5
+                Start-Sleep -s 10
                 if (!$Agent.HasExited) {
                     $Agent | Stop-Process -Force
                 }
@@ -104,40 +122,45 @@ Do {
             Push-Location $env:USERPROFILE
             
 
-            #Download Program Files
-            Write-Host "Downloading Add2Exchange Enterprise"
+            #Downloading Add2Exchange
+            Write-Host "Downloading Add2Exchange"
             Write-Host "Please Wait......"
 
-            $URL = "ftp://ftp.diditbetter.com/A2E-Enterprise/New%20Installs/a2e-enterprise.exe"
-            $Output = "C:\zlibrary\A2E_Backup\A2E-Enterprise.exe"
-            $Start_Time = Get-Date
+            # Replace the value of $bucketUrl with the public Amazon S3 URL of your bucket
+            $bucketUrl = "https://s3.amazonaws.com/dl.diditbetter.com/"
 
-            (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
+            # Replace the value of $partialFileName with the first part of the filename you know
+            $partialFileName = "a2e-enterprise."
 
-            Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+            # Create a web request to get the contents of the bucket
+            $request = [System.Net.WebRequest]::Create($bucketUrl)
+            $response = $request.GetResponse()
 
-            Write-Host "Finished Downloading"
+            # Read the response stream
+            $reader = New-Object System.IO.StreamReader($response.GetResponseStream())
+            $contents = $reader.ReadToEnd()
 
+            # Extract the keys from the response
+            $keyPattern = "(?<=\<Key\>)[^<]+(?=\<\/Key\>)"
+            $keys = [regex]::Matches($contents, $keyPattern) | ForEach-Object { $_.Value }
 
-            Write-Host "Downloading Recovery and Migration Manager"
-            Write-Host "Please Wait......"
+            # Find the first key that matches the partial filename
+            $matchingKey = $keys | Where-Object { $_ -like "$partialFileName*" } | Select-Object -First 1
 
-            $URL = "ftp://ftp.diditbetter.com/RMM-Enterprise/Upgrades/rmm-enterprise.exe"
-            $Output = "C:\zlibrary\A2E_Backup\rmm-enterprise.exe"
-            $Start_Time = Get-Date
-
-            (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
-
-            Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+            # Download the matching file
+            $matchingFileUrl = "$bucketUrl$matchingKey"
+            $destinationPath = "C:\zlibrary\A2E_Backup"
+            $fileName = "a2e-enterprise.exe"
+            #$downloadedfileName = [System.IO.Path]::GetFileName($matchingFileUrl)
+            $ProgressPreference = 'SilentlyContinue'
+            Invoke-WebRequest -Uri $matchingFileUrl -OutFile "$destinationPath\$fileName"
 
             Write-Host "Finished Downloading"
 
 
             
             #Creating Next Steps File
-
             #Variables
-
             $NewA2E = Read-Host "What is the Name of your New Add2Exchange Appliance?"
             
             Write-Host "Creating Next Steps File"
@@ -190,17 +213,17 @@ Do {
             #Shuttding Down Services
             Write-Host "Stopping Add2Exchange Service"
             Stop-Service -Name "Add2Exchange Service"
-            Start-Sleep -s 2
+            Start-Sleep -s 5
             Write-Host "Done"
             Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service –StartupType Disabled
 
             #Stop The Add2Exchange Agent
             Write-Host "Stopping the Agent. Please Wait."
-            Start-Sleep -s 5
+            Start-Sleep -s 10
             $Agent = Get-Process "Add2Exchange Agent" -ErrorAction SilentlyContinue
             if ($Agent) {
                 Write-Host "Waiting for Agent to Exit"
-                Start-Sleep -s 5
+                Start-Sleep -s 10
                 if (!$Agent.HasExited) {
                     $Agent | Stop-Process -Force
                 }
@@ -208,7 +231,7 @@ Do {
             #Stop The Add2Excange SQL Service
             Write-Host "Stopping Add2Exchange SQL Service"
             Stop-Service -Name "SQL Server (A2ESQLSERVER)"
-            Start-Sleep -s 2
+            Start-Sleep -s 5
             Write-Host "Done"
 
             #Backing Up SQL Files
@@ -223,31 +246,38 @@ Do {
             }
 
 
-            #Download Program Files
-            Write-Host "Downloading Add2Exchange Enterprise"
+            #Downloading Add2Exchange
+            Write-Host "Downloading Add2Exchange"
             Write-Host "Please Wait......"
 
-            $URL = "ftp://ftp.diditbetter.com/A2E-Enterprise/New%20Installs/a2e-enterprise.exe"
-            $Output = "C:\zlibrary\A2E_Backup\A2E-Enterprise.exe"
-            $Start_Time = Get-Date
+            # Replace the value of $bucketUrl with the public Amazon S3 URL of your bucket
+            $bucketUrl = "https://s3.amazonaws.com/dl.diditbetter.com/"
 
-            (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
+            # Replace the value of $partialFileName with the first part of the filename you know
+            $partialFileName = "a2e-enterprise."
 
-            Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+            # Create a web request to get the contents of the bucket
+            $request = [System.Net.WebRequest]::Create($bucketUrl)
+            $response = $request.GetResponse()
 
-            Write-Host "Finished Downloading"
+            # Read the response stream
+            $reader = New-Object System.IO.StreamReader($response.GetResponseStream())
+            $contents = $reader.ReadToEnd()
 
+            # Extract the keys from the response
+            $keyPattern = "(?<=\<Key\>)[^<]+(?=\<\/Key\>)"
+            $keys = [regex]::Matches($contents, $keyPattern) | ForEach-Object { $_.Value }
 
-            Write-Host "Downloading Recovery and Migration Manager"
-            Write-Host "Please Wait......"
+            # Find the first key that matches the partial filename
+            $matchingKey = $keys | Where-Object { $_ -like "$partialFileName*" } | Select-Object -First 1
 
-            $URL = "ftp://ftp.diditbetter.com/RMM-Enterprise/Upgrades/rmm-enterprise.exe"
-            $Output = "C:\zlibrary\A2E_Backup\rmm-enterprise.exe"
-            $Start_Time = Get-Date
-
-            (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
-
-            Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+            # Download the matching file
+            $matchingFileUrl = "$bucketUrl$matchingKey"
+            $destinationPath = "C:\zlibrary\A2E_Backup"
+            $fileName = "a2e-enterprise.exe"
+            #$downloadedfileName = [System.IO.Path]::GetFileName($matchingFileUrl)
+            $ProgressPreference = 'SilentlyContinue'
+            Invoke-WebRequest -Uri $matchingFileUrl -OutFile "$destinationPath\$fileName"
 
             Write-Host "Finished Downloading"
 

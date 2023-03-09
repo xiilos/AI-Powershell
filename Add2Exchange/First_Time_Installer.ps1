@@ -1,3 +1,34 @@
+<#
+        .SYNOPSIS
+        Create Initial Environment for Add2Exchange Install
+        Assign Permissions for Add2Exchange
+        Install Add2Exchange
+        Cleanup
+        Luanch Add2Exchange for the first time
+
+        .DESCRIPTION
+        Step 1: Account Creation
+        Step 2: Upgrade .Net and Powershell if needed
+        Step 3: Create zLibrary and Create Shortcuts
+        Step 4: Install Outlook and Setup Profile
+        Step 5: Mailbox Creation
+        Step 6: Create a Mail Profile
+        Step 7: Add Permissions (moved to step 11a)
+        Step 8: Add Public Folder Permissions
+        Step 9: Enable AutoLogon
+        Step 10: Install Add2Exchange
+        Step 11: Add Registry Favs
+        Step 11a: Setup Timed Permissions
+        Step 12: Cleanup
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -7,31 +38,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
-#Goal
-# Create Initial Environment for Add2Exchange Install
-# Assign Permissions for Add2Exchange
-# Install Add2Exchange
-# Cleanup
-# Luanch Add2Exchange for the first time
-
-
-#Step 1: Account Creation
-#Step 2: Upgrade .Net and Powershell if needed
-#Step 3: Create zLibrary and Create Shortcuts
-#Step 4: Install Outlook and Setup Profile
-#Step 5: Mailbox Creation
-#Step 6: Create a Mail Profile
-#Step 7: Add Permissions (moved to step 11a)
-#Step 8: Add Public Folder Permissions
-#Step 9: Enable AutoLogon
-#Step 10: Install Add2Exchange
-#Step 11: Add Registry Favs
-#Step 11a: Setup Timed Permissions
-#Step 12: Cleanup
-
-#Check for UAC First
-
-# Disable UAC
+#Menu Start
 $Title1 = 'Add2Exchange Installation Wizard'
 
 Clear-Host 
@@ -43,7 +50,6 @@ Write-Host "Press '1' to Start the Installation Wizard"
 Write-Host "Press 'Q' to Quit." -ForegroundColor Red 
 
 #Migration Method
- 
 $input1 = Read-Host "Please Make A Selection" 
 switch ($input1) { 
 
@@ -111,7 +117,6 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogon", 0x1)
 
         #Step 1-----------------------------------------------------------------------------------------------------------------------------------------------------Step 1
         # Account Creation
-
         $message = 'Have you created an account for Add2Exchange to install under?'
         $question = 'Pick one of the following from below'
 
@@ -123,7 +128,6 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogon", 0x1)
         $decision = $Host.UI.PromptForChoice($message, $question, $choices, 2)
 
         # Option 2: Quit
-
         if ($decision -eq 2) {
             Write-Host "Quitting"
             Get-PSSession | Remove-PSSession
@@ -135,7 +139,6 @@ Click OK to Continue or Cancel to Skip", 0, "AutoLogon", 0x1)
 
 
             # Account Creation
-
             Write-host "We need to create an account for Add2Exchange"
             $confirmation = Read-Host "Are you on a domain? [Y/N]"
             if ($confirmation -eq 'y') {
@@ -207,7 +210,6 @@ Log off and back on as the new Sync Service account and run this again before pr
         # Powershell Update
         # Check if .Net 4.5 or above is installed
         # Check Operating Sysetm
-
         $Confirmation = Read-Host "Check for latest powershell modules? [Y/N]"
         if ($confirmation -eq 'y') {
         
@@ -222,7 +224,6 @@ Log off and back on as the new Sync Service account and run this again before pr
         #Step 3-----------------------------------------------------------------------------------------------------------------------------------------------------Step 3
 
         #Create zLibrary & Copy Shortcuts to Desktop
-
         $TestPath = "C:\zlibrary"
 
         if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
@@ -234,7 +235,6 @@ Log off and back on as the new Sync Service account and run this again before pr
         }
 
         # Desktop Shortcuts
-
         $wshShell = New-Object -ComObject "WScript.Shell"
         $urlShortcut = $wshShell.CreateShortcut(
             (Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "Disable Outlook Social Connector through GPO.url")
@@ -252,7 +252,6 @@ Log off and back on as the new Sync Service account and run this again before pr
         # Step 4-----------------------------------------------------------------------------------------------------------------------------------------------------Step 4
 
         # Outlook Install 32Bit
-
         If (Get-ItemProperty HKLM:\SOFTWARE\Classes\Outlook.Application -ErrorAction SilentlyContinue) {
             Write-Output "Outlook Is Installed"
         }
@@ -282,7 +281,6 @@ When Done, click OK", 0, "Outlook Install", 0x1)
         # Step 5-----------------------------------------------------------------------------------------------------------------------------------------------------Step 5
 
         # Mailbox Creation
-
         $confirmation = Read-Host "Are you on Office 365 or Exchange on Premise [O/E]"
         if ($confirmation -eq 'O') {
             Write-host "Make sure to create a mailbox for the sync service account and add an *E1 or E3 License to it"
@@ -303,7 +301,6 @@ When Done, click OK", 0, "Outlook Install", 0x1)
         # Step 6-----------------------------------------------------------------------------------------------------------------------------------------------------Step 6
 
         # Mail Profile
-
         $wshell = New-Object -ComObject Wscript.Shell
         $answer = $wshell.Popup("The next step is to Create an outlook Profile for your new sync account. Open Control panel and go to Mail. 
         
@@ -327,7 +324,6 @@ When Done, click OK", 0, "Outlook Install", 0x1)
 
         # Step 8-----------------------------------------------------------------------------------------------------------------------------------------------------Step 8
         # Auto Logon
-
         $AutoLogon = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "AutoAdminLogon" -ErrorAction SilentlyContinue
         If ($AutoLogon -eq 0) {
 
