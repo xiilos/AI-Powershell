@@ -15,7 +15,7 @@ Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_P
 # Script #
 
 # Replace the value of $bucketUrl with the public Amazon S3 URL of your bucket
-$bucketUrl = "https://s3.amazonaws.com/downloads.diditbetter.com/"
+$bucketUrl = "https://s3.amazonaws.com/dl.diditbetter.com/"
 
 # Replace the value of $partialFileName with the first part of the filename you know
 $partialFileName = "a2e-enterprise_upgrade"
@@ -38,9 +38,11 @@ $matchingKey = $keys | Where-Object { $_ -like "$partialFileName*" } | Select-Ob
 # Download the matching file
 $matchingFileUrl = "$bucketUrl$matchingKey"
 $destinationPath = "C:\zlibrary\Add2Exchange Upgrades"
-$fileName = [System.IO.Path]::GetFileName($matchingFileUrl)
+$fileName = "a2e-enterprise_upgrade.exe"
 $ProgressPreference = 'SilentlyContinue'
 Invoke-WebRequest -Uri $matchingFileUrl -OutFile "$destinationPath\$fileName"
+
+#$fileName = [System.IO.Path]::GetFileName($matchingFileUrl)
 
 
 

@@ -7,8 +7,10 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
-#Checking Task Creation
+#Logging
+Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
 
+#Checking Task Creation
 Write-Host "Checking for Auto update Task..."
 $TaskName = "Scheduled Update Add2Exchange"
 $TaskExists = Get-ScheduledTask | Where-Object { $_.TaskName -like $TaskName }
@@ -29,8 +31,6 @@ Else {
     Write-Host "Done" 
 }
 
-#Logging
-Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
 
 #Test for Upgrade Eligibility
 $LicenseKeyAExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange\Profile 1" -Name "LicenseKeyAExpiry" -ErrorAction SilentlyContinue
@@ -197,12 +197,11 @@ $Tasks for Tasks Synchronization
 $Mail for Email Synchronization
 $Email  for Confidential Email Notifier
 
-$Today is today’s date, and any keys for your active functioning modules should expire AFTER this date.  
+$Today is today’s date, Any keys for your active functioning modules will expire AFTER this date.  
 
 Click OK to continue with your upgrade, or Cancel to Quit.
 
 NOTE* Upgrading Add2Exchange with expired keys and outside Software Assurance will stop synchronization until a renewal is purchased and new keys are issued.
-Also, if the service account can receive email, after you purchase, the keys will automatically be applied, usually without intervention.
 
 ", 0, "ATTENTION!! Add2Exchange Licensing", 0 + 1)
 if ($answer -eq 2) { Break }
@@ -211,31 +210,86 @@ if ($answer -eq 2) { Break }
 #Stop Menu Process
 Stop-Process -Name "DidItBetter Support Menu" -Force -ErrorAction SilentlyContinue
 
-#Test for FTP
+
+#Create zLibrary
+Write-Host "Creating Landing Zone"
+$TestPath = "C:\zlibrary\Add2Exchange Upgrades"
+if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
+
+    Write-Host "Add2Exchange Upgrades Directory Exists...Resuming"
+}
+Else {
+    New-Item -ItemType directory -Path "C:\zlibrary\Add2Exchange Upgrades"
+}
+
+
+#Test for HTTPS Access
+Write-Host "Testing for HTTPS Connectivity"
 
 try {
-    $FTP = New-Object System.Net.Sockets.TcpClient("ftp.diditbetter.com", 21)
-    $FTP.Close()
-    Write-Host "Connectivity OK."
+    $wresponse = Invoke-WebRequest -Uri https://s3.amazonaws.com/dl.diditbetter.com -UseBasicParsing
+    if ($wresponse.StatusCode -eq 200) {
+        Write-Output "Connection successful"
+    }
+    else {
+        Write-Output "Connection failed with status code $($wresponse.StatusCode)"
+    }
 }
 catch {
     $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-    $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+    $wshell.Popup("Connection failed with error: $($_.Exception.Message)... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
     Start-Process "http://support.diditbetter.com/Secure/Login.aspx?returnurl=/downloads.aspx"
     Write-Host "Quitting"
     Get-PSSession | Remove-PSSession
     Exit
 }
 
-#Stop Add2Exchange Service
+#Downloading Add2Exchange
+Write-Host "Downloading Add2Exchange"
+Write-Host "Please Wait......"
 
+# Replace the value of $bucketUrl with the public Amazon S3 URL of your bucket
+$bucketUrl = "https://s3.amazonaws.com/dl.diditbetter.com/"
+
+# Replace the value of $partialFileName with the first part of the filename you know
+$partialFileName = "a2e-enterprise_upgrade"
+
+# Create a web request to get the contents of the bucket
+$request = [System.Net.WebRequest]::Create($bucketUrl)
+$response = $request.GetResponse()
+
+# Read the response stream
+$reader = New-Object System.IO.StreamReader($response.GetResponseStream())
+$contents = $reader.ReadToEnd()
+
+# Extract the keys from the response
+$keyPattern = "(?<=\<Key\>)[^<]+(?=\<\/Key\>)"
+$keys = [regex]::Matches($contents, $keyPattern) | ForEach-Object { $_.Value }
+
+# Find the first key that matches the partial filename
+$matchingKey = $keys | Where-Object { $_ -like "$partialFileName*" } | Select-Object -First 1
+
+# Download the matching file
+$matchingFileUrl = "$bucketUrl$matchingKey"
+$destinationPath = "C:\zlibrary\Add2Exchange Upgrades"
+$fileName = "a2e-enterprise_upgrade.exe"
+$downloadedfileName = [System.IO.Path]::GetFileName($matchingFileUrl)
+$ProgressPreference = 'SilentlyContinue'
+Invoke-WebRequest -Uri $matchingFileUrl -OutFile "$destinationPath\$fileName"
+
+Write-Host "Finished Downloading"
+
+#Upgrading from version_x.x to version_x.x
+$CurrentVersionDB = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "CurrentVersionDB" -ErrorAction SilentlyContinue
+Write-Host "You are now upgrading Add2Exchange Enterprise from Version $CurrentVersionDB to $downloadedfileName" -ForegroundColor Green
+
+#Stop Add2Exchange Service
 Write-Host "Stopping Add2Exchange Service"
 Stop-Service -Name "Add2Exchange Service"
 Start-Sleep -s 5
 Write-Host "Done"
 
 #Stop The Add2Exchange Agent
-
 Write-Host "Stopping the Agent. Please Wait."
 Start-Sleep -s 10
 $Agent = Get-Process "Add2Exchange Agent" -ErrorAction SilentlyContinue
@@ -249,36 +303,14 @@ if ($Agent) {
 
 
 #Remove Add2Exchange
-
 Write-Host "Removing Add2Exchange"
 Write-Host "Please Wait...."
 $Program = Get-WmiObject -Class Win32_Product -Filter "Name = 'Add2Exchange'"
 $Program.Uninstall()
 Write-Host "Done"
 
-#Create zLibrary
-
-Write-Host "Creating Landing Zone"
-$TestPath = "C:\zlibrary\Add2Exchange Upgrades"
-if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-
-    Write-Host "Add2Exchange Upgrades Directory Exists...Resuming"
-}
-Else {
-    New-Item -ItemType directory -Path "C:\zlibrary\Add2Exchange Upgrades"
-}
-
-#Downloading Add2Exchange
-
-Write-Host "Downloading Add2Exchange"
-Write-Host "Please Wait......"
-
-Start-Process ./Download_A2E_Upgrade.vbs -wait
-
-Write-Host "Finished Downloading"
 
 #Unpacking Add2Exchange
-
 Write-Host "Unpacking Add2exchange"
 Write-Host "please Wait....."
 Push-Location "c:\zlibrary\Add2Exchange Upgrades"
@@ -293,8 +325,6 @@ Do {
     Write-Host "Installing Add2Exchange"
     $Location = Get-ChildItem -Path $root | Where-Object { $_.PSIsContainer } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     Push-Location $Location
-    $CurrentVersionDB = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "CurrentVersionDB" -ErrorAction SilentlyContinue
-    Write-Host "You are now upgrading Add2Exchange Enterprise from Version $CurrentVersionDB to $Location" -ForegroundColor Green
     Start-Process msiexec.exe -Wait -ArgumentList '/I "Add2Exchange_Upgrade.msi" /quiet' -ErrorAction Inquire -ErrorVariable InstallError;
     Write-Host "Finished...Upgrade Complete"
 
