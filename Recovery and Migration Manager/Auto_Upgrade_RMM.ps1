@@ -1,8 +1,25 @@
-if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    # Relaunch as an elevated process:
-    Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
-    exit
-}
+<#
+        .SYNOPSIS
+        Automatically upgrades Recovery and Migration Manager to the newest version
+
+        .DESCRIPTION
+        Check and Creates scheduled update for RMM
+        Checks for outdated license keys and prompts before upgrading
+        Downloads from S3
+        Upgrades RMM to latest build
+        Start RMM interface
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
+    if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        # Relaunch as an elevated process:
+        Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
+        exit
+    }
 
 #Execution Policy
 Set-ExecutionPolicy -ExecutionPolicy Bypass
@@ -16,9 +33,7 @@ $LicenseKeyDExpiry = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\Ope
 $Today = Get-Date
 
 #License Varify
-
 #Recovery and Migration Manager--------------
-
 $RMM = if ($LicenseKeyDExpiry -eq "") {
     "Not Licensed or in Trial"
 }
@@ -42,72 +57,93 @@ Your Software Mainenance Free Upgrade Periods
 
 $RMM for Recovery and Migration Manager
 
-$Today  is today’s date, and any keys for your active functioning modules should expire AFTER this date.
+$Today  is today’s date, and any keys for your active functioning modules will expire AFTER this date.
 
 Click OK to continue with your upgrade, or Cancel to Quit.
 
 NOTE* Upgrading Recovery and Migration Manager with expired keys and outside Software Assurance will stop synchronization until a renewal is purchased and new keys are issued.
-Also, if the service account can receive email, after you purchase, the keys will automatically be applied, usually without intervention.
 
 ", 0, "ATTENTION!! RMM Licensing", 0 + 1)
 if ($answer -eq 2) { Break }
 
 
 
-# Test for FTP
+#Create zLibrary\RMM Directory
+Write-Host "Creating Landing Zone"
+$TestPath = "C:\zlibrary\RMM Upgrades"
+if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
+
+    Write-Host "RMM Directory Exists...Resuming"
+}
+Else {
+    New-Item -ItemType directory -Path "C:\zlibrary\RMM Upgrades"
+}
+
+#Test for HTTPS Access
+Write-Host "Testing for HTTPS Connectivity"
 
 try {
-    $FTP = New-Object System.Net.Sockets.TcpClient("ftp.diditbetter.com", 21)
-    $FTP.Close()
-    Write-Host "Connectivity OK."
+    $wresponse = Invoke-WebRequest -Uri https://s3.amazonaws.com/dl.diditbetter.com -UseBasicParsing
+    if ($wresponse.StatusCode -eq 200) {
+        Write-Output "Connection successful"
+    }
+    else {
+        Write-Output "Connection failed with status code $($wresponse.StatusCode)"
+    }
 }
 catch {
     $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-    $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+    $wshell.Popup("Connection failed with error: $($_.Exception.Message)... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
     Start-Process "http://support.diditbetter.com/Secure/Login.aspx?returnurl=/downloads.aspx"
     Write-Host "Quitting"
     Get-PSSession | Remove-PSSession
     Exit
 }
 
+#Downloading RMM
+Write-Host "Downloading Recovery and Migration Manager"
+Write-Host "Please Wait......"
+
+# Replace the value of $bucketUrl with the public Amazon S3 URL of your bucket
+$bucketUrl = "https://s3.amazonaws.com/dl.diditbetter.com/"
+
+# Replace the value of $partialFileName with the first part of the filename you know
+$partialFileName = "rmm-enterprise"
+
+# Create a web request to get the contents of the bucket
+$request = [System.Net.WebRequest]::Create($bucketUrl)
+$response = $request.GetResponse()
+
+# Read the response stream
+$reader = New-Object System.IO.StreamReader($response.GetResponseStream())
+$contents = $reader.ReadToEnd()
+
+# Extract the keys from the response
+$keyPattern = "(?<=\<Key\>)[^<]+(?=\<\/Key\>)"
+$keys = [regex]::Matches($contents, $keyPattern) | ForEach-Object { $_.Value }
+
+# Find the first key that matches the partial filename
+$matchingKey = $keys | Where-Object { $_ -like "$partialFileName*" } | Select-Object -First 1
+
+# Download the matching file
+$matchingFileUrl = "$bucketUrl$matchingKey"
+$destinationPath = "C:\zlibrary\RMM Upgrades"
+$fileName = "rmm-enterprise.exe"
+#$downloadedfileName = [System.IO.Path]::GetFileName($matchingFileUrl)
+$ProgressPreference = 'SilentlyContinue'
+Invoke-WebRequest -Uri $matchingFileUrl -OutFile "$destinationPath\$fileName"
+
+Write-Host "Finished Downloading"
+
 
 #Remove Recovery and Migration Manager
-
 Write-Host "Removing Recovery and Migration Manager"
 Write-Host "Please Wait...."
 $Program = Get-WmiObject -Class Win32_Product -Filter "Name = 'Recovery and Migration Manager'"
 $Program.Uninstall()
 Write-Host "Done"
 
-#Create zLibrary\RMM Sub Directory
-
-Write-Host "Creating Landing Zone"
-$TestPath = "C:\zlibrary\RMM Upgrades"
-if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
-
-    Write-Host "RMM Upgrades Directory Exists...Resuming"
-}
-Else {
-    New-Item -ItemType directory -Path "C:\zlibrary\RMM Upgrades"
-}
-
-#Downloading Recovery and Migration Manager
-
-Write-Host "Downloading Recovery and Migration Manager"
-Write-Host "Please Wait......"
-
-$URL = "ftp://ftp.diditbetter.com/RMM-Enterprise/Upgrades/rmm-enterprise.exe"
-$Output = "C:\zlibrary\RMM Upgrades\rmm-enterprise.exe"
-$Start_Time = Get-Date
-
-(New-Object System.Net.WebClient).DownloadFile($URL, $Output)
-
-Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
-
-Write-Host "Finished Downloading"
-
 #Unpacking Recovery and Migration Manager
-
 Write-Host "Unpacking Recovery and Migration Manager"
 Write-Host "please Wait....."
 Push-Location "C:\zlibrary\RMM Upgrades"
