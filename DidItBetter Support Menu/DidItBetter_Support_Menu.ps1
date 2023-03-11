@@ -1,7 +1,15 @@
 <#
-.NAME
-    A2E Menu
-#>
+        .SYNOPSIS
+        DidItBetter Software Support Menu
+
+        .DESCRIPTION
+        Menu for all powershell tools used
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
@@ -534,14 +542,14 @@ $UpgradeAdd2Outlook.Add_Click( { Start-Process PowerShell .\Auto_Upgrade_Add2Out
 $O365ExchangePermissions.Add_Click( { Start-Process Powershell .\PermissionsOnPremOrO365Combined.ps1 })
 $A2OPermissions.Add_Click( { Start-Process Powershell .\Add2Outlook_Set_Granular_permissions.ps1 })
 $AutoPermissions.Add_Click( { Start-Process PowerShell .\Permissions_Task_Creation.ps1 })
-$DownloadAdd2Exchange.Add_Click( { Start-Process http://support.DidItBetter.com/Secure/Login.aspx?returnurl=/downloads.aspx })
-$DownloadToolKit.Add_Click( { Start-Process ftp://ftp.diditbetter.com/Add2Outlook%20Toolkit/Upgrades/Add2Outlook%20ToolKit%20Full%20Installation.exe })
+$DownloadAdd2Exchange.Add_Click( { Start-Process https://support.diditbetter.com/downloads.aspx })
+$DownloadToolKit.Add_Click( { Start-Process .\Auto_Upgrade_ToolKit.ps1 })
 $DownloadSQL.Add_Click( { Start-Process https://aka.ms/ssmsfullsetup })
 $A2EDiags.Add_Click( { Start-Process PowerShell .\Get_Diags.ps1 })
 $FTPDownloads.Add_Click( { Start-Process ftp.DidItBetter.com })
-$GetHelp.Add_Click( { Start-Process http://support.DidItBetter.com/support-request.aspx })
-$SearchDidItBetter.Add_Click( { Start-Process http://support.DidItBetter.com/ })
-$QuickStartGuide.Add_Click( { Start-Process http://guides.diditbetter.com/Add2Exchange_Guide.pdf })
+$GetHelp.Add_Click( { Start-Process https://support.diditbetter.com/support-request.aspx })
+$SearchDidItBetter.Add_Click( { Start-Process https://support.DidItBetter.com/ })
+$QuickStartGuide.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/Add2Exchange_Guide.pdf })
 $AutoLogon.Add_Click( { Start-Process Powershell .\AutoLogon.exe })
 $DirSync.Add_Click( { Start-Process Powershell .\Dir_Sync.ps1 })
 $DisableUAC.Add_Click( { Start-Process Powershell .\Disable_UAC.ps1 })
@@ -553,14 +561,14 @@ $DisableOSC.Add_Click( {
 $AddRegistryFavorites.Add_Click( { Start-Process Powershell .\Registry_Favorites.ps1 })
 $Reset_A2E_Passwords.Add_Click( { Start-Process Powershell .\Reset_A2E_Password.ps1 })
 $CreateSupporttext.Add_Click( { Start-Process PowerShell .\A2E_Setup_Details.ps1 })
-$GALSync.Add_Click( { Start-Process http://guides.diditbetter.com/GAL_Sync_Scenario.pdf })
-$PrivatetoPrivate.Add_Click( { Start-Process http://guides.diditbetter.com/Private_to_Private_Sync_Scenarios.pdf })
-$PublictoPublic.Add_Click( { Start-Process http://guides.diditbetter.com/Public_to_Public_Sync_Scenarios.pdf })
-$PrivatetoPublic.Add_Click( { Start-Process http://guides.diditbetter.com/Private_to_Public_Sync_Scenarios.pdf })
-$PublictoPrivate.Add_Click( { Start-Process http://guides.diditbetter.com/Public_to_Private_Sync_Scenarios.pdf })
-$TemplateCreation.Add_Click( { Start-Process http://guides.diditbetter.com/Template_Creation_RGM_Sync_Scenarios.pdf })
-$MigrateA2E.Add_Click( { Start-Process http://guides.diditbetter.com/Migrating_A2E_Sync_Scenarios.pdf })
-$ExhangeMigration.Add_Click( { Start-Process http://guides.diditbetter.com/Migrating_Environments_A2E_Sync_Scenarios.pdf })
+$GALSync.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/GAL_Sync_Scenario.pdf })
+$PrivatetoPrivate.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/Private_to_Private_Sync_Scenarios.pdf })
+$PublictoPublic.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/Public_to_Public_Sync_Scenarios.pdf })
+$PrivatetoPublic.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/Private_to_Public_Sync_Scenarios.pdf })
+$PublictoPrivate.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/Public_to_Private_Sync_Scenarios.pdf })
+$TemplateCreation.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/Template_Creation_RGM_Sync_Scenarios.pdf })
+$MigrateA2E.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/Migrating_A2E_Sync_Scenarios.pdf })
+$ExhangeMigration.Add_Click( { Start-Process https://s3.amazonaws.com/guides.diditbetter.com/Migrating_Environments_A2E_Sync_Scenarios.pdf })
 $AD_Photos.Add_Click( { Start-Process Powershell .\Export_ADPhoto.ps1 })
 $MSExchangeDelegate.Add_Click( { Start-Process Powershell .\MSExchangeDelegation.ps1 })
 $ExchangeShell.Add_Click( { Start-Process Powershell .\Shell.ps1 })
