@@ -1,3 +1,18 @@
+<#
+        .SYNOPSIS
+        Disable Modern Authentication
+
+        .DESCRIPTION
+        Will disable Modern Authentication for machine that it is run on
+        Outlook will then use creds manager on board to connect to exchange
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
   # Relaunch as an elevated process:
   Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -5,7 +20,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Execution Policy
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Logging

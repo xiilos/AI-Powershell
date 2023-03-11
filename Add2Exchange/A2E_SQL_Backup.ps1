@@ -1,3 +1,19 @@
+<#
+        .SYNOPSIS
+        A2E SQL Backup
+
+        .DESCRIPTION
+        Auto backs up the A2E SQL database
+        Makes task for auto backup
+        default retention is 5 copies
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs

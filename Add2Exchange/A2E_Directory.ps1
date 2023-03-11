@@ -1,3 +1,17 @@
+<#
+        .SYNOPSIS
+        A2E Directory shortcut
+
+        .DESCRIPTION
+        Open Add2Exchange Directory
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
   # Relaunch as an elevated process:
