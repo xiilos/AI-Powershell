@@ -1,3 +1,21 @@
+<#
+        .SYNOPSIS
+        Outlook Profile Setup
+
+        .DESCRIPTION
+        Setup Outlook profile for Add2Exchange
+        Setup GAL Options
+        Setup Send/Recieve
+        Disables COM Addins
+        Sets Options
+        Disables Outlook Popups
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
   # Relaunch as an elevated process:
@@ -6,7 +24,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Execution Policy
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 #Logging
@@ -23,7 +40,6 @@ If ($E1) {
 }
 
 #######Outlook V.16#############
-
 If ($Version -eq "Outlook.Application.16") {
 #Profile Check
 Write-Host "Checking Profile Names"
@@ -167,7 +183,6 @@ Else {
 }
 
 #Disable Outlook popups
-
 Write-Host "Disabling Teaching Callouts"
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "AutoSaveTottleOnWord" -value 0 -ErrorAction SilentlyContinue
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCallouts" -Name "MeetingAllowForwardTeachingCallout" -value 0 -ErrorAction SilentlyContinue
@@ -184,7 +199,6 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Common\TeachingCall
 } 
 
 #######Outlook V.15#############
-
 If ($Version -eq "Outlook.Application.15") {
   #Profile Check
 Write-Host "Checking Profile Names"
@@ -329,7 +343,6 @@ Else {
 }
 
 #Disable Outlook popups
-
 Write-Host "Disabling Teaching Callouts"
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "AutoSaveTottleOnWord" -value 0 -ErrorAction SilentlyContinue
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCallouts" -Name "MeetingAllowForwardTeachingCallout" -value 0 -ErrorAction SilentlyContinue
@@ -348,7 +361,6 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Office\15.0\Common\TeachingCall
 }
 
 #######Outlook Not Supported#############
-
 If ($Version -eq "Outlook.Application.14") { 
   Write-Host "This version of Outlook is not supported"
 }

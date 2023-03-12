@@ -1,3 +1,18 @@
+<#
+        .SYNOPSIS
+        Permissions task creator
+
+        .DESCRIPTION
+        Updates EXO PS modules
+        Saves and bit locks passwords and usernames for auto log in to exchange or office 365
+        sets additional tasks for permissions to auto run using credentials provided
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 #Logging
 Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
 
@@ -333,18 +348,15 @@ $Add2Exchange_Permissions_Menu.controls.AddRange(@($DIB_Logo, $ExchangeServerNam
         $LocalPassword, $LocalPassUpdate))
 
 #Shell into Exchange or O365 Auto with Options
-
 $Shell_Permissions.Add_Click( { 
         Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup"
         Start-Process Powershell .\Shell_Permissions.ps1 })
 
 
 #Update Credentials Variables
-
 Push-Location "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds"
 
 #Rename Old Files
-
 Rename-Item -Path ".\ServerUser.txt" -NewName "Exchange_Server_Admin.txt" -ErrorAction SilentlyContinue
 Rename-Item -Path ".\ServerPass.txt" -NewName "Exchange_Server_Pass.txt" -ErrorAction SilentlyContinue
 Rename-Item -Path ".\ExchangeName.txt" -NewName "Exchange_Server_Name.txt" -ErrorAction SilentlyContinue
@@ -354,7 +366,6 @@ Rename-Item -Path ".\ServiceAccount.txt" -NewName "Sync_Account_Name.txt" -Error
 Rename-Item -Path ".\DistributionName.txt" -NewName "Dist_List_Name.txt" -ErrorAction SilentlyContinue
 
 #Text Field Get Content
-
 [System.Security.Principal.WindowsIdentity]::GetCurrent().Name | Out-File ".\Local_Account_Name.txt"
 
 $ExServ_Name_txt.text = get-content ".\Exchange_Server_Name.txt" -ErrorAction SilentlyContinue
@@ -367,23 +378,19 @@ $Static_txt.text = get-content ".\Static_Name.txt" -ErrorAction SilentlyContinue
 $Localacctname.text = get-content ".\Local_Account_Name.txt" -ErrorAction SilentlyContinue
 
 #Password Update Time
-
 $Exchange_Admin_Password_Update.text = Get-Item ".\Exchange_Server_Pass.txt"  -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
 $Global_Admin_Password_Update.text = Get-Item ".\GA_Admin_Pass.txt" -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
 $LocalPassUpdate.text = Get-Item ".\Local_Account_Pass.txt" -ErrorAction SilentlyContinue | ForEach-Object { $_.LastWriteTime }
 
 #Password Input Give
-
 $EX_Pass.Add_Click( { Read-Host "Exchange Admin Password" -assecurestring | convertfrom-securestring | out-file "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" })
 $GB_Admin_Pass.Add_Click( { Read-Host "Office 365 Admin Password" -assecurestring | convertfrom-securestring | out-file "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\GA_Admin_Pass.txt" })
 $LocalPassword.Add_Click( { Read-Host "Local Account Password" -assecurestring | convertfrom-securestring | out-file "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" })
 
 #Click to Open Dist. Lists Text
-
 $Dist_List_Label.Add_Click( { Start-Process "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Dist_List_Name.txt" })
 
 #Update Credentials
-
 $UpdateCreds.Add_Click( { 
     
         $ExServ_Name_txt.text | Out-File "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Name.txt"
@@ -401,7 +408,6 @@ $UpdateCreds.Add_Click( {
 
 
 # Select Option Blank Outs
-
 $All_Perm_Check.Add_CheckStateChanged( {
         if ($All_Perm_Check.checked) { $Dist_List_Check.Enabled = $false }
         else { $Dist_List_Check.Enabled = $true }
@@ -473,22 +479,18 @@ $DualPermissions.Add_CheckStateChanged( {
 
 
 #Check for Powershell File Paths
-
 $Location = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange' -Name "InstallLocation").InstallLocation
 Set-Location $Location
 
 
 #Creating the Task
-
 # Option 1: Office 365-Adding Permissions to All Users
-
 $Create_Task.Add_Click( {
     
         if ($O365_Check.checked -and $All_Perm_Check.checked) {
             Write-Host "You chose to Add Permissions to All Users in Office 365"
 
             #Check If old Tasks Already Exist
-
             if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
             }
@@ -512,13 +514,10 @@ $Create_Task.Add_Click( {
 
 
         # Option 2: Office 365-Add Permissions to a Distribution List in Office 365
-
-
         if ($O365_Check.checked -and $Dist_List_Check.checked) {
             Write-Host "You chose to Add Permissions to a Distribution List in Office 365"
             
             #Check If old Tasks Already Exist
-
             if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
             }
@@ -542,13 +541,10 @@ $Create_Task.Add_Click( {
 
 
         # Option 3: Office 365-Add Permissions to a Dynamic Distribution List in Office 365
-
-
         if ($O365_Check.checked -and $Dynamic_Check.checked) {
             Write-Host "You chose to Add Permissions to a Dynamic Distribution List in Office 365"
            
             #Check If old Tasks Already Exist
-
             if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
             }
@@ -572,13 +568,10 @@ $Create_Task.Add_Click( {
 
 
         # Option 4: Office 365 & On-Premise-Add Permissions to All
-
-
         if ($DualPermissions.checked -and $All_Perm_Check.checked) {
             Write-Host "You chose to Add Permissions to all users on Premise & Office 365"
 
             #Check If old Tasks Already Exist
-
             if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
             }
@@ -617,13 +610,10 @@ $Create_Task.Add_Click( {
 
 
         # Option 5: Office 365 & On-Premis-Add Permissions to a Distribution List
-
-
         if ($DualPermissions.checked -and $Dist_List_Check.checked) {
             Write-Host "You chose to Add Permissions to a Distribution List in Office 365 and On-Premise"
 
             #Check If old Tasks Already Exist
-
             if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
             }
@@ -662,12 +652,10 @@ $Create_Task.Add_Click( {
 
 
         # Option 6: Exchange On Premise-Adding Permissions to All Users
-    
         if ($On_Premise_Check.checked -and $All_Perm_Check.checked) {
             Write-Host "You chose to Add Permissions to All Users on Premise"
 
             #Check If old Tasks Already Exist
-
             if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
             }
@@ -691,13 +679,10 @@ $Create_Task.Add_Click( {
 
 
         # Option 7: Exchange On Premise-Add Permissions to a Distribution List
-
-
         if ($On_Premise_Check.checked -and $Dist_List_Check.checked) {
             Write-Host "You chose to Add Permissions to a Distribution List on Premise"
 
             #Check If old Tasks Already Exist
-
             if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
             }
@@ -721,13 +706,10 @@ $Create_Task.Add_Click( {
 
 
         # Option 8: Exchange On Premise-Add Permissions to a Dynamic Distribution List
-
-
         if ($On_Premise_Check.checked -and $Dynamic_Check.checked) {
             Write-Host "You chose to Add Permissions to a Dynamic Distribution List on Premise"
 
             #Check If old Tasks Already Exist
-
             if (Get-ScheduledTask "Add2Exchange Permissions" -ErrorAction SilentlyContinue) {
                 Unregister-ScheduledTask -TaskName "Add2Exchange Permissions" -Confirm:$false
             }

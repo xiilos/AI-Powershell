@@ -1,3 +1,16 @@
+<#
+        .SYNOPSIS
+        Group Policy Results
+
+        .DESCRIPTION
+        Finds and diplays current group policies on current user and machine
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -36,6 +49,6 @@ Do {
 } Until ($repeat -eq 'n')
 
 Write-Host "Done"
-Write-Host "Quitting"
+Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
 Exit

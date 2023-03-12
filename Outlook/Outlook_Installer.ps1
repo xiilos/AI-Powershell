@@ -1,7 +1,16 @@
 <#
-.NAME
-    Outlook Installer
-#>
+        .SYNOPSIS
+        Outlook Installer Menu
+
+        .DESCRIPTION
+        Choose between Outlook 32bit or 64bit
+        This is just a menu for choice
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()

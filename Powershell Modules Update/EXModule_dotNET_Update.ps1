@@ -1,3 +1,18 @@
+<#
+        .SYNOPSIS
+        .net and powershell module updater
+
+        .DESCRIPTION
+        Updates .net and EXOv3 modules for Office 365 and Azure connections
+        will check and compare
+        update if needed
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs

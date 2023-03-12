@@ -1,3 +1,20 @@
+<#
+        .SYNOPSIS
+        Permissions for on Premise or Office365
+
+        .DESCRIPTION
+        Updates PS EXO modules
+        Choice of on premise Exchange 2010-2019 server or Office 365
+        Sets permissions for individual users, dist. lists
+        Can remove permissions
+        Remove or add permissions to public folders
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs

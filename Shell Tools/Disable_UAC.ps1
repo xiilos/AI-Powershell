@@ -1,3 +1,17 @@
+<#
+        .SYNOPSIS
+        Disable User Access Control
+
+        .DESCRIPTION
+        Disables User Access control within the registry
+        Reboot is needed if disabled
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
   # Relaunch as an elevated process:
@@ -13,7 +27,6 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
 
 # Disable UAC
-
 $Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
 
 if($val.EnableLUA -ne 0)

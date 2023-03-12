@@ -1,3 +1,18 @@
+<#
+        .SYNOPSIS
+        Microsoft Exchange Delegation
+
+        .DESCRIPTION
+        Finds old data in msexchangedelegate attribute field for users in a specific OU
+        Must run this on AD
+        Removes the msexchangedelegate list link from the user
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -6,7 +21,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
   
   
 #Execution Policy
-  
 Set-ExecutionPolicy -ExecutionPolicy Bypass
   
 #Support Directory
@@ -38,7 +52,6 @@ if ($answer -eq 2) {
 }
   
 #Removing the MSExchDelegateListlink from an account
-  
 Import-Module ActiveDirectory
 Do {
     Get-ADUser -Properties msExchDelegateListlink -LDAPFilter "(msExchDelegateListlink=*)" | Select-Object @{n = 'UserName'; e = { $_.SamAccountName } }, @{n = 'ListLink'; e = { $_.msExchDelegateListLink } } | Export-csv "C:\Program Files (x86)\DidItBetterSoftware\Support\ExchangeDelegateLinkList.csv" -NoTypeInformation
@@ -53,6 +66,7 @@ Do {
     $confirmation = Read-Host "Are you sure you want to remove List Links from all Users? [Y/N]"
     if ($confirmation -eq 'y') {
         Write-Host "Please Wait while we remove the List Link"
+
         #Removing List Link
         foreach ($username in $username) { Set-ADUser $Username -Remove @{msExchDelegateListLink = "$UserDN" } }  
         Write-Host "Finished"
@@ -70,7 +84,7 @@ Do {
   
   
   
-Write-Host "Quitting"
+Write-Host "ttyl"
 Get-PSSession | Remove-PSSession
 Exit
   

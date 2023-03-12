@@ -1,3 +1,17 @@
+<#
+        .SYNOPSIS
+        Timed A2E SQL Backup
+
+        .DESCRIPTION
+        This is a part of a scheduled task to run and backup A2E SQl DB every 3 days
+        5 version retention by default
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -5,7 +19,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Execution Policy
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 #Variables

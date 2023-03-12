@@ -1,7 +1,15 @@
 <#
-.NAME
-    Outlook Tools
-#>
+        .SYNOPSIS
+        Outlook Tools Menu
+
+        .DESCRIPTION
+        Simple Menu to show tools that link to powershell files
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()

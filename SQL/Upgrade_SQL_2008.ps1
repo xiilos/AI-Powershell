@@ -1,3 +1,17 @@
+<#
+        .SYNOPSIS
+        SQL 2008 Upgrade
+
+        .DESCRIPTION
+        Upgrades SQL 2008 A2E DB to SQL 2012
+        Can only upgrade to 2012, since that was the last 32bit SQL avialable
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -11,7 +25,6 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
 
 #Create zLibrary\A2E SQL Upgrade Directory
-
 Write-Host "Creating Landing Zone"
 $TestPath = "C:\zlibrary\SQL Upgrade"
 if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
@@ -23,28 +36,32 @@ Else {
 }
 
 
-#Test for FTP
+#Test for HTTPS Access
+Write-Host "Testing for HTTPS Connectivity"
 
 try {
-    $FTP = New-Object System.Net.Sockets.TcpClient("ftp.diditbetter.com", 21)
-    $FTP.Close()
-    Write-Host "Connectivity OK."
+    $wresponse = Invoke-WebRequest -Uri https://s3.amazonaws.com/dl.diditbetter.com -UseBasicParsing
+    if ($wresponse.StatusCode -eq 200) {
+        Write-Output "Connection successful"
+    }
+    else {
+        Write-Output "Connection failed with status code $($wresponse.StatusCode)"
+    }
 }
 catch {
     $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-    $wshell.Popup("No FTP Access... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
-    Start-Process "https://download.microsoft.com/download/F/6/7/F673709C-D371-4A64-8BF9-C1DD73F60990/ENU/x86/SQLEXPR_x86_ENU.exe"
+    $wshell.Popup("Connection failed with error: $($_.Exception.Message)... Taking you to Downloads.... Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+    Start-Process "http://support.diditbetter.com/Secure/Login.aspx?returnurl=/downloads.aspx"
     Write-Host "Quitting"
     Get-PSSession | Remove-PSSession
     Exit
 }
 
 #Downloading SQL Express 2012
-
 Write-Host "Downloading SQL Express 2012"
 Write-Host "Please Wait......"
 
-$URL = "ftp://ftp.diditbetter.com/SQL/SQL2012Management/SQLEXPR_x86_ENU.exe"
+$URL = "https://s3.amazonaws.com/dl.diditbetter.com/SQLEXPR_x86_ENU.exe"
 $Output = "C:\zlibrary\SQL Upgrade\SQLEXPR_x86_ENU.exe"
 $Start_Time = Get-Date
 

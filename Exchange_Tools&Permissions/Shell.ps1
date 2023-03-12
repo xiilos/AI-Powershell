@@ -1,3 +1,18 @@
+<#
+        .SYNOPSIS
+        Shell
+
+        .DESCRIPTION
+        Simple open another PS session to shell into Exchange of Office365
+        Calls another powershell file "Shell into Exchange"
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
   # Relaunch as an elevated process:
@@ -6,7 +21,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Execution Policy
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 

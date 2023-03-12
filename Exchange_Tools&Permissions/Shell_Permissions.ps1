@@ -1,3 +1,18 @@
+<#
+        .SYNOPSIS
+        Shell Permissions
+
+        .DESCRIPTION
+        Automatically logs into the desired on premise exchange or Office 365 and applies permissions
+        uses bit-locked creds from timed permission setup
+
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -5,7 +20,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Execution Policy
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
 #Logging
@@ -36,7 +50,6 @@ Write-Host "Press 'Q' to Quit." -ForegroundColor Red
 
 
 #Login Method
- 
 $input1 = Read-Host "Please Make A Selection" 
 switch ($input1) { 
 

@@ -1,3 +1,16 @@
+<#
+        .SYNOPSIS
+        Get A2E Diags
+
+        .DESCRIPTION
+        Downloads and extracts A2E Diags from Amazon S3
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -23,11 +36,10 @@ Else {
 }
 
 #Downloading A2E Diags
-
 Write-Host "Downloading A2E Diags"
 Write-Host "Please Wait......"
 
-$URL = "ftp://ftp.diditbetter.com/A2EDiags/A2EDiags-2.3.exe"
+$URL = "https://s3.amazonaws.com/dl.diditbetter.com/A2EDiags-2.3.exe"
 $Output = "C:\zlibrary\A2E Diags\A2EDiags-2.3.exe"
 $Start_Time = Get-Date
 
@@ -38,7 +50,6 @@ Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
 Write-Host "Finished Downloading"
 
 #Unpacking A2E Diags
-
 Write-Host "Unpacking A2E Diags"
 Write-Host "please Wait....."
 Push-Location "C:\zlibrary\A2E Diags"

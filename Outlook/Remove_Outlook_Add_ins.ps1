@@ -1,3 +1,16 @@
+<#
+        .SYNOPSIS
+        Remove outlook Add-ins
+
+        .DESCRIPTION
+        Removes/disables outlook add-ins
+
+        .NOTES
+        Version:        3.2023
+        Author:         DidItBetter Software
+
+    #>
+
 if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relaunch as an elevated process:
     Start-Process powershell.exe "-File", ('"{0}"' -f $MyInvocation.MyCommand.Path) -Verb RunAs
@@ -10,24 +23,6 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass
 #Logging
 Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt" -Append
 
-#UAC Check
-Write-Host "Checking UAC"
-$Val = Get-ItemProperty -Path "HKLM:Software\Microsoft\Windows\Currentversion\Policies\System" -Name "EnableLUA"
-
-If ($val.EnableLUA -ne 0) {
-    Write-Host "UAC is Enabled. Change the Execution Policy to Unrestricted"
-    Write-Host "Script copied to Clipboard. Please Open PowerShell as an Admin and paste the script copied. Click Yes for All, then run this script again."
-    Start-Sleep -Seconds 1
-    Set-Clipboard -Value "Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy Unrestricted"
-    Pause
-}
-
-Else {
-
-    $wshell = New-Object -ComObject Wscript.Shell
-    $wshell.Popup("UAC Is already Disabled", 0, "Done", 0x1)
-
-}
 
 #Menu
 $Title1 = 'Disabling Outlook Social Connector'
@@ -44,7 +39,6 @@ Write-Host "Press 'Q' to Quit." -ForegroundColor Red
 
 
 #OutLook Version
- 
 $input1 = Read-Host "Please Make A Selection" 
 switch ($input1) { 
 
