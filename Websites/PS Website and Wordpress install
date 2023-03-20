@@ -1,0 +1,91 @@
+# Define variables
+$SiteName = "example.com"
+$SitePath = "C:\inetpub\wwwroot\$SiteName"
+$WPVersion = "5.9.2"
+$WPDownloadURL = "https://wordpress.org/wordpress-$WPVersion.tar.gz"
+
+# Create the website
+New-WebSite -Name $SiteName -PhysicalPath $SitePath -Port 80
+
+# Download and extract WordPress
+Invoke-WebRequest -Uri $WPDownloadURL -OutFile "$SitePath\wordpress.tar.gz"
+Expand-Archive -Path "$SitePath\wordpress.tar.gz" -DestinationPath $SitePath
+
+# Move WordPress files to site root
+Move-Item "$SitePath\wordpress\*" $SitePath -Force
+
+# Remove WordPress directory
+Remove-Item "$SitePath\wordpress"
+
+# Set permissions
+$Acl = Get-Acl $SitePath
+$Ar = New-Object System.Security.AccessControl.FileSystemAccessRule("IUSR","ReadAndExecute","Allow")
+$Acl.SetAccessRule($Ar)
+Set-Acl $SitePath $Acl
+
+# Create a new MySQL database for WordPress
+$DBName = "wordpress_$SiteName"
+$DBUser = "wordpressuser"
+$DBPassword = "password"
+
+New-Item -ItemType Directory -Path "$SitePath\wp-content\uploads" -Force
+
+$ConnectionString = "server=localhost;database=$DBName;user=$DBUser;password=$DBPassword;"
+$SqlConnection = New-Object System.Data.SqlClient.SqlConnection
+$SqlConnection.ConnectionString = $ConnectionString
+$SqlConnection.Open()
+
+$SqlCommand = $SqlConnection.CreateCommand()
+$SqlCommand.CommandText = "CREATE DATABASE $DBName;"
+$SqlCommand.ExecuteNonQuery()
+
+$SqlCommand.CommandText = "CREATE LOGIN $DBUser WITH PASSWORD='$DBPassword';"
+$SqlCommand.ExecuteNonQuery()
+
+$SqlCommand.CommandText = "CREATE USER $DBUser FOR LOGIN $DBUser;"
+$SqlCommand.ExecuteNonQuery()
+
+$SqlCommand.CommandText = "EXEC sp_addrolemember 'db_owner', '$DBUser';"
+$SqlCommand.ExecuteNonQuery()
+
+$SqlConnection.Close()
+
+# Configure WordPress
+$ConfigFilePath = "$SitePath\wp-config.php"
+$SecretKeys = Invoke-WebRequest -Uri "https://api.wordpress.org/secret-key/1.1/salt/" | Select-Object -ExpandProperty Content
+$SecretKeys = $SecretKeys -replace "'", "`'"
+$Config = @"
+<?php
+define('DB_NAME', '$DBName');
+define('DB_USER', '$DBUser');
+define('DB_PASSWORD', '$DBPassword');
+define('DB_HOST', 'localhost');
+define('DB_CHARSET', 'utf8mb4');
+define('DB_COLLATE', '');
+$SecretKeys
+$table_prefix  = 'wp_';
+define('WP_DEBUG', false);
+if ( !defined('ABSPATH') )
+    define('ABSPATH', dirname(__FILE__) . '/');
+require_once(ABSPATH . 'wp-settings.php');
+"@
+
+Set-Content -Path $ConfigFilePath -Value $Config
+
+# Clean up
+Remove-Item "$SitePath\wordpress.tar.gz"
+
+Write-Host "WordPress installation for $SiteName complete."
+
+
+<#This script does the following:
+
+Defines variables for the website name, site path, WordPress version, and download URL.
+Creates a new website in IIS using the New-WebSite cmdlet.
+Downloads and extracts WordPress to the site path.
+Moves the WordPress files to the site root.
+Removes the WordPress directory.
+Sets permissions on the site directory.
+Creates a new MySQL database for WordPress.
+Configures WordPress by generating secret keys and writing a wp-config.php file.
+Cleans up by removing the downloaded WordPress archive.#>
