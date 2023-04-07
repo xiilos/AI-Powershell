@@ -92,7 +92,7 @@ $matchingKey = $keys | Where-Object { $_ -like "$partialFileName*" } | Select-Ob
 # Download the matching file
 $matchingFileUrl = "$bucketUrl$matchingKey"
 $destinationPath = "C:\zlibrary\Add2Outlook"
-$fileName = "Add2OutlookFullInstallation.exe"
+$fileName = "Add2OutlookFullInstallation.zip"
 #$downloadedfileName = [System.IO.Path]::GetFileName($matchingFileUrl)
 $ProgressPreference = 'SilentlyContinue'
 Invoke-WebRequest -Uri $matchingFileUrl -OutFile "$destinationPath\$fileName"
@@ -107,9 +107,9 @@ Push-Location "C:\zlibrary\Add2Outlook"
 Write-Host "Done"
 
 #Installing Add2Outlook
-Write-Host "Installing Add2Outlook"
-Start-Process -FilePath "./Add2OutlookFullInstallation.exe" -wait -ErrorAction Stop
-Write-Host "Finished...Upgrade Complete"
+Write-Host "Unzipping Add2Outlook"
+Expand-Archive -Path "./Add2OutlookFullInstallation.zip" 
+Write-Host "Finished"
 Start-Sleep -Seconds 2
 
 Write-Host "Quitting"
