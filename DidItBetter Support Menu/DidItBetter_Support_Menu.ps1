@@ -543,7 +543,7 @@ $O365ExchangePermissions.Add_Click( { Start-Process Powershell .\PermissionsOnPr
 $A2OPermissions.Add_Click( { Start-Process Powershell .\Add2Outlook_Set_Granular_permissions.ps1 })
 $AutoPermissions.Add_Click( { Start-Process PowerShell .\Permissions_Task_Creation.ps1 })
 $DownloadAdd2Exchange.Add_Click( { Start-Process https://support.diditbetter.com/downloads.aspx })
-$DownloadToolKit.Add_Click( { Start-Process .\Auto_Upgrade_ToolKit.ps1 })
+$DownloadToolKit.Add_Click( { Start-Process Powershell .\Auto_Upgrade_ToolKit.ps1 })
 $DownloadSQL.Add_Click( { Start-Process https://aka.ms/ssmsfullsetup })
 $A2EDiags.Add_Click( { Start-Process PowerShell .\Get_Diags.ps1 })
 $FTPDownloads.Add_Click( { Start-Process ftp.DidItBetter.com })
