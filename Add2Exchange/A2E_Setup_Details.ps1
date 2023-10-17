@@ -13,7 +13,7 @@
 
 
         .NOTES
-        Version:        3.2023
+        Version:        1.10.2023
         Author:         DidItBetter Software
 
     #>
@@ -102,7 +102,6 @@ $LocalAccount = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 LogWrite "Local Account Name= $LocalAccount" -ErrorAction SilentlyContinue
 
 #Local Account Password
-
 $LocalPassword = Read-Host "What is the Local Account password?" -ErrorAction SilentlyContinue
 
 LogWrite "Local Account Password= $LocalPassword" -ErrorAction SilentlyContinue
