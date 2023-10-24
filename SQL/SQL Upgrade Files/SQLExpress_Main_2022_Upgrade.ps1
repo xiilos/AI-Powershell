@@ -23,7 +23,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 #Execution Policy
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
@@ -143,6 +142,8 @@ Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\SQL 
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
     Write-Host "SQL Express 2008 currently installed"
     Write-Host "Downloading and Upgrading to SQL Express 2008 SP4"
+    Write-Host "Click Enter to continue with upgrade when ready"
+    Pause
     Start-Process Powershell .\SQL8x_to_SQL8xSP4 .ps1
 }
 
@@ -150,6 +151,8 @@ if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -ge '5999') {
     Write-Host "SQL Express 2008 SP4 currently installed"
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
+    Write-Host "Click Enter to continue with upgrade when ready"
+    Pause
     Start-Process Powershell .\SQL8x_to_SQL12x.ps1
 }
 
@@ -161,6 +164,8 @@ if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -ge '5999') {
 if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -le '7000') {
     Write-Host "SQL Express 2012 currently installed"
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
+    Write-Host "Click Enter to continue with upgrade when ready"
+    Pause
     Start-Process Powershell .\SQL12x_to_SQL12xSP4 .ps1
 }
 
@@ -168,6 +173,8 @@ if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -le '7000') {
 if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -ge '7000') {
     Write-Host "SQL Express 2012 SP4 currently installed"
     Write-Host "Downloading and Upgrading to SQL Express 2022"
+    Write-Host "Click Enter to continue with upgrade when ready"
+    Pause
     Start-Process Powershell .\SQL12x_to_SQL22x.ps1
 }
 
@@ -176,6 +183,8 @@ if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -ge '7000') {
 #SQL 2017+
 if ($BuildVersion.Major -ge '13') {
     Write-Host "Downloading and Upgrading to SQL Express 2022"
+    Write-Host "Click Enter to continue with upgrade when ready"
+    Pause
     Start-Process Powershell .\SQL17x_to_SQL22x.ps1
 }
 
@@ -188,7 +197,7 @@ $wshell2 = New-Object -ComObject Wscript.Shell
 $answer = $wshell2.Popup("Would you like you install SQL Management Studio? Click OK to start the silent installation, or Cancel to quit", 0, "WARNING!!", 0x1)
 
 if ($answer -eq 1){
-    Write-Host "Downloading and Upgrading to SQL Express 2022"
+    Write-Host "Downloading and silently installing SQL Management Studio"
     Start-Process Powershell .\SQL_Management_Studio_Quiet_Install.ps1
 }
 
@@ -201,10 +210,7 @@ if ($answer -eq 2) {
 
 
 
-
-
-
-Write-Host "Please Reboot to Complete the Upgrade"
+Write-Host "Optional; you can now cleanup old SQL Express and SQL Studio installs."
 Pause
 Write-Host "ttyl"
 Get-PSSession | Remove-PSSession

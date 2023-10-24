@@ -582,7 +582,7 @@ $TaskScheduler.Add_Click({Start-Process taskschd.msc})
 $WindowsDefender.Add_Click({Start-Process Powershell .\Windows_Defender_Exclusions.ps1})
 $Outlook_Tools_Menu.Add_Click({Start-Process Powershell .\Outlook_Tools_Menu.ps1})
 $A2ESQLBackUp.Add_Click({Start-Process Powershell .\A2E_SQL_Backup.ps1})
-$SQLUpgrade.Add_Click({Start-Process Powershell .\Upgrade_SQL_2008.ps1})
+$SQLUpgrade.Add_Click({Start-Process Powershell ".\SQL Upgrade Files\SQLExpress_Main_2022_Upgrade.ps1"})
 $PowerShell_Logs.Add_Click({Invoke-Item "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_PowerShell_log.txt"})
 $A2E_Auto_Shell_Permissions.Add_Click({Start-Process Powershell .\Shell_Permissions.ps1})
 
