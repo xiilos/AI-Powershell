@@ -194,15 +194,15 @@ if ($BuildVersion.Major -ge '13') {
 
 #SQL Management Studio
 $wshell2 = New-Object -ComObject Wscript.Shell
-$answer = $wshell2.Popup("Would you like you install SQL Management Studio? Click OK to start the silent installation, or Cancel to quit", 0, "WARNING!!", 0x1)
+$answer2 = $wshell2.Popup("Would you like you install SQL Management Studio? Click OK to start the silent installation, or Cancel to quit", 0, "WARNING!!", 0x1)
 
-if ($answer -eq 1){
+if ($answer2 -eq 1){
     Write-Host "Downloading and silently installing SQL Management Studio"
     Start-Process Powershell .\SQL_Management_Studio_Quiet_Install.ps1
 }
 
 
-if ($answer -eq 2) {
+if ($answer2 -eq 2) {
     Write-Host "ttyl"
     Get-PSSession | Remove-PSSession
     Exit
