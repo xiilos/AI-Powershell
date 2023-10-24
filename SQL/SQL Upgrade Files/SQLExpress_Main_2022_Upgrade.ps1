@@ -32,8 +32,36 @@ Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_P
 
 # Script #
 
-#Variables
-#$DBInstance = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Softwareù\Add2Exchange" -Name "DBInstance" -ErrorAction SilentlyContinue
+#Warning
+$wshell = New-Object -ComObject Wscript.Shell
+$answer = $wshell.Popup("Caution... Only run this tool on installtions that solely host the Add2Exchange Database locally. Click OK to Continue. or Cancel if you are unsure to quit", 0, "WARNING!!", 0x1)
+if ($answer -eq 2) {
+    Write-Host "ttyl"
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+
+
+#Check DIBSERVER and SERVER Name Match
+#Database Server
+$DBServer = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ\Add2Exchange" -Name "DBServer" -ErrorAction SilentlyContinue
+#Server Name
+$ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ\Add2Exchange" -Name "Server" -ErrorAction SilentlyContinue
+
+If ($DBServer -eq $ServerName) {
+    Write-Host "DIB Server Names Match!"
+}
+
+Else {
+
+    Write-Host "SQL Server name and localhost Server name do not match. This tool cannot upgrade SQl Express on unmatched server names."
+    Pause
+    Write-Host "ttyl"
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+
+
 
 
 #Check for SQL Module
@@ -62,7 +90,7 @@ IF (Get-Module -ListAvailable -Name SQLSERVER) {
 Else {
     Write-Host "Module Does Not Exist"
     Write-Host "Downloading Sql Server Module..."
-    Install-Module ùName SQLSERVER -Force
+    Install-Module -Name SQLSERVER -Force -AllowClobber
     Write-Host "Success"
 }
 
@@ -83,7 +111,7 @@ Write-Host "Stopping Add2Exchange Service"
 Stop-Service -Name "Add2Exchange Service"
 Start-Sleep -s 10
 Write-Host "Done"
-Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service ùStartupType Disabled
+Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service -StartupType Disabled
 
 #Stop The Add2Exchange Agent
 Write-Host "Stopping the Agent. Please Wait."
@@ -100,7 +128,6 @@ Write-Host "Done"
 
 
 
-
 #Check SQL Version
 Write-Host "Checking SQl Version..."
 Push-Location SQLSERVER:\SQL\localhost 
@@ -108,18 +135,22 @@ $BuildVersion = Get-ChildItem | Select-Object Version -ExpandProperty Version
 
 
 #Main Upgrade Menu
-Push-Location "C:\zlibrary\SQL Upgrade"
+Push-Location "C:\Program Files (x86)\OpenDoor SoftwareÆ\Add2Exchange\Setup\SQL Upgrade Files"
+
+
 
 #SQL 2008
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
+    Write-Host "SQL Express 2008 currently installed"
     Write-Host "Downloading and Upgrading to SQL Express 2008 SP4"
-        
+    Start-Process Powershell .\SQL8x_to_SQL8xSP4 .ps1
 }
 
 
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -ge '5999') {
+    Write-Host "SQL Express 2008 SP4 currently installed"
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
-      
+    Start-Process Powershell .\SQL8x_to_SQL12x.ps1
 }
 
 
@@ -128,28 +159,42 @@ if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -ge '5999') {
 
 #SQL 2012
 if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -le '7000') {
-        
+    Write-Host "SQL Express 2012 currently installed"
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
+    Start-Process Powershell .\SQL12x_to_SQL12xSP4 .ps1
 }
 
 
 if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -ge '7000') {
-        
-    Write-Host "Exporting Old DB, Installing SQL Express 2022 and Re-importing DB"
+    Write-Host "SQL Express 2012 SP4 currently installed"
+    Write-Host "Downloading and Upgrading to SQL Express 2022"
+    Start-Process Powershell .\SQL12x_to_SQL22x.ps1
 }
 
 #----------------------------------------------------------------------
 
 #SQL 2017+
-if ($BuildVersion.Major -eq '14') {
-        
+if ($BuildVersion.Major -ge '13') {
     Write-Host "Downloading and Upgrading to SQL Express 2022"
+    Start-Process Powershell .\SQL17x_to_SQL22x.ps1
 }
 
 
 #----------------------------------------------------------------------
 
 
+
+
+
+
+
+Write-Host "Please Reboot to Complete the Upgrade"
+Pause
+Write-Host "ttyl"
+Get-PSSession | Remove-PSSession
+Exit
+
+# End Scripting
 
 
 
