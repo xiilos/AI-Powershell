@@ -134,7 +134,7 @@ $BuildVersion = Get-ChildItem | Select-Object Version -ExpandProperty Version
 
 
 #Main Upgrade Menu
-Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\SQL Upgrade Files"
+Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\SQL_Upgrade_Files"
 
 
 
