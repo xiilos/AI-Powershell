@@ -128,7 +128,7 @@ Write-Host "Done"
 
 
 #Check SQL Version
-Write-Host "Checking SQl Version..."
+Write-Host "Checking SQL Version..."
 Push-Location SQLSERVER:\SQL\localhost 
 $BuildVersion = Get-ChildItem | Select-Object Version -ExpandProperty Version
 
@@ -140,7 +140,7 @@ Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\SQL_
 
 #SQL 2008
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
-    Write-Host "SQL Express 2008 currently installed"
+    Write-Host "SQL Express 2008 currently installed" -ForegroundColor Green
     Write-Host "Downloading and Upgrading to SQL Express 2008 SP4"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
@@ -149,7 +149,7 @@ if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
 
 
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -ge '5999') {
-    Write-Host "SQL Express 2008 SP4 currently installed"
+    Write-Host "SQL Express 2008 SP4 currently installed" -ForegroundColor Green
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
@@ -162,7 +162,7 @@ if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -ge '5999') {
 
 #SQL 2012
 if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -le '7000') {
-    Write-Host "SQL Express 2012 currently installed"
+    Write-Host "SQL Express 2012 currently installed" -ForegroundColor Green
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
@@ -171,7 +171,7 @@ if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -le '7000') {
 
 
 if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -ge '7000') {
-    Write-Host "SQL Express 2012 SP4 currently installed"
+    Write-Host "SQL Express 2012 SP4 currently installed" -ForegroundColor Green
     Write-Host "Downloading and Upgrading to SQL Express 2022"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
@@ -180,9 +180,21 @@ if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -ge '7000') {
 
 #----------------------------------------------------------------------
 
-#SQL 2017+
-if ($BuildVersion.Major -ge '13') {
-    Write-Host "Downloading and Upgrading to SQL Express 2022"
+#SQL 2017
+if ($BuildVersion.Major -eq '14') {
+    Write-Host "Downloading and Upgrading to SQL Express 2022" -ForegroundColor Green
+    Write-Host "Click Enter to continue with upgrade when ready"
+    Pause
+    Start-Process Powershell .\SQL17x_to_SQL22x.ps1 -wait
+}
+
+
+
+#----------------------------------------------------------------------
+
+#SQL 2019
+if ($BuildVersion.Major -eq '15') {
+    Write-Host "Downloading and Upgrading to SQL Express 2022" -ForegroundColor Green
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
     Start-Process Powershell .\SQL17x_to_SQL22x.ps1 -wait
@@ -191,12 +203,22 @@ if ($BuildVersion.Major -ge '13') {
 
 #----------------------------------------------------------------------
 
+#SQL 2022
+if ($BuildVersion.Major -eq '16') {
+    Write-Host "You are already on the latest SQL 2022 Express" -ForegroundColor Green
+    Pause
+}
+
+
+#----------------------------------------------------------------------
+
+
 
 #SQL Management Studio
 $wshell2 = New-Object -ComObject Wscript.Shell
 $answer2 = $wshell2.Popup("Would you like you install SQL Management Studio? Click OK to start the silent installation, or Cancel to quit", 0, "WARNING!!", 0x1)
 
-if ($answer2 -eq 1){
+if ($answer2 -eq 1) {
     Write-Host "Downloading and silently installing SQL Management Studio"
     Start-Process Powershell .\SQL_Management_Studio_Quiet_Install.ps1
 }
