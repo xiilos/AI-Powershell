@@ -39,7 +39,9 @@ Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_P
 # Script #
 
 #Variables
+$ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ\Add2Exchange" -Name "Server" -ErrorAction SilentlyContinue
 $instanceName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ\Add2Exchange" -Name "DBInstance" -ErrorAction SilentlyContinue
+$DBname = "A2E"
 $installerPath = "C:\zlibrary\SQL Upgrade\SQLEXPR_x86_ENU_2012SP4.exe"
 $arguments = "/Action=Upgrade /Q /INSTANCENAME=$instanceName /IACCEPTSQLSERVERLICENSETERMS"
 
@@ -76,7 +78,7 @@ catch {
 
 #Back up existing SQL Instance
 #Define source and destination paths
-$instanceLocation = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
+$instanceLocation = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Softwareù\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
 $CurrentDB = $instanceLocation + 'Database\*' #Current Database Location
 $sourcePath = $CurrentDB
 $backupFolder = 'C:\zlibrary\SQL Backup'
@@ -93,6 +95,24 @@ Write-Host "Stopping Add2Exchange SQL Service"
 Stop-Service -Name "SQL Server (A2ESQLSERVER)"
 Start-Sleep -s 10
 Write-Host "Done"
+
+
+#Trim SQL Log
+Write-Host "Trimming the SQL transaction Log"
+
+try {
+    Invoke-Sqlcmd -ServerInstance "$Servername\$instancename" -Database "$DBname" -Query "DBCC SHRINKFILE('A2E_log', 1);"
+}
+catch {
+    Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10020 -EntryType FailureAudit -Message "SQL Transaction Log Trim failure $_.Exception.Message"
+    Write-Host "Please see the Add2Exchange Log for Errors"
+    Pause
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+
+Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10021 -EntryType FailureAudit -Message "Add2Exchange SQL Transaction Log Trimmed Succesfully"
+
 
 #Compress files to a .zip archive
 Write-Host "Backing up current SQL Database before upgrade"

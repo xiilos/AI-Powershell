@@ -9,7 +9,7 @@
 
 
         .NOTES
-        Version:        3.2023
+        Version:        4.2023
         Author:         DidItBetter Software
 
     #>
@@ -27,6 +27,9 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 #Variables
 $Install = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue #Current Add2Exchange Installation Path
 $CurrentDB = $Install + 'Database\' #Current Database Location
+$ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "Server" -ErrorAction SilentlyContinue
+$instanceName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBInstance" -ErrorAction SilentlyContinue
+$DBname = "A2E"
 #$BackupDirs = $Install + 'Database Backup\' #This is were the default Backup DB Files are stored
 
 
@@ -86,6 +89,21 @@ Stop-Service -Name "SQL Server (A2ESQLSERVER)"
 Start-Sleep -s 10
 Write-Host "Done"
 
+#Trim SQL Log
+Write-Host "Trimming the SQL transaction Log"
+
+try {
+    Invoke-Sqlcmd -ServerInstance "$Servername\$instancename" -Database "$DBname" -Query "DBCC SHRINKFILE('A2E_log', 1);"
+}
+catch {
+    Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10020 -EntryType FailureAudit -Message "SQL Transaction Log Trim failure $_.Exception.Message"
+    Write-Host "Please see the Add2Exchange Log for Errors"
+    Pause
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+
+Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10021 -EntryType FailureAudit -Message "Add2Exchange SQL Transaction Log Trimmed Succesfully"
 
 #Backing Up SQL Files
 Write-Host "Backing Up Add2Exchange SQL Files"
