@@ -1,6 +1,6 @@
 <#
         .SYNOPSIS
-PowerShell Script to Upgrade SQL Server Express 2017 to 2022
+PowerShell Script to Upgrade SQL Server Express 2017+ to 2022
 
 Ensure you run PowerShell as Administrator
 
@@ -9,7 +9,7 @@ Ensure to adjust paths and instance names as per your environment.
 1. Backup Databases
 Implement backup logic as per your environment & requirement.
 
-2. Verify SQL Server 2017 is installed
+2. Verify SQL Server 2017+ is installed
 Verify manually or add script logic as per your requirement.
 
 3. Install SQL Server 2022 Express
@@ -139,8 +139,8 @@ Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
 Write-Host "Finished Downloading"
     
     
-#Launch the installer with arguments 2017 to 2022
-Write-Host "Upgrading SQL Express 2017 to SQL Express 2022..."
+#Launch the installer with arguments 2017+ to 2022
+Write-Host "Upgrading SQL Express 2017+ to SQL Express 2022..."
 Push-Location "C:\zLibrary\SQL Upgrade"
 Start-Process -FilePath $installerPath -ArgumentList $arguments -Wait -PassThru
 Write-Host "Finished...Upgrade Complete.."
