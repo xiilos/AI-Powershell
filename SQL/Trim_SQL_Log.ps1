@@ -30,8 +30,8 @@ Start-Transcript -Path "C:\Program Files (x86)\DidItBetterSoftware\Support\A2E_P
 $ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "Server" -ErrorAction SilentlyContinue
 $instanceName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBInstance" -ErrorAction SilentlyContinue
 $DBname = "A2E"
-#$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Admin.txt"
-#$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Exchange_Server_Pass.txt" | convertto-securestring
+#$Username = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Sync_Account_Name.txt"
+#$Password = Get-Content "C:\Program Files (x86)\DidItBetterSoftware\Add2Exchange Creds\Local_Account_Pass.txt" | convertto-securestring
 
 
 
@@ -39,7 +39,7 @@ $DBname = "A2E"
 Write-Host "Trimming the SQL transaction Log"
 
 try {
-    Invoke-Sqlcmd -ServerInstance "$Servername\$instancename" -Database "$DBname" -Query "DBCC SHRINKFILE('A2E_log', 1);"
+    Invoke-Sqlcmd -ServerInstance "$Servername\$instancename" -Database "$DBname" -Trustservercertificate -Query "DBCC SHRINKFILE('A2E_log', 1);"
 }
 catch {
     Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10020 -EntryType FailureAudit -Message "SQL Transaction Log Trim failure $_.Exception.Message"
@@ -52,6 +52,7 @@ catch {
 Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10021 -EntryType FailureAudit -Message "Add2Exchange SQL Transaction Log Trimmed Succesfully"
 
 
+#Invoke-Sqlcmd -ServerInstance "$Servername\$instancename" -Database "$DBname" -Username "$username" -Password "$password" -Query "DBCC SHRINKFILE('A2E_log', 1);"
 #Invoke-Sqlcmd -ServerInstance "$Servername\$instancename" -Database "$DBname" -Username "$username" -Password "$password" or -Trustservercertificate -Query "DBCC SHRINKFILE('A2E_log', 1);"
 
 Write-Host "ttyl"

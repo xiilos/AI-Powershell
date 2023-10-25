@@ -90,13 +90,6 @@ if (-not (Test-Path $backupFolder)) {
     New-Item -Path $backupFolder -ItemType Directory
 }
 
-#Stop A2E SQL Service
-Write-Host "Stopping Add2Exchange SQL Service"
-Stop-Service -Name "SQL Server (A2ESQLSERVER)"
-Start-Sleep -s 10
-Write-Host "Done"
-
-
 #Trim SQL Log
 Write-Host "Trimming the SQL transaction Log"
 
@@ -112,6 +105,12 @@ catch {
 }
 
 Write-EventLog -LogName "Add2Exchange" -Source "Add2Exchange" -EventID 10021 -EntryType FailureAudit -Message "Add2Exchange SQL Transaction Log Trimmed Succesfully"
+
+#Stop A2E SQL Service
+Write-Host "Stopping Add2Exchange SQL Service"
+Stop-Service -Name "SQL Server (A2ESQLSERVER)"
+Start-Sleep -s 10
+Write-Host "Done"
 
 
 #Compress files to a .zip archive
