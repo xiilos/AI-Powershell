@@ -110,7 +110,7 @@ Write-Host "Stopping Add2Exchange Service"
 Stop-Service -Name "Add2Exchange Service"
 Start-Sleep -s 10
 Write-Host "Done"
-Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service -StartupType Disabled
+#Get-Service | Where-Object { $_.DisplayName -eq "Add2Exchange Service" } | Set-Service -StartupType Disabled
 
 #Stop The Add2Exchange Agent
 Write-Host "Stopping the Agent. Please Wait."
@@ -144,7 +144,7 @@ if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
     Write-Host "Downloading and Upgrading to SQL Express 2008 SP4"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
-    Start-Process Powershell .\SQL8x_to_SQL8xSP4 .ps1 -wait
+    Start-Process Powershell .\SQL8x_to_SQL8xSP4.ps1 -wait
 }
 
 
@@ -166,7 +166,7 @@ if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -le '7000') {
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
-    Start-Process Powershell .\SQL12x_to_SQL12xSP4 .ps1 -wait
+    Start-Process Powershell .\SQL12x_to_SQL12xSP4.ps1 -wait
 }
 
 

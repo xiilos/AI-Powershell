@@ -78,7 +78,7 @@ catch {
     
 #Back up existing SQL Instance
 #Define source and destination paths
-$instanceLocation = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Softwareù\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
+$instanceLocation = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor SoftwareÆ\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
 $CurrentDB = $instanceLocation + 'Database\*' #Current Database Location
 $sourcePath = $CurrentDB
 $backupFolder = 'C:\zlibrary\SQL Backup'
