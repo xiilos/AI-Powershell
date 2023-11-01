@@ -144,6 +144,9 @@ Write-Host "Finished...Upgrade Complete.."
 If ($InstallError) { 
     Write-Warning -Message "Something Went Wrong with the Upgrade!"
     Pause
+    Write-Host "ttyl"
+    Get-PSSession | Remove-PSSession
+    Exit
 }
 
 Write-Host "Please Reboot to Complete the Upgrade"

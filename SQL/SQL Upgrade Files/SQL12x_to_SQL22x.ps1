@@ -197,6 +197,7 @@ Write-Host "Installing SQL Express 2022..."
 Push-Location "C:\zLibrary\SQL Upgrade"
 Start-Process -FilePath "$installerPath" -ArgumentList "/ConfigurationFile=Microsoft_SQL_Server_Express_2022.ini /Q /IACCEPTSQLSERVERLICENSETERMS" -Wait -PassThru
 Write-Host "Finished...Installation Complete.."
+Write-Host "Press Enter to Proceed with upgrade"
     
 If ($InstallError) { 
     Write-Warning -Message "Something Went Wrong with the Installation!"

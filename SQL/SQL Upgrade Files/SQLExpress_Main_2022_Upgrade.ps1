@@ -74,10 +74,10 @@ IF (Get-Module -ListAvailable -Name SQLSERVER) {
     $LatestSQLMod = (Find-Module -Name SQLSERVER).Version.ToString()
 
     [PSCustomObject]@{
-        Match = If ($InstalledSQLMod -eq $LatestSQLMod) { Write-Host "You are on the latest Version" } 
+        Match = If ($InstalledSQLMod -eq $LatestSQLMod) { Write-Host "SQL Server Module is on the latest Version" } 
 
         Else {
-            Write-Host "Upgrading Modules..."
+            Write-Host "Upgrading SQL Server Modules..."
             Update-Module -Name SQLSERVER -Force
             Write-Host "Success"
         }
@@ -87,8 +87,8 @@ IF (Get-Module -ListAvailable -Name SQLSERVER) {
 
 } 
 Else {
-    Write-Host "Module Does Not Exist"
-    Write-Host "Downloading Sql Server Module..."
+    Write-Host "SQL Server Module Does Not Exist"
+    Write-Host "Downloading SQL Server Module..."
     Install-Module -Name SQLSERVER -Force -AllowClobber
     Write-Host "Success"
 }
@@ -102,6 +102,42 @@ if ($Console) {
     Get-PSSession | Remove-PSSession
     Exit
 
+}
+
+
+#Check for Pending file rename operations (Windows Reboot)
+function Test-PendingReboot {
+    $rebootRequired = $false
+
+    # Check for pending file rename operations
+    if (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name PendingFileRenameOperations -ErrorAction SilentlyContinue) {
+        $rebootRequired = $true
+    }
+
+    # Check for Windows Update reboot required flag
+    if (Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired") {
+        $rebootRequired = $true
+    }
+
+    # Check for CBS reboot pending flag
+    if ((Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\" -Name RebootPending -ErrorAction SilentlyContinue).RebootPending) {
+        $rebootRequired = $true
+    }
+
+    return $rebootRequired
+}
+
+if (Test-PendingReboot) {
+    Write-Host "Pending file rename operations found! Reboot is required before upgrading." -ForegroundColor Red
+    Write-Host "Enter to quit and reboot"
+    Pause
+    Shutdown -r -t 05
+    Write-Host "ttyl"
+    Get-PSSession | Remove-PSSession
+    Exit
+}
+else {
+    Write-Host "No reboot needed." -ForegroundColor Green
 }
 
 
@@ -140,7 +176,7 @@ Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\SQL_
 
 #SQL 2008
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
-    Write-Host "SQL Express 2008 currently installed" -ForegroundColor Green
+    Write-Host "SQL Express 2008 version $BuildVersion currently installed" -ForegroundColor Green
     Write-Host "Downloading and Upgrading to SQL Express 2008 SP4"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
@@ -149,7 +185,7 @@ if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
 
 
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -ge '5999') {
-    Write-Host "SQL Express 2008 SP4 currently installed" -ForegroundColor Green
+    Write-Host "SQL Express 2008 SP4 version $BuildVersion currently installed" -ForegroundColor Green
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
@@ -162,7 +198,7 @@ if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -ge '5999') {
 
 #SQL 2012
 if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -le '7000') {
-    Write-Host "SQL Express 2012 currently installed" -ForegroundColor Green
+    Write-Host "SQL Express 2012 version $BuildVersion currently installed" -ForegroundColor Green
     Write-Host "Downloading and Upgrading to SQL Express 2012 SP4"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
@@ -171,7 +207,7 @@ if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -le '7000') {
 
 
 if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -ge '7000') {
-    Write-Host "SQL Express 2012 SP4 currently installed" -ForegroundColor Green
+    Write-Host "SQL Express 2012 SP4 version $BuildVersion currently installed" -ForegroundColor Green
     Write-Host "Downloading and Upgrading to SQL Express 2022"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
@@ -182,7 +218,8 @@ if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -ge '7000') {
 
 #SQL 2017
 if ($BuildVersion.Major -eq '14') {
-    Write-Host "Downloading and Upgrading to SQL Express 2022" -ForegroundColor Green
+    Write-Host "SQL Express 2017 version $BuildVersion currently installed" -ForegroundColor Green
+    Write-Host "Downloading and Upgrading to SQL Express 2022"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
     Start-Process Powershell .\SQL17x_to_SQL22x.ps1 -wait
@@ -194,7 +231,8 @@ if ($BuildVersion.Major -eq '14') {
 
 #SQL 2019
 if ($BuildVersion.Major -eq '15') {
-    Write-Host "Downloading and Upgrading to SQL Express 2022" -ForegroundColor Green
+    Write-Host "SQL Express 2019 version $BuildVersion currently installed" -ForegroundColor Green
+    Write-Host "Downloading and Upgrading to SQL Express 2022"
     Write-Host "Click Enter to continue with upgrade when ready"
     Pause
     Start-Process Powershell .\SQL17x_to_SQL22x.ps1 -wait
@@ -205,7 +243,7 @@ if ($BuildVersion.Major -eq '15') {
 
 #SQL 2022
 if ($BuildVersion.Major -eq '16') {
-    Write-Host "You are already on the latest SQL 2022 Express" -ForegroundColor Green
+    Write-Host "You are already on the latest SQL 2022 Express version $BuildVersion" -ForegroundColor Green
     Pause
 }
 
