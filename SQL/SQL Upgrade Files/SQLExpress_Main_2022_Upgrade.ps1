@@ -48,12 +48,12 @@ $DBServer = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Sof
 $ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "Server" -ErrorAction SilentlyContinue
 
 If ($DBServer -eq $ServerName) {
-    Write-Host "DIB Server Names Match!"
+    Write-Host "DIB Server Names Match!" -ForegroundColor Green
 }
 
 Else {
 
-    Write-Host "SQL Server name and localhost Server name do not match. This tool cannot upgrade SQl Express on unmatched server names."
+    Write-Host "SQL Server name and localhost Server name do not match. This tool cannot upgrade SQl Express on unmatched server names." -ForegroundColor Red
     Pause
     Write-Host "ttyl"
     Get-PSSession | Remove-PSSession

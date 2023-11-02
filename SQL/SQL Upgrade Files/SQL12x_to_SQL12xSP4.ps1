@@ -43,7 +43,7 @@ $ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor S
 $instanceName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBInstance" -ErrorAction SilentlyContinue
 $DBname = "A2E"
 $installerPath = "C:\zlibrary\SQL Upgrade\SQLEXPR_x86_ENU_2012SP4.exe"
-$arguments = "/Action=Upgrade /Q /INSTANCENAME=$instanceName /IACCEPTSQLSERVERLICENSETERMS"
+$arguments = "/Action=Patch /Q /INSTANCENAME=$instanceName /IACCEPTSQLSERVERLICENSETERMS"
     
 #Create zLibrary\A2E SQL Upgrade Directory
 Write-Host "Creating Landing Zone"
