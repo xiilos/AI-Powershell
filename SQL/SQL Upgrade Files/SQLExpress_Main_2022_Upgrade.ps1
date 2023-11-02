@@ -129,9 +129,8 @@ function Test-PendingReboot {
 
 if (Test-PendingReboot) {
     Write-Host "Pending file rename operations found! Reboot is required before upgrading." -ForegroundColor Red
-    Write-Host "Enter to quit and reboot"
+    Write-Host "Enter to quit and manually reboot"
     Pause
-    Shutdown -r -t 05
     Write-Host "ttyl"
     Get-PSSession | Remove-PSSession
     Exit
@@ -169,7 +168,7 @@ Push-Location SQLSERVER:\SQL\localhost
 $BuildVersion = Get-ChildItem | Select-Object Version -ExpandProperty Version
 
 
-#Main Upgrade Menu
+#Main Upgrade Files
 Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\SQL_Upgrade_Files"
 
 
@@ -277,7 +276,3 @@ Get-PSSession | Remove-PSSession
 Exit
 
 # End Scripting
-
-
-
-
