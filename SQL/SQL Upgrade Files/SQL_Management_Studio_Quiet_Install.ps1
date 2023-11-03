@@ -52,7 +52,6 @@ if ($LASTEXITCODE -eq 0) {
 }
 else {
     Write-Host "There was an error during the SSMS installation."
-    
 }
 
 Pause
