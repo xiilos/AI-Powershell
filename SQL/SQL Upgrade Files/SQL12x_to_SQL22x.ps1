@@ -134,7 +134,7 @@ Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
 Write-Host "Finished Downloading"
 
 #Download SQL Express Config.ini
-$URL = "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/Microsoft%20SQL%20Server%20Express%202022.ini"
+$URL = "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/Microsoft_SQL_Server_Express_2022.ini"
 $Output = "C:\zlibrary\SQL Upgrade\Microsoft_SQL_Server_Express_2022.ini"
 $Start_Time = Get-Date
     
