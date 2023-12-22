@@ -15,7 +15,7 @@ Verify manually or add script logic as per your requirement.
 3. Install SQL Express 2022
 
         .DESCRIPTION
-      Will upgrade SQL Express 2012 SP4 to SQL Express 2022
+      Will upgrade SQL Express 2012 SP4+ to SQL Express 2022
 
         .NOTES
         Version:        1.0

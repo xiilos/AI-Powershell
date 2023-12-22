@@ -213,6 +213,32 @@ if ($BuildVersion.Major -eq '11' -and $BuildVersion.Build -ge '7000') {
     Start-Process Powershell .\SQL12x_to_SQL22x.ps1 -wait
 }
 
+
+#----------------------------------------------------------------------
+
+
+#SQL 2014
+if ($BuildVersion.Major -eq '12' -and $BuildVersion.Build -ge '6000') {
+    Write-Host "SQL Express 2014 SP3 version $BuildVersion currently installed" -ForegroundColor Green
+    Write-Host "Downloading and Upgrading to SQL Express 2022"
+    Write-Host "Click Enter to continue with upgrade when ready"
+    Pause
+    Start-Process Powershell .\SQL12x_to_SQL22x.ps1 -wait
+}
+
+
+#----------------------------------------------------------------------
+
+#SQL 2016
+if ($BuildVersion.Major -eq '13') {
+    Write-Host "SQL Express 2016 version $BuildVersion currently installed" -ForegroundColor Green
+    Write-Host "Downloading and Upgrading to SQL Express 2022"
+    Write-Host "Click Enter to continue with upgrade when ready"
+    Pause
+    Start-Process Powershell .\SQL17x_to_SQL22x.ps1 -wait
+}
+
+
 #----------------------------------------------------------------------
 
 #SQL 2017
