@@ -1,6 +1,6 @@
 <#
         .SYNOPSIS
-PowerShell Script to Upgrade SQL Server Express 2012 SP4 to 2022
+PowerShell Script to Upgrade SQL Server Express 2008 to 2022
 
 Ensure you run PowerShell as Administrator
 
@@ -9,16 +9,16 @@ Ensure to adjust paths and instance names as per your environment.
 1. Backup Databases
 Implement backup logic as per your environment & requirement.
 
-2. Verify SQL Server 2008 SP4 is installed
+2. Verify SQL Server Express is installed
 Verify manually or add script logic as per your requirement.
 
 3. Install SQL Express 2022
 
         .DESCRIPTION
-      Will upgrade SQL Express 2012 SP4+ to SQL Express 2022
+      Will upgrade SQL Express 2008+ to SQL Express 2022
 
         .NOTES
-        Version:        1.1
+        Version:        1.0
         Author:         DidItBetter Software
 
     #>
@@ -43,7 +43,7 @@ $ServerName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor S
 $instanceName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "DBInstance" -ErrorAction SilentlyContinue
 $DBname = "A2E"
 $installerPath = "C:\zlibrary\SQL Upgrade\SQL2022-SSEI-Expr.exe"
-
+#$configFilePath = 'C:\zlibrary\SQL Backup\Microsoft_SQL_Server_Express_2022.ini'
 
 
     
@@ -60,7 +60,7 @@ Else {
     
 #Test for HTTPS Access
 Write-Host "Testing for HTTPS Connectivity"
-
+    
 try {
     $wresponse = Invoke-WebRequest -Uri https://s3.amazonaws.com/dl.diditbetter.com -UseBasicParsing
     if ($wresponse.StatusCode -eq 200) {
@@ -71,21 +71,21 @@ try {
     }
 }
 catch {
-    $wshell1 = New-Object -ComObject Wscript.Shell
-        $answer1 = $wshell1.Popup("Connection failed with error: $($_.Exception.Message)...Click OK to try a different download method or Cancel to Quit", 0, "SQL Download", 0x1)
-        if ($answer1 -eq 2) { 
-            Write-Host "ttyl"
-            Get-PSSession | Remove-PSSession
-            Exit
-        }
+    $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
+    $wshell.Popup("Connection failed with error: $($_.Exception.Message)...Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
+    Write-Host "Quitting"
+    Get-PSSession | Remove-PSSession
+    Exit
 }
     
 #Back up existing SQL Instance
 #Define source and destination paths
 $instanceLocation = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
-$CurrentDB = $instanceLocation + 'Database\' #Current Database Location
+$CurrentDB = $instanceLocation + 'Database\*' #Current Database Location
 $sourcePath = $CurrentDB
 $backupFolder = 'C:\zlibrary\SQL Backup'
+$backupFileName = "Backup_$(Get-Date -Format 'yyyyMMddHHmmss').zip"
+$backupFilePath = Join-Path -Path $backupFolder -ChildPath $backupFileName
     
 # Ensure backup folder exists
 if (-not (Test-Path $backupFolder)) {
@@ -115,70 +115,33 @@ Start-Sleep -s 10
 Write-Host "Done"
 
 
-#Copy files to to SQL backup folder
-Write-Host "Backing up current SQL Database before upgrade"
-# Define the source folder where the files are located
-$sourceFolder = $sourcepath
-
-# Define the destination folder where the files will be copied to
-$destinationFolder = $backupFolder
-
-# Files to be copied
-$filesToCopy = @("a2e.mdf", "a2e_log.ldf")
-
-# Loop through each file in the list and copy them to the destination folder
-foreach ($file in $filesToCopy) {
-    $sourcePath2 = Join-Path -Path $sourceFolder -ChildPath $file
-    $destinationPath = Join-Path -Path $destinationFolder -ChildPath $file
-
-    # Check if the source file exists before attempting to copy
-    if (Test-Path -Path $sourcePath2) {
-        Copy-Item -Path $sourcePath2 -Destination $destinationPath -Force
-        Write-Output "Copied: $sourcePath2 to $destinationPath"
-        Write-Output "Backup completed to $backupFolder"
-    } else {
-        Write-Output "File not found: $sourcePath2"
-        $wshell = New-Object -ComObject Wscript.Shell
-        $answer = $wshell.Popup("There seems to be an issue copying the A2E SQL databases. Ensure that your Databases are located in $Sourcepath Click OK to continue or Cancel to Quit", 0, "SQL Backup", 0x1)
-        if ($answer -eq 2) { 
-            Write-Host "ttyl"
-            Get-PSSession | Remove-PSSession
-            Exit
-        }
-    }
-}
+#Compress files to a .zip archive
+Write-Host "Backing up current SQL Database before Installation"
+Compress-Archive -Path $sourcePath -DestinationPath $backupFilePath
+Write-Output "Backup completed to $backupFilePath"
     
     
 #Download SQL Express Installer
-try {
-    Write-Host "Downloading SQL Express 2022"
-    $URL = "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/SQL2022-SSEI-Expr.exe"
-    $Output = "C:\zlibrary\SQL Upgrade\SQL2022-SSEI-Expr.exe"
-    $Start_Time = Get-Date
+Write-Host "Downloading SQL Express 2022"
+$URL = "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/SQL2022-SSEI-Expr.exe"
+$Output = "C:\zlibrary\SQL Upgrade\SQL2022-SSEI-Expr.exe"
+$Start_Time = Get-Date
     
     (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
     
-    Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
     
+Write-Host "Finished Downloading"
+
 #Download SQL Express Config.ini
 $URL = "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/Microsoft_SQL_Server_Express_2022.ini"
 $Output = "C:\zlibrary\SQL Upgrade\Microsoft_SQL_Server_Express_2022.ini"
 $Start_Time = Get-Date
     
     (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
-
-    Write-Host "Finished Downloading"
-    }
-    catch {
-        Write-Host "Donwloading failed through Powershell, trying another way...." -ForegroundColor Red
-        Start-Process "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/SQL2022-SSEI-Expr.exe"
-        Start-Process "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/Microsoft_SQL_Server_Express_2022.ini"
-        Write-Host "Ensure to put the downloaded SQL Express installer in the folder C:\zlibrary\SQL Upgrade\* When finished, click Enter to continue"
-        Pause
-    }
     
 
-#Remove SQL Express 2012
+<#Remove SQl Express 2012
 # Path to the SQL Server 2012 Express setup executable
 Write-Host "Removing SQL Express 2012. Please Wait..."
 $SetupPath = "C:\Program Files (x86)\Microsoft SQL Server\110\Setup Bootstrap\SQLServer2012\setup.exe"
@@ -187,7 +150,36 @@ $instanceName = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor
 # Run the uninstall command silently
 Start-Process -FilePath $SetupPath -ArgumentList "/Action=Uninstall /FEATURES=SQLEngine /INSTANCENAME=$InstanceName /Q" -Wait
 Write-Output "SQL Express 2012 is now Uninstalled"
+#>
 
+#Detach SQL Instance from current SQL express
+
+# Import the SQL Server module
+Import-Module SqlServer
+
+# Define the SQL Server instance and the database to detach
+$serverInstance = "A2ESQLSERVER"
+$databaseName = "A2E"
+
+# Create a Server object
+$server = New-Object Microsoft.SqlServer.Management.Smo.Server($serverInstance)
+
+# Access the database
+$database = $server.Databases[$databaseName]
+
+if ($null -eq $database) {
+    Write-Host "Database not found."
+    exit
+}
+
+# Detach the database
+$server.DetachDatabase($databaseName, $true, $false)
+
+Write-Host "Database detached successfully."
+
+
+
+Pause
 
 #Rename MDF and LDF files
 $dirPath = "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Database"

@@ -18,7 +18,7 @@ Verify manually or add script logic as per your requirement.
       Will upgrade SQL Express 2012 to SQL Express 2012 SP4
 
         .NOTES
-        Version:        1.0
+        Version:        1.1
         Author:         DidItBetter Software
 
     #>
@@ -58,7 +58,7 @@ Else {
     
 #Test for HTTPS Access
 Write-Host "Testing for HTTPS Connectivity"
-    
+
 try {
     $wresponse = Invoke-WebRequest -Uri https://s3.amazonaws.com/dl.diditbetter.com -UseBasicParsing
     if ($wresponse.StatusCode -eq 200) {
@@ -69,21 +69,21 @@ try {
     }
 }
 catch {
-    $wshell = New-Object -ComObject Wscript.Shell -ErrorAction Stop
-    $wshell.Popup("Connection failed with error: $($_.Exception.Message)...Click OK or Cancel to Quit.", 0, "ATTENTION!!", 0 + 1)
-    Write-Host "Quitting"
-    Get-PSSession | Remove-PSSession
-    Exit
+    $wshell1 = New-Object -ComObject Wscript.Shell
+        $answer1 = $wshell1.Popup("Connection failed with error: $($_.Exception.Message)...Click OK to try a different download method or Cancel to Quit", 0, "SQL Download", 0x1)
+        if ($answer1 -eq 2) { 
+            Write-Host "ttyl"
+            Get-PSSession | Remove-PSSession
+            Exit
+        }
 }
     
 #Back up existing SQL Instance
 #Define source and destination paths
 $instanceLocation = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
-$CurrentDB = $instanceLocation + 'Database\*' #Current Database Location
+$CurrentDB = $instanceLocation + 'Database\' #Current Database Location
 $sourcePath = $CurrentDB
 $backupFolder = 'C:\zlibrary\SQL Backup'
-$backupFileName = "Backup_$(Get-Date -Format 'yyyyMMddHHmmss').zip"
-$backupFilePath = Join-Path -Path $backupFolder -ChildPath $backupFileName
     
 # Ensure backup folder exists
 if (-not (Test-Path $backupFolder)) {
@@ -112,29 +112,65 @@ Stop-Service -Name "SQL Server (A2ESQLSERVER)"
 Start-Sleep -s 10
 Write-Host "Done"
 
-#Compress files to a .zip archive
-Write-Host "Backing up current SQL Database before upgrade"
-Compress-Archive -Path $sourcePath -DestinationPath $backupFilePath
-Write-Output "Backup completed to $backupFilePath"
     
+    
+#Copy files to to SQL backup folder
+Write-Host "Backing up current SQL Database before upgrade"
+# Define the source folder where the files are located
+$sourceFolder = $sourcepath
+
+# Define the destination folder where the files will be copied to
+$destinationFolder = $backupFolder
+
+# Files to be copied
+$filesToCopy = @("a2e.mdf", "a2e_log.ldf")
+
+# Loop through each file in the list and copy them to the destination folder
+foreach ($file in $filesToCopy) {
+    $sourcePath2 = Join-Path -Path $sourceFolder -ChildPath $file
+    $destinationPath = Join-Path -Path $destinationFolder -ChildPath $file
+
+    # Check if the source file exists before attempting to copy
+    if (Test-Path -Path $sourcePath2) {
+        Copy-Item -Path $sourcePath2 -Destination $destinationPath -Force
+        Write-Output "Copied: $sourcePath2 to $destinationPath"
+        Write-Output "Backup completed to $backupFolder"
+    } else {
+        Write-Output "File not found: $sourcePath2"
+        $wshell = New-Object -ComObject Wscript.Shell
+        $answer = $wshell.Popup("There seems to be an issue copying the A2E SQL databases. Ensure that your Databases are located in $Sourcepath Click OK to continue or Cancel to Quit", 0, "SQL Backup", 0x1)
+        if ($answer -eq 2) { 
+            Write-Host "ttyl"
+            Get-PSSession | Remove-PSSession
+            Exit
+        }
+    }
+}
+
 #Restart SQL Services
 Start-Service -Name "SQL Server (A2ESQLSERVER)"
 Start-Sleep -s 10
 Write-Host "SQL Services Restarted"
-    
-    
+
 #Download SQL Express Installer
-Write-Host "Downloading SQL Express 2012 SP4"
-$URL = "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/SQLEXPR_x86_ENU_2012SP4.exe"
-$Output = "C:\zlibrary\SQL Upgrade\SQLEXPR_x86_ENU_2012SP4.exe"
-$Start_Time = Get-Date
+try {
+    Write-Host "Downloading SQL Express 2012 SP4"
+    $URL = "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/SQLEXPR_x86_ENU_2012SP4.exe"
+    $Output = "C:\zlibrary\SQL Upgrade\SQLEXPR_x86_ENU_2012SP4.exe"
+    $Start_Time = Get-Date
     
     (New-Object System.Net.WebClient).DownloadFile($URL, $Output)
     
-Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
+    Write-Output "Time taken: $((Get-Date).Subtract($Start_Time).Seconds) second(s)"
     
-Write-Host "Finished Downloading"
-    
+    Write-Host "Finished Downloading"
+    }
+    catch {
+        Write-Host "Donwloading failed through Powershell, trying another way...." -ForegroundColor Red
+        Start-Process "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/SQLEXPR_x86_ENU_2012SP4.exe"
+        Write-Host "Ensure to put the downloaded SQL Express installer in the folder C:\zlibrary\SQL Upgrade\* When finished, click Enter to continue"
+        Pause
+    }
     
 #Launch the installer with arguments
 Write-Host "Upgrading SQL Express 2012 to SQL Express 2012 SP4..."

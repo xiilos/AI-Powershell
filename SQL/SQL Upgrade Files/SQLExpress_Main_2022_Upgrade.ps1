@@ -10,7 +10,7 @@
       
 
         .NOTES
-        Version:        1.0
+        Version:        1.1
         Author:         DidItBetter Software
 
     #>
@@ -171,7 +171,7 @@ $BuildVersion = Get-ChildItem | Select-Object Version -ExpandProperty Version
 #Main Upgrade Files
 Push-Location "C:\Program Files (x86)\OpenDoor Software®\Add2Exchange\Setup\SQL_Upgrade_Files"
 
-
+#----------------------------------------------------------------------
 
 #SQL 2008
 if ($BuildVersion.Major -eq '10' -and $BuildVersion.Build -le '5900') {
