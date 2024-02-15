@@ -18,7 +18,7 @@ Verify manually or add script logic as per your requirement.
       Will upgrade SQL Express 2012 SP4+ to SQL Express 2022
 
         .NOTES
-        Version:        1.2
+        Version:        1.3
         Author:         DidItBetter Software
 
     #>
@@ -64,8 +64,8 @@ Else {
 $instanceLocation = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\OpenDoor Software®\Add2Exchange" -Name "InstallLocation" -ErrorAction SilentlyContinue
 $CurrentDB = $instanceLocation + 'Database\' #Current Database Location
 $sourcePath = $CurrentDB
-$backupFolder = 'C:\zlibrary\SQL Backup'
-    
+$backupFolder = "C:\zlibrary\SQL Backup\$((Get-Date).ToString('yyyy-MM-dd-hh-mm-ss'))"
+
 # Ensure backup folder exists
 if (-not (Test-Path $backupFolder)) {
     New-Item -Path $backupFolder -ItemType Directory
