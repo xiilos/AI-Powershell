@@ -18,7 +18,7 @@ Verify manually or add script logic as per your requirement.
       Will upgrade SQL Express 2012 SP4+ to SQL Express 2022
 
         .NOTES
-        Version:        1.1
+        Version:        1.2
         Author:         DidItBetter Software
 
     #>
@@ -57,28 +57,7 @@ if ( $(Try { Test-Path $TestPath.trim() } Catch { $false }) ) {
 Else {
     New-Item -ItemType directory -Path "C:\zlibrary\SQL Upgrade"
 }
-    
-#Test for HTTPS Access
-Write-Host "Testing for HTTPS Connectivity"
 
-try {
-    $wresponse = Invoke-WebRequest -Uri https://s3.amazonaws.com/dl.diditbetter.com -UseBasicParsing
-    if ($wresponse.StatusCode -eq 200) {
-        Write-Output "Connection successful"
-    }
-    else {
-        Write-Output "Connection failed with status code $($wresponse.StatusCode)"
-    }
-}
-catch {
-    $wshell1 = New-Object -ComObject Wscript.Shell
-        $answer1 = $wshell1.Popup("Connection failed with error: $($_.Exception.Message)...Click OK to try a different download method or Cancel to Quit", 0, "SQL Download", 0x1)
-        if ($answer1 -eq 2) { 
-            Write-Host "ttyl"
-            Get-PSSession | Remove-PSSession
-            Exit
-        }
-}
     
 #Back up existing SQL Instance
 #Define source and destination paths
@@ -148,7 +127,22 @@ foreach ($file in $filesToCopy) {
     }
 }
     
-    
+#Test for HTTPS Access
+Write-Host "Testing for HTTPS Connectivity"
+
+try {
+    $wresponse = Invoke-WebRequest -Uri https://s3.amazonaws.com/dl.diditbetter.com -UseBasicParsing
+    if ($wresponse.StatusCode -eq 200) {
+        Write-Output "Connection successful"
+    }
+    else {
+        Write-Output "HTTPS Connection failed with status code $($wresponse.StatusCode) Will try a different download method."
+    }
+}
+catch {
+#
+}
+
 #Download SQL Express Installer
 try {
     Write-Host "Downloading SQL Express 2022"
