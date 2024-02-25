@@ -167,6 +167,19 @@ catch {
     Pause
 }
 
+# Check to ensure all files are in place before moving foward
+$filePathinstaller = "C:\zlibrary\SQL Upgrade\SQLServer2008SP4-KB2979596-x86-ENU.exe"
+
+# Check if the file exists
+if (Test-Path -Path $filePathinstaller) {
+    # File exists
+    Write-Output "The files exist. Moving foward."
+} else {
+    # File does not exist
+    Write-Output "The files do not exist in the destination. Ensure to put the downloaded SQL Express installer in the folder C:\zlibrary\SQL Upgrade\* When finished, click Enter to continue"
+    pause
+}
+
 
 
 #Launch the installer with arguments

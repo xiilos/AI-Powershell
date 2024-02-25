@@ -267,13 +267,11 @@ catch {
 Write-Host "Downloading Add2Exchange"
 Write-Host "Please Wait......"
 
-# Replace the value of $bucketUrl with the public Amazon S3 URL of your bucket
-$bucketUrl = "https://s3.amazonaws.com/dl.diditbetter.com/"
 
-# Replace the value of $partialFileName with the first part of the filename you know
+$bucketUrl = "https://s3.amazonaws.com/dl.diditbetter.com/"
 $partialFileName = "a2e-enterprise_upgrade"
 
-# Create a web request to get the contents of the bucket
+# web request to get the contents of the bucket
 $request = [System.Net.WebRequest]::Create($bucketUrl)
 $response = $request.GetResponse()
 

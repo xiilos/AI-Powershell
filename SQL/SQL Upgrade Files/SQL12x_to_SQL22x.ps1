@@ -167,7 +167,7 @@ $Start_Time = Get-Date
         Write-Host "Donwloading failed through Powershell, trying another way...." -ForegroundColor Red
         Start-Process "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/SQL2022-SSEI-Expr.exe"
         Start-Process "https://s3.amazonaws.com/dl.diditbetter.com/SQL%20Express/Microsoft_SQL_Server_Express_2022.ini"
-        Write-Host "Ensure to put the downloaded SQL Express installer in the folder C:\zlibrary\SQL Upgrade\* When finished, click Enter to continue"
+        Write-Host "Ensure to put both the downloaded SQL Express installer and .ini file in the folder C:\zlibrary\SQL Upgrade\* When finished, click Enter to continue"
         Pause
     }
     
